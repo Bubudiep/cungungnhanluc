@@ -19,8 +19,10 @@ const Home = () => {
         const isFirstLoad = searchParams.get("fistLoad");
         const isFromLogin = searchParams.get("fromLogin");
         if (isFirstLoad || isFromLogin) {
-          api.send("resize", true);
-          api.send("maximized");
+          try {
+            api.send("resize", true);
+            api.send("maximized");
+          } catch (e) {}
         }
         setTimeout(() => {
           setLoadOut(true);
@@ -31,6 +33,7 @@ const Home = () => {
         }, 1000); // 1000 ms = 1 giây
       })
       .catch((err) => {
+        console.log(err);
         navigate("/login");
       })
       .finally(() => {

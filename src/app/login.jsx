@@ -17,14 +17,12 @@ const Login = () => {
   const checkAuth = async () => {
     try {
       const token = api.getCookie("token");
+      console.log(token);
       if (token) {
         // Kiểm tra API để xác thực token
-        const response = await api.get("/user/", {
-          headers: { Authorization: `Bearer ${token}` },
+        api.get("/user/", token).then((res) => {
+          navigate("/?fromLogin=true");
         });
-        if (response.data) {
-          navigate("/");
-        }
       } else {
         // Kiểm tra localStorage
         const savedUsername = localStorage.getItem("username");

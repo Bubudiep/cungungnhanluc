@@ -1,9 +1,22 @@
 import React from "react";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import api from "../../components/api";
 import Top_container from "./top-container";
 
 const Homepage = ({ user }) => {
+  const location = useLocation();
+  const routeNames = {
+    "/": "Home",
+    "/dashboard": "Tổng quan",
+    "/employee": "Nhân viên",
+  };
+  const breadcrumbItems = location.pathname
+    .split("/")
+    .filter((item) => item) // Bỏ các phần rỗng
+    .map((item, index, arr) => {
+      const to = "/" + arr.slice(0, index + 1).join("/"); // Xây dựng đường dẫn cho từng phần
+      return { name: routeNames[to] || item, path: to };
+    });
   return (
     <div className="home-page">
       <Top_container />
@@ -25,7 +38,27 @@ const Homepage = ({ user }) => {
           </div>
         </div>
         <div className="main-container">
-          <div className="route-container"></div>
+          <div className="route-container">
+            <div className="route-container">
+              <Link to="/" className="items">
+                <div className="icon">
+                  <i class="fa-solid fa-house"></i>
+                </div>
+              </Link>
+              {breadcrumbItems.map((item, index) => (
+                <React.Fragment key={index}>
+                  <i className="fa-solid fa-angle-right"></i>
+                  {index === breadcrumbItems.length - 1 ? (
+                    <span className="breadcrumb-item active">{item.name}</span>
+                  ) : (
+                    <Link to={item.path} className="breadcrumb-item">
+                      {item.name}
+                    </Link>
+                  )}
+                </React.Fragment>
+              ))}
+            </div>
+          </div>
           <div className="outlet-box">
             <Outlet />
           </div>
