@@ -1,0 +1,25 @@
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "../app";
+import Login from "../app/login";
+import NotFound from "../app/404";
+import Dashboard from "../app/layout/page/dashboard";
+import "@fortawesome/fontawesome-free/css/all.css";
+import Employee from "../app/layout/page/employee";
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />}>
+          <Route index element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/employee" element={<Employee />} />
+          <Route path="/*" element={<NotFound />} />
+        </Route>
+        <Route path="/login" element={<Login />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
+  );
+};
+export default App;

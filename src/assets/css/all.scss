@@ -1,0 +1,348 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.home-page {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: #e6e8f1;
+  -webkit-app-region: no-drag;
+  .body-container {
+    display: flex;
+    flex: 1;
+    padding: 4px;
+    gap: 8px;
+    .main-container {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      .employeer-table {
+        background-color: #fff;
+        border-radius: 8px;
+        table {
+          width: 100%;
+          thead {
+            tr {
+              th {
+                cursor: pointer;
+                font-size: 0.7rem;
+                white-space: nowrap;
+                text-align: left;
+                padding: 8px 5px;
+                user-select: none;
+              }
+            }
+          }
+          tbody {
+            tr {
+              border-top: 1px solid #e1e1e1;
+              td {
+                padding: 2px 5px;
+                white-space: nowrap;
+                font-size: 0.8rem;
+                .on {
+                  color: #34c400;
+                }
+                .off {
+                  color: #b3b3b3;
+                }
+                .work {
+                  color: #21c300;
+                }
+                .notwork {
+                  color: rgb(196, 3, 0);
+                }
+                &.isOut {
+                  font-size: 0.7rem;
+                  font-weight: 700;
+                  padding: 5px 8px;
+                  font-style: italic;
+                  text-align: center;
+                }
+                button {
+                  padding: 6px 8px;
+                  font-size: 0.7rem;
+                  outline: none;
+                  border: hidden;
+                  transition: all 0.3s;
+                  &.edit {
+                    background-color: #74a4c1;
+                    color: #fff;
+                    &:hover {
+                      background-color: #0066f4;
+                    }
+                  }
+                  &.remove {
+                    background-color: #c17c74;
+                    color: #fff;
+                    &:hover {
+                      background-color: #c71502;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      background-color: #fff;
+      width: 68px;
+      border-radius: 8px;
+      overflow: hidden;
+      .list-app {
+        border-bottom: 1px solid rgb(178, 199, 212);
+        padding: 4px;
+        .item {
+          display: flex;
+          flex-direction: column;
+          height: 60px;
+          overflow: hidden;
+          align-items: center;
+          justify-content: center;
+          gap: 4px;
+          cursor: pointer;
+          transition: all 0.3s;
+          border-radius: 6px;
+          color: #a6b2c2;
+          text-decoration: none;
+          .icon {
+            font-size: 18px;
+          }
+          .name {
+            font-size: 11px;
+            font-weight: 550;
+            white-space: nowrap;
+          }
+          &:hover {
+            background-color: #f1f5fc;
+            color: #214c85;
+          }
+        }
+      }
+    }
+  }
+  .top-container {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    padding: 4px;
+    animation: slideIntop 0.3s forwards;
+    -webkit-app-region: drag;
+    .app-nav {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      background-color: #fff;
+      padding: 2px 8px 2px 4px;
+      box-shadow: 1px 2px 3px #0003;
+      border-radius: 8px;
+      -webkit-app-region: no-drag;
+      .logo {
+        .box {
+          width: 32px;
+          height: 32px;
+          border-radius: 8px;
+          overflow: hidden;
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+      }
+      .name {
+        font-weight: 600;
+        color: rgb(0, 153, 255);
+        text-shadow: 1px 2px 3px #0002;
+      }
+    }
+    .right-nav {
+      display: flex;
+      gap: 12px;
+      .tools-nav {
+        .item {
+          .icon {
+          }
+          .name {
+          }
+        }
+      }
+      .tools-nav {
+        display: flex;
+        gap: 6px;
+        .list {
+          background-color: #fff;
+          box-shadow: 2px 2px 4px #0002;
+          padding: 4px;
+          border-radius: 12px;
+          gap: 4px;
+          -webkit-app-region: no-drag;
+          display: flex;
+          gap: 4px;
+          .item {
+            align-items: center;
+            gap: 5px;
+            display: flex;
+            padding: 0px 4px;
+            font-size: 13px;
+            color: #bebebe;
+            user-select: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            &:hover {
+              color: #2e3049;
+            }
+            i {
+              width: 20px;
+              text-align: center;
+            }
+          }
+        }
+      }
+      .app-actions {
+        display: flex;
+        background-color: #fff;
+        box-shadow: 2px 2px 4px #0002;
+        padding: 2px;
+        border-radius: 12px;
+        gap: 4px;
+        -webkit-app-region: no-drag;
+        user-select: none;
+        .item {
+          width: 35px;
+          height: 35px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #ccd1dd;
+          transition: all 0.3s;
+          border-radius: 12px;
+          cursor: pointer;
+          &:hover {
+            background-color: #e3eaff;
+            color: #006dff;
+            box-shadow: 1px 2px 3px #0001 inset;
+          }
+          &.close {
+            &:hover {
+              background-color: #ffe9e9;
+              color: #ff0000;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+body,
+#root {
+  position: fixed;
+  display: flex;
+  margin: 0px;
+  padding: 0px;
+  width: 100%;
+  height: 100%;
+  font-size: 0.9rem;
+  -webkit-app-region: drag;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+.flex {
+  display: flex;
+}
+.fc {
+  display: flex;
+  flex-direction: column;
+}
+.g4 {
+  gap: 4px;
+}
+.loading-spinner {
+  border: 6px solid rgba(0, 0, 0, 0.1); /* Màu nền của spinner */
+  border-left-color: #09f; /* Màu quay */
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  animation: spin 1s linear infinite;
+}
+.app-load {
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: #fff;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .body {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: 28px;
+    animation: slideIntop 1s ease-out;
+    .logo {
+      width: 140px;
+      animation: fadeInfinite 2s linear infinite;
+      img {
+        width: 100%;
+      }
+    }
+  }
+  .bottom {
+    margin-top: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    animation: slideIn 1s ease-out;
+    .logo {
+      background-color: #09f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 10px;
+      img {
+        width: 100%;
+      }
+      .value {
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+      }
+    }
+    .coppy-right {
+      font-size: 15px;
+      display: flex;
+      gap: 5px;
+      color: #8d8e8f;
+      .author {
+        font-weight: 500;
+        color: #09f;
+      }
+    }
+  }
+  .version {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    color: #999;
+    font-weight: 500;
+    font-size: 13px;
+    animation: fadeIn 1s ease-out;
+  }
+}

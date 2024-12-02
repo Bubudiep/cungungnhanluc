@@ -1,0 +1,128 @@
+.login-page {
+  -webkit-app-region: drag;
+  display: flex;
+  flex: 1;
+  user-select: none;
+  .video-container {
+    -webkit-app-region: no-drag;
+    display: flex;
+    flex: 1;
+    background-color: #dbe2e7;
+    margin: 8px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 3px #0003;
+  }
+  .login-container {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    width: 320px;
+    background-color: #fff;
+    font-size: 0.9rem;
+    .login-box {
+      -webkit-app-region: no-drag;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: -webkit-fill-available;
+      .register,
+      .forget-pass {
+        text-align: center;
+        color: #0066f4;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.8rem;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+      .exit {
+        text-align: center;
+        color: #a3a3a3;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.8rem;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+      .header {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #0093ef;
+        // text-transform: uppercase;
+      }
+      .hi {
+        font-size: 1rem;
+        color: #0071b8;
+        font-weight: 500;
+      }
+      .with-zalo {
+        button {
+          padding: 8px;
+          border-radius: 8px;
+          width: -webkit-fill-available;
+          outline: none;
+          background-color: #fff;
+          color: #4f46e5;
+          border: 1px solid #4f46e5;
+          height: 38px;
+          transition: all 0.3s;
+          font-weight: 500;
+          text-transform: uppercase;
+          &:hover {
+            cursor: pointer;
+            background-color: #e3eaff;
+          }
+        }
+      }
+      .login-btn {
+        button {
+          padding: 8px;
+          border-radius: 8px;
+          width: -webkit-fill-available;
+          outline: none;
+          background-color: #4f46e5;
+          color: #fff;
+          border: 1px solid #e5e7eb;
+          height: 42px;
+          transition: all 0.3s;
+          font-weight: 500;
+          text-transform: uppercase;
+          &:hover {
+            cursor: pointer;
+            background-color: #5f87ff;
+          }
+        }
+      }
+      .form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        .items {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+          .name {
+            font-weight: 500;
+            color: #0071b8;
+          }
+          .value {
+            input {
+              padding: 0px 8px;
+              border-radius: 8px;
+              border: 1px solid #c3c7d0;
+              width: -webkit-fill-available;
+              height: 40px;
+              outline: none;
+              &::placeholder {
+                color: #c3c3c3;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
