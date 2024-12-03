@@ -85,6 +85,13 @@ const Employee_table = ({ user }) => {
                 <Skeleton.Input active size="large" />
                 <Skeleton.Input active size="large" />
               </div>
+              <div className="flex gap-2">
+                <Skeleton.Avatar active size="large" />
+                <Skeleton.Input active size="large" />
+                <Skeleton.Input active size="large" />
+                <Skeleton.Input active size="large" />
+                <Skeleton.Input active size="large" />
+              </div>
             </div>
           </div>
         ) : (
