@@ -15,7 +15,11 @@ const Home = () => {
     await api
       .get("/user/?key=3B739A8FC11B4527A24B4634B9ED6DE9", token)
       .then((res) => {
-        setUser(res);
+        setUser({
+          ...res,
+          key: "3B739A8FC11B4527A24B4634B9ED6DE9",
+          token: token,
+        });
         const isFirstLoad = searchParams.get("fistLoad");
         const isFromLogin = searchParams.get("fromLogin");
         if (isFirstLoad || isFromLogin) {
