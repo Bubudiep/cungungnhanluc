@@ -13,7 +13,7 @@ const Home = () => {
   const [user, setUser] = useState();
   const checkUser = async (token) => {
     await api
-      .get("/user/", token)
+      .get("/user/?key=3B739A8FC11B4527A24B4634B9ED6DE9", token)
       .then((res) => {
         setUser(res);
         const isFirstLoad = searchParams.get("fistLoad");

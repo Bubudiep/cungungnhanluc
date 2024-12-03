@@ -11,18 +11,17 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const client_secret =
-    "s5n3Dys2fO64XHmFJ6b24WvFKBDHBeLryCaJresHpZ5IIETV7QDxMET8rTSxd8mTfYIACWhtXyZkpZXTi9I8tPYUaKXFErcO0s75tmaHbwkElJNVt1TJe9L5KFJPOcxs";
-  const client_id = "y9LneBmuh9I7e0jQs3gjt5X1T7X64IoOy9l6ZXMF";
   const checkAuth = async () => {
     try {
       const token = api.getCookie("token");
       console.log(token);
       if (token) {
         // Kiểm tra API để xác thực token
-        api.get("/user/", token).then((res) => {
-          navigate("/?fromLogin=true");
-        });
+        api
+          .get("/user/?key=3B739A8FC11B4527A24B4634B9ED6DE9", token)
+          .then((res) => {
+            navigate("/?fromLogin=true");
+          });
       } else {
         // Kiểm tra localStorage
         const savedUsername = localStorage.getItem("username");
@@ -56,11 +55,9 @@ const Login = () => {
       const response = await api.post(
         "/login/",
         qs.stringify({
-          grant_type: "password",
+          key: "3B739A8FC11B4527A24B4634B9ED6DE9",
           username: username,
           password: password,
-          client_id: client_id,
-          client_secret: client_secret,
         })
       );
       const token = response.access_token;

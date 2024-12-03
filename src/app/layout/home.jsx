@@ -9,6 +9,7 @@ const Homepage = ({ user }) => {
     "/": "Home",
     "/dashboard": "Tổng quan",
     "/employee": "Nhân viên",
+    "/company": "Công ty",
   };
   const breadcrumbItems = location.pathname
     .split("/")
@@ -35,6 +36,12 @@ const Homepage = ({ user }) => {
               </div>
               <div className="name">Nhân viên</div>
             </Link>
+            <Link className="item" to="/company">
+              <div className="icon">
+                <i className="fa-regular fa-building"></i>
+              </div>
+              <div className="name">Công ty</div>
+            </Link>
           </div>
         </div>
         <div className="main-container">
@@ -42,7 +49,7 @@ const Homepage = ({ user }) => {
             <div className="route-container">
               <Link to="/" className="items">
                 <div className="icon">
-                  <i class="fa-solid fa-house"></i>
+                  <i className="fa-solid fa-house"></i>
                 </div>
               </Link>
               {breadcrumbItems.map((item, index) => (

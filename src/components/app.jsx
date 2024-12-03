@@ -6,6 +6,7 @@ import NotFound from "../app/404";
 import Dashboard from "../app/layout/page/dashboard";
 import "@fortawesome/fontawesome-free/css/all.css";
 import Employee from "../app/layout/page/employee";
+import Company from "../app/layout/page/company";
 const App = () => {
   return (
     <Router>
@@ -13,6 +14,7 @@ const App = () => {
         <Route path="/" element={<Home />}>
           <Route index element={<Dashboard />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/company" element={<Company />} />
           <Route path="/employee" element={<Employee />} />
           <Route path="/*" element={<NotFound />} />
         </Route>

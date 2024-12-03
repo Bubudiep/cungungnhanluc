@@ -22,15 +22,70 @@
       flex-direction: column;
       flex: 1;
       gap: 4px;
+      width: 100%;
+      overflow: hidden;
       .employee-page {
         display: flex;
         gap: 8px;
         animation: slideIn 0.6s forwards;
+        flex-direction: column;
+        .db-card {
+          display: flex;
+          gap: 8px;
+          overflow: auto;
+          padding: 8px 0px;
+          .items {
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            max-width: 250px;
+            min-width: 200px;
+            border-radius: 16px;
+            box-shadow: 2px 2px 4px #00000010;
+            padding: 10px;
+            .name {
+              font-size: 18px;
+            }
+            .value {
+              font-size: 32px;
+              text-align: center;
+            }
+            .content {
+              margin-top: 10px;
+              font-size: 13px;
+              color: #999;
+            }
+          }
+          &::-webkit-scrollbar {
+            width: 0px;
+            height: 0px;
+          }
+        }
+        .panel-cl {
+          display: flex;
+          background-color: #fff;
+          border-radius: 8px;
+          padding: 4px;
+          justify-content: center;
+        }
+        .employee-list {
+          display: flex;
+          gap: 8px;
+          .employee-details {
+            min-width: 500px;
+            background-color: #fff;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+          }
+        }
         .right-box {
           display: flex;
           gap: 8px;
           flex-direction: column;
-          width: 900px;
+          min-width: 900px;
           .tools {
             display: flex;
             justify-content: space-between;
@@ -38,19 +93,7 @@
               display: flex;
               gap: 4px;
               button {
-                color: #fff;
-                border-radius: 8px;
-                border: hidden;
-                padding: 0px 8px;
-                background-color: #0099ff;
-                display: flex;
-                gap: 5px;
-                align-items: center;
-                cursor: pointer;
-                transition: all 0.3s;
-                &:hover {
-                  background-color: #0160f0;
-                }
+                height: 38px;
               }
             }
             .left {
@@ -58,35 +101,17 @@
               gap: 4px;
               .searchbox {
                 display: flex;
-                border: 1px solid #474d55;
                 border-radius: 8px;
                 overflow: hidden;
                 background-color: #fff;
                 box-shadow: 2px 2px 4px #0002;
                 align-items: center;
+                height: 38px;
                 i {
-                  width: 22px;
+                  width: 24px;
                   text-align: right;
                   font-size: 13px;
                   color: #0005;
-                }
-                input {
-                  border: hidden;
-                  outline: none;
-                  padding: 8px;
-                  width: 160px;
-                  transition: all 0.3s;
-                  &:focus {
-                    width: 166px;
-                  }
-                }
-                button.search {
-                  height: 32px;
-                  color: #fff;
-                  border: none;
-                  white-space: nowrap;
-                  background-color: #474d55;
-                  border: 1px solid #474d55;
                 }
               }
             }
@@ -104,11 +129,8 @@
             color: #ebeef1;
             display: flex;
             justify-content: space-between;
-            background-color: #34373b;
+            color: rgb(0, 87, 145);
             transition: all 0.3s;
-            &:hover {
-              color: #fff;
-            }
             .right {
               button.no-add {
                 border: hidden;
@@ -179,6 +201,7 @@
         border-radius: 8px;
         table {
           width: 100%;
+          border-spacing: 0px;
           thead {
             tr {
               th {
@@ -186,8 +209,9 @@
                 font-size: 0.7rem;
                 white-space: nowrap;
                 text-align: left;
-                padding: 8px 5px;
+                padding: 12px 5px;
                 user-select: none;
+                color: #8d8d8d;
               }
             }
           }
@@ -198,6 +222,9 @@
                 padding: 2px 5px;
                 white-space: nowrap;
                 font-size: 0.8rem;
+                &.null {
+                  padding: 20px;
+                }
                 .on {
                   color: #34c400;
                 }
@@ -492,5 +519,30 @@ body,
     font-weight: 500;
     font-size: 13px;
     animation: fadeIn 1s ease-out;
+  }
+}
+.full {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.custom-form .ant-form-item {
+  margin-bottom: 10px; /* Điều chỉnh khoảng cách */
+}
+.ant-modal-content {
+  padding: 0px !important;
+  .ant-modal-close {
+    top: 10px;
+  }
+  .ant-modal-header {
+    padding: 14px 22px;
+    border-bottom: 1px solid #0003;
+    box-shadow: 2px 2px 4px #0001;
+    margin-bottom: 0px;
+  }
+  .ant-modal-body {
+    padding: 20px 24px;
   }
 }
