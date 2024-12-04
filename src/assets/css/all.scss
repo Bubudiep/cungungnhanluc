@@ -208,9 +208,32 @@
                 font-size: 0.7rem;
                 white-space: nowrap;
                 text-align: left;
-                padding: 12px 5px;
+                padding: 0px 5px;
+                height: 40px;
+                font-weight: 500;
                 user-select: none;
                 color: #8d8d8d;
+                position: relative;
+                vertical-align: middle;
+                &:first-child {
+                  text-align: center;
+                }
+                .filter {
+                  position: absolute;
+                  right: 5px;
+                  top: 0;
+                  height: 40px;
+                  justify-content: center;
+                  transition: all 0.3s;
+                  i {
+                    line-height: 1;
+                    font-size: 13px;
+                    color: #0003;
+                    &.active {
+                      color: #000;
+                    }
+                  }
+                }
               }
             }
           }
@@ -224,7 +247,10 @@
                 .online {
                   color: #31b401;
                   font-weight: 550;
-                  font-style: italic;
+                }
+                .offline {
+                  color: #acacac;
+                  font-weight: 550;
                 }
                 &.null {
                   padding: 20px;
@@ -241,11 +267,14 @@
                 .notwork {
                   color: rgb(196, 3, 0);
                 }
+                &.none {
+                  text-align: center;
+                  padding: 40px;
+                }
                 &.isOut {
                   font-size: 0.7rem;
                   font-weight: 700;
                   padding: 5px 8px;
-                  font-style: italic;
                   text-align: center;
                 }
                 button {
@@ -554,4 +583,7 @@ body,
   .ant-modal-footer {
     padding: 0px 24px 20px 24px;
   }
+}
+.error {
+  color: red;
 }

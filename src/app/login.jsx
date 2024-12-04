@@ -68,7 +68,13 @@ const Login = () => {
       document.cookie = `token=${token}; expires=${expirationTime.toUTCString()}; path=/`;
       navigate("/?fromLogin=true");
     } catch (err) {
-      setError("Login failed. Please try again.");
+      if (err.response.data.Error) {
+        setError(<div className="error">{err.response.data.Error}</div>);
+      } else {
+        setError(
+          <div className="error">Đăng nhập thất bại! Vui lòng thử lại!</div>
+        );
+      }
     }
   };
 

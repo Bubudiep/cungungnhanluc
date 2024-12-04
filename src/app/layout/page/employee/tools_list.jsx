@@ -134,8 +134,8 @@ const Tools_list = ({ user }) => {
             form.resetFields();
           })
           .catch((err) => {
-            if (err?.response?.Error) {
-              message.error(err.response.Error);
+            if (err?.response?.data?.Error) {
+              message.error(err.response.data.Error);
             } else {
               message.error("Có lỗi xảy ra!");
             }

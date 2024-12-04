@@ -7,7 +7,6 @@ const Employee = () => {
   const [loading, setLoading] = useState(false);
   const [empData, setEmpData] = useState(false);
   const user = useUser();
-  console.log(user);
   useEffect(() => {
     setLoading(true);
     api

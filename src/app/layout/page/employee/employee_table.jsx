@@ -1,4 +1,4 @@
-import { Empty, Pagination, Skeleton } from "antd";
+import { Empty, Pagination, Skeleton, Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import Tools_list from "./tools_list";
 import Searchbox from "./seach_box";
@@ -6,6 +6,7 @@ import api from "../../../../components/api";
 
 const Employee_table = ({ user }) => {
   const [loading, setLoading] = useState(false);
+  const [firstload, setFirstload] = useState(false);
   const [showLoad, setShowload] = useState(true);
   const [pagenow, setPagenow] = useState(1);
   const [listEMP, setListEMP] = useState([]);
@@ -16,15 +17,26 @@ const Employee_table = ({ user }) => {
       direction = "desc";
     }
     setSortConfig({ key, direction });
-    const sortedList = [...listEMP].sort((a, b) => {
-      if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
-      if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
-      return 0;
-    });
-    setListEMP(sortedList); // Cập nhật danh sách sắp xếp
+    const ordering = direction === "asc" ? key : `-${key}`;
+    const url = `/employee/?page_size=10&ordering=${ordering}`;
+    setLoading(true);
+    const timer = setTimeout(() => {
+      api
+        .get(url, user.token)
+        .then((res) => {
+          setListEMP(res.results || []); // Cập nhật danh sách nhân viên
+        })
+        .catch((er) => {
+          console.error("Lỗi khi tải dữ liệu:", er);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }, 500);
+    return () => clearTimeout(timer);
   };
   useEffect(() => {
-    setLoading(true);
+    setFirstload(true);
     const timer = setTimeout(() => {
       api
         .get(`/employee/?page_size=10`, user.token)
@@ -35,13 +47,13 @@ const Employee_table = ({ user }) => {
           console.error("Lỗi khi tải dữ liệu:", er);
         })
         .finally(() => {
-          setLoading(false);
+          setFirstload(false);
         });
-    }, 1000);
+    }, 500);
     return () => clearTimeout(timer);
   }, []);
   return (
-    <>
+    <div className="flex flex-1 items-start gap-2">
       <div className="right-box">
         <div className="tools">
           <div className="left">
@@ -51,123 +63,136 @@ const Employee_table = ({ user }) => {
             </div>
           </div>
           <div className="right">
-            <Tools_list user={user} />
+            {user?.user?.isAdmin ?? <Tools_list user={user} />}
           </div>
         </div>
-        {loading ? (
-          <div className="employeer-table p-4">
-            <div className="flex-col flex gap-2">
-              <div className="flex gap-2">
-                <Skeleton.Avatar active size="large" />
-                <Skeleton.Input active size="large" />
-                <Skeleton.Input active size="large" />
-                <Skeleton.Input active size="large" />
-                <Skeleton.Input active size="large" />
-              </div>
-              <div className="flex gap-2">
-                <Skeleton.Avatar active size="large" />
-                <Skeleton.Input active size="large" />
-                <Skeleton.Input active size="large" />
-                <Skeleton.Input active size="large" />
-                <Skeleton.Input active size="large" />
-              </div>
-              <div className="flex gap-2">
-                <Skeleton.Avatar active size="large" />
-                <Skeleton.Input active size="large" />
-                <Skeleton.Input active size="large" />
-                <Skeleton.Input active size="large" />
-                <Skeleton.Input active size="large" />
-              </div>
-              <div className="flex gap-2">
-                <Skeleton.Avatar active size="large" />
-                <Skeleton.Input active size="large" />
-                <Skeleton.Input active size="large" />
-                <Skeleton.Input active size="large" />
-                <Skeleton.Input active size="large" />
-              </div>
-              <div className="flex gap-2">
-                <Skeleton.Avatar active size="large" />
-                <Skeleton.Input active size="large" />
-                <Skeleton.Input active size="large" />
-                <Skeleton.Input active size="large" />
-                <Skeleton.Input active size="large" />
-              </div>
-            </div>
-          </div>
-        ) : (
-          <>
-            <div className="employeer-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th onClick={() => handleSort("employeeCode")}>
-                      Thông tin nhân viên
-                    </th>
-                    <th onClick={() => handleSort("fullName")}>Bộ phận</th>
-                    <th onClick={() => handleSort("dob")}>Chức vụ</th>
-                    <th onClick={() => handleSort("address")}>
-                      Hoạt động tháng này
-                    </th>
-                    <th onClick={() => handleSort("accessCode")}>Công cụ</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {listEMP?.length > 0 ? (
-                    listEMP?.map((employee) => (
-                      <tr key={employee.id}>
-                        <td className="isOut">
-                          <div className="flex flex-col items-start">
-                            {employee.isActive ? (
-                              employee.isOnline ? (
-                                <div className="online">online</div>
-                              ) : (
-                                <div className="offline">offline</div>
-                              )
-                            ) : (
-                              <div
-                                className="notwork"
-                                title={employee.isOnline}
-                              >
-                                <i className="fa-solid fa-xmark"></i>
-                              </div>
-                            )}
+        <div className="employeer-table">
+          <table>
+            <thead>
+              <tr>
+                <th>
+                  {loading && (
+                    <>
+                      <Spin size="small" />
+                    </>
+                  )}
+                </th>
+                <th onClick={() => handleSort("name")}>
+                  Thông tin nhân viên
+                  {sortConfig.key === "name" && (
+                    <div className="flex flex-col filter">
+                      <i
+                        className={`fa-solid fa-caret-up ${
+                          sortConfig.direction === "asc" && "active"
+                        }`}
+                      ></i>
+                      <i
+                        className={`fa-solid fa-caret-down ${
+                          sortConfig.direction !== "asc" && "active"
+                        }`}
+                      ></i>
+                    </div>
+                  )}
+                </th>
+                <th onClick={() => handleSort("department")}>
+                  Bộ phận
+                  {sortConfig.key === "department" && (
+                    <div className="flex flex-col filter">
+                      <i
+                        className={`fa-solid fa-caret-up ${
+                          sortConfig.direction === "asc" && "active"
+                        }`}
+                      ></i>
+                      <i
+                        className={`fa-solid fa-caret-down ${
+                          sortConfig.direction !== "asc" && "active"
+                        }`}
+                      ></i>
+                    </div>
+                  )}
+                </th>
+                <th onClick={() => handleSort("possition")}>
+                  Chức vụ
+                  {sortConfig.key === "possition" && (
+                    <div className="flex flex-col filter">
+                      <i
+                        className={`fa-solid fa-caret-up ${
+                          sortConfig.direction === "asc" && "active"
+                        }`}
+                      ></i>
+                      <i
+                        className={`fa-solid fa-caret-down ${
+                          sortConfig.direction !== "asc" && "active"
+                        }`}
+                      ></i>
+                    </div>
+                  )}
+                </th>
+                <th>Hoạt động tháng này</th>
+                <th>Công cụ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {firstload ? (
+                <tr>
+                  <td colSpan={9999} className="none">
+                    <Spin size="large" />
+                  </td>
+                </tr>
+              ) : listEMP?.length > 0 ? (
+                listEMP?.map((employee) => (
+                  <tr key={employee.id}>
+                    <td className="isOut">
+                      <div className="flex flex-col items-start">
+                        {employee.isActive ? (
+                          employee.isOnline ? (
+                            <div className="online">online</div>
+                          ) : (
+                            <div className="offline">offline</div>
+                          )
+                        ) : (
+                          <div className="notwork" title={employee.isOnline}>
+                            <i className="fa-solid fa-xmark"></i>
                           </div>
-                        </td>
-                        <td>{employee.name ?? "-"}</td>
-                        <td>{employee.fullNamee ?? "-"}</td>
-                        <td>{employee.dobe ?? "-"}</td>
-                        <td>{employee.addresse ?? "-"}</td>
-                        <td>
-                          <div className="flex gap-1">
+                        )}
+                      </div>
+                    </td>
+                    <td>{employee.name ?? "-"}</td>
+                    <td>{employee.fullNamee ?? "-"}</td>
+                    <td>{employee.dobe ?? "-"}</td>
+                    <td>{employee.addresse ?? "-"}</td>
+                    <td>
+                      <div className="flex gap-1">
+                        {user?.user?.isAdmin ?? (
+                          <>
                             <button className="edit">Cập nhập</button>
                             <button className="remove">Xóa</button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td className="null" colSpan={999}>
-                        <Empty description="Chưa có nhân viên nào..." />
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-            <div className="panel-cl">
-              <Pagination defaultCurrent={pagenow} total={0} />
-            </div>
-          </>
-        )}
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td className="null" colSpan={999}>
+                    <Empty description="Chưa có nhân viên nào..." />
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        <div className="panel-cl">
+          <Pagination defaultCurrent={pagenow} total={0} />
+        </div>
       </div>
       <div className="employee-details">
         <div className="full">
           <Empty description="Chọn một nhân viên..." />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
