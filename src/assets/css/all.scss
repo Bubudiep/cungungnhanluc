@@ -93,7 +93,7 @@
               display: flex;
               gap: 4px;
               button {
-                height: 38px;
+                font-size: 12px;
               }
             }
             .left {
@@ -106,7 +106,6 @@
                 background-color: #fff;
                 box-shadow: 2px 2px 4px #0002;
                 align-items: center;
-                height: 38px;
                 i {
                   width: 24px;
                   text-align: right;
@@ -222,6 +221,11 @@
                 padding: 2px 5px;
                 white-space: nowrap;
                 font-size: 0.8rem;
+                .online {
+                  color: #31b401;
+                  font-weight: 550;
+                  font-style: italic;
+                }
                 &.null {
                   padding: 20px;
                 }
@@ -250,18 +254,19 @@
                   outline: none;
                   border: hidden;
                   transition: all 0.3s;
+                  border-radius: 5px;
                   &.edit {
-                    background-color: #74a4c1;
+                    background-color: #0066f4;
                     color: #fff;
                     &:hover {
-                      background-color: #0066f4;
+                      background-color: #0146a7;
                     }
                   }
                   &.remove {
-                    background-color: #c17c74;
+                    background-color: #c71502;
                     color: #fff;
                     &:hover {
-                      background-color: #c71502;
+                      background-color: #8b0f01;
                     }
                   }
                 }
@@ -545,5 +550,8 @@ body,
   }
   .ant-modal-body {
     padding: 20px 24px;
+  }
+  .ant-modal-footer {
+    padding: 0px 24px 20px 24px;
   }
 }

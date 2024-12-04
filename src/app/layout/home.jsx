@@ -2,6 +2,7 @@ import React from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import api from "../../components/api";
 import Top_container from "./top-container";
+import { UserProvider } from "../../components/userContext";
 
 const Homepage = ({ user }) => {
   const location = useLocation();
@@ -67,7 +68,9 @@ const Homepage = ({ user }) => {
             </div>
           </div>
           <div className="outlet-box">
-            <Outlet />
+            <UserProvider user={user}>
+              <Outlet />
+            </UserProvider>
           </div>
         </div>
       </div>
