@@ -5,6 +5,7 @@ import Searchbox from "./seach_box";
 import api from "../../../../components/api";
 
 const Employee_table = ({ user }) => {
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [firstload, setFirstload] = useState(false);
   const [showLoad, setShowload] = useState(true);
@@ -35,12 +36,36 @@ const Employee_table = ({ user }) => {
     }, 500);
     return () => clearTimeout(timer);
   };
+  const add_EMP = (data) => {
+    setListEMP((old) => [data, ...old]);
+  };
+  const handlePageChange = (page) => {
+    setPagenow(page); // Cập nhật trang hiện tại
+    setLoading(true); // Hiển thị trạng thái loading
+    const url = `/employee/?page=${page}&page_size=10`; // API với số trang
+    const timer = setTimeout(() => {
+      api
+        .get(url, user.token)
+        .then((res) => {
+          setListEMP(res.results || []); // Cập nhật danh sách nhân viên
+          setTotal(res.count); // Cập nhật tổng số nhân viên
+        })
+        .catch((er) => {
+          console.error("Lỗi khi tải dữ liệu:", er);
+        })
+        .finally(() => {
+          setLoading(false); // Ẩn trạng thái loading
+        });
+    }, 500);
+    return () => clearTimeout(timer);
+  };
   useEffect(() => {
     setFirstload(true);
     const timer = setTimeout(() => {
       api
         .get(`/employee/?page_size=10`, user.token)
         .then((res) => {
+          setTotal(res.count);
           setListEMP(res.results || []); // Cập nhật danh sách nhân viên
         })
         .catch((er) => {
@@ -63,7 +88,7 @@ const Employee_table = ({ user }) => {
             </div>
           </div>
           <div className="right">
-            {user?.user?.isAdmin ?? <Tools_list user={user} />}
+            {user.user.isAdmin && <Tools_list user={user} add_EMP={add_EMP} />}
           </div>
         </div>
         <div className="employeer-table">
@@ -157,13 +182,22 @@ const Employee_table = ({ user }) => {
                         )}
                       </div>
                     </td>
-                    <td>{employee.name ?? "-"}</td>
+                    <td>
+                      <div className="flex flex-col">
+                        <div className="flex text-[#2b67e9]">
+                          {employee.name ?? "-"}
+                        </div>
+                        <div className="flex text-[#2b67e9] font-semibold">
+                          {employee.username ?? "-"}
+                        </div>
+                      </div>
+                    </td>
                     <td>{employee.fullNamee ?? "-"}</td>
                     <td>{employee.dobe ?? "-"}</td>
                     <td>{employee.addresse ?? "-"}</td>
                     <td>
                       <div className="flex gap-1">
-                        {user?.user?.isAdmin ?? (
+                        {user.user.isAdmin && (
                           <>
                             <button className="edit">Cập nhập</button>
                             <button className="remove">Xóa</button>
@@ -184,7 +218,11 @@ const Employee_table = ({ user }) => {
           </table>
         </div>
         <div className="panel-cl">
-          <Pagination defaultCurrent={pagenow} total={0} />
+          <Pagination
+            defaultCurrent={pagenow}
+            total={total}
+            onChange={handlePageChange}
+          />
         </div>
       </div>
       <div className="employee-details">

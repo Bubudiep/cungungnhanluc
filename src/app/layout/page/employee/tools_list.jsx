@@ -3,7 +3,7 @@ import TextArea from "antd/es/input/TextArea";
 import React, { useEffect, useState } from "react";
 import api from "../../../../components/api";
 
-const Tools_list = ({ user }) => {
+const Tools_list = ({ user, add_EMP }) => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
@@ -132,6 +132,9 @@ const Tools_list = ({ user }) => {
             message.success("Thêm thành công!");
             setOpen(false);
             form.resetFields();
+            if (modalType == "employee") {
+              add_EMP(res);
+            }
           })
           .catch((err) => {
             if (err?.response?.data?.Error) {
