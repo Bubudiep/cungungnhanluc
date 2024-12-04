@@ -318,6 +318,7 @@
     padding: 4px;
     animation: slideIntop 0.3s forwards;
     -webkit-app-region: drag;
+    user-select: none;
     .app-nav {
       display: flex;
       gap: 8px;
