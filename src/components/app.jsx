@@ -7,6 +7,7 @@ import Dashboard from "../app/layout/page/dashboard";
 import "@fortawesome/fontawesome-free/css/all.css";
 import Employee from "../app/layout/page/employee";
 import Company from "../app/layout/page/company";
+import User_profile from "../app/layout/page/user";
 const App = () => {
   return (
     <Router>
@@ -16,6 +17,7 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/company" element={<Company />} />
           <Route path="/employee" element={<Employee />} />
+          <Route path="/profile" element={<User_profile />} />
           <Route path="/*" element={<NotFound />} />
         </Route>
         <Route path="/login" element={<Login />} />

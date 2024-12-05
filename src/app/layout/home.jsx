@@ -3,6 +3,7 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import api from "../../components/api";
 import Top_container from "./top-container";
 import { UserProvider } from "../../components/userContext";
+import avatar from "../../assets/image/avatar.png";
 
 const Homepage = ({ user }) => {
   const location = useLocation();
@@ -11,7 +12,9 @@ const Homepage = ({ user }) => {
     "/dashboard": "Tổng quan",
     "/employee": "Nhân viên",
     "/company": "Công ty",
+    "/profile": "Cá nhân",
   };
+  console.log(user);
   const breadcrumbItems = location.pathname
     .split("/")
     .filter((item) => item) // Bỏ các phần rỗng
@@ -37,11 +40,18 @@ const Homepage = ({ user }) => {
               </div>
               <div className="name">Nhân viên</div>
             </Link>
-            <Link className="item" to="/company">
+            {/* <Link className="item" to="/company">
               <div className="icon">
                 <i className="fa-regular fa-building"></i>
               </div>
               <div className="name">Công ty</div>
+            </Link> */}
+          </div>
+          <div className="list-app">
+            <Link className="item" to="/profile">
+              <div className="avatar">
+                {user.profile?.avatar ? <></> : <img src={avatar} />}
+              </div>
             </Link>
           </div>
         </div>

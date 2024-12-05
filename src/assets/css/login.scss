@@ -10,13 +10,71 @@
     background-color: #dbe2e7;
     margin: 8px;
     border-radius: 10px;
-    box-shadow: 1px 1px 3px #0003;
+    box-shadow: 4px 4px 12px #0002 inset;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    .video-description {
+      margin-left: auto;
+      height: 100%;
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 20px;
+      .box-sizing {
+        border-radius: 20px;
+        width: 160px;
+        height: 180px;
+      }
+      .box-view {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+        background-color: rgba(255, 255, 255, 0.333);
+        backdrop-filter: blur(10px); /* Hiệu ứng làm mờ */
+        -webkit-backdrop-filter: blur(10px); /* Hỗ trợ trình duyệt WebKit */
+        border-radius: 8px; /* Tùy chọn: bo góc */
+        box-shadow: 2px 4px 10px #0003; /* Tùy chọn: thêm đổ bóng */
+        overflow: hidden;
+        .qr {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .logo {
+            position: absolute;
+            width: 34px;
+            padding: 3px;
+            background-color: #fffc;
+            border-radius: 10px;
+            img {
+              border-radius: 10px;
+              width: 100%;
+            }
+          }
+        }
+        .title {
+          margin-top: auto;
+          width: 100%;
+          text-align: center;
+          background-color: #120e3b;
+          color: #ffffff9f;
+          font-weight: 600;
+          padding: 8px;
+          font-size: 13px;
+        }
+      }
+    }
   }
   .login-container {
     display: flex;
     align-items: center;
     padding: 10px;
-    width: 320px;
+    width: 340px;
     background-color: #fff;
     font-size: 0.9rem;
     .login-box {
@@ -124,5 +182,21 @@
         }
       }
     }
+  }
+}
+.app-version {
+  position: absolute;
+  right: 5px;
+  bottom: 5px;
+  display: flex;
+  gap: 5px;
+  align-items: flex-end;
+  font-size: 11px;
+  color: #999;
+  .logo {
+    color: #fff;
+    background-color: #09f;
+    padding: 2px 8px;
+    border-bottom-right-radius: 4px;
   }
 }

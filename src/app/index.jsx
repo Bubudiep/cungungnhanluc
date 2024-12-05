@@ -11,13 +11,16 @@ const Home = () => {
   const [loadOut, setLoadOut] = useState(false);
   const [loadShow, setLoadShow] = useState(false);
   const [user, setUser] = useState();
+  const key = import.meta.env.VITE_KEY;
+  const author = import.meta.env.VITE_AUTHOR;
+  const version = import.meta.env.VITE_VERSION;
   const checkUser = async (token) => {
     await api
-      .get("/user/?key=3B739A8FC11B4527A24B4634B9ED6DE9", token)
+      .get("/user/?key=" + key, token)
       .then((res) => {
         setUser({
           ...res,
-          key: "3B739A8FC11B4527A24B4634B9ED6DE9",
+          key: key,
           token: token,
         });
         const isFirstLoad = searchParams.get("fistLoad");
@@ -73,13 +76,13 @@ const Home = () => {
           </div>
           <div className="bottom">
             <div className="logo">
-              <div className="value">Hi.tech</div>
+              <div className="value">{author}</div>
             </div>
             <div className="coppy-right">
-              Thiết kế bởi<div className="author">HiTech</div>
+              Thiết kế bởi<div className="author">{author}</div>
             </div>
           </div>
-          <div className="version">Version - EV1.0.0.1</div>
+          <div className="version">{version}</div>
         </div>
       )}
       {loadShow && <Homepage user={user} />}

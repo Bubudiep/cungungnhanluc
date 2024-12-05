@@ -111,21 +111,23 @@ const Tools_list = ({ user, add_EMP }) => {
       .then((values) => {
         setModalLoading(true);
         let apiUrl = "";
+        let data = null;
         switch (modalType) {
           case "department":
-            apiUrl = "/api/department/";
+            apiUrl = "/create-fxm/";
+            data = { data: { ...values }, key: user?.key, func: "department" };
             break;
           case "possition":
-            apiUrl = "/api/possition/";
+            apiUrl = "/create-fxm/";
+            data = { data: { ...values }, key: user?.key, func: "possition" };
             break;
           case "employee":
             apiUrl = "/create-employee/";
+            data = { ...values, key: user?.key };
             break;
           default:
             return;
         }
-        const data = { ...values, key: user?.key };
-        console.log(data);
         api
           .post(apiUrl, data, api.getCookie("token"))
           .then((res) => {

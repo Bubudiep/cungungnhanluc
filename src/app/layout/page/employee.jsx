@@ -10,7 +10,7 @@ const Employee = () => {
   useEffect(() => {
     setLoading(true);
     api
-      .get(`/db-employee/`, api.getCookie("token"))
+      .get(`/db-employee/?key=`, api.getCookie("token"))
       .then((res) => {
         setEmpData(res || {}); // Cập nhật danh sách nhân viên
       })
