@@ -247,6 +247,10 @@
           tbody {
             tr {
               border-top: 1px solid #e1e1e1;
+              transition: all 0.3s;
+              &:hover {
+                background-color: #f1f5f8;
+              }
               td {
                 padding: 2px 5px;
                 white-space: nowrap;
@@ -285,24 +289,24 @@
                   text-align: center;
                 }
                 button {
-                  padding: 6px 8px;
-                  font-size: 0.7rem;
+                  padding: 6px 10px;
+                  font-size: 0.8rem;
                   outline: none;
                   border: hidden;
                   transition: all 0.3s;
                   border-radius: 5px;
                   &.edit {
-                    background-color: #0066f4;
-                    color: #fff;
+                    color: #437dcf;
                     &:hover {
-                      background-color: #0146a7;
+                      color: #006aff;
+                      background-color: #d5deeb;
                     }
                   }
                   &.remove {
-                    background-color: #c71502;
-                    color: #fff;
+                    color: #cc6767;
                     &:hover {
-                      background-color: #8b0f01;
+                      color: #f70505;
+                      background-color: #ebd5d5;
                     }
                   }
                 }
@@ -837,4 +841,82 @@ body,
   display: flex;
   flex: 1;
   overflow: hidden;
+}
+.modal-view {
+  display: flex;
+  flex: 1;
+  table {
+    width: 100%;
+    tr {
+      th {
+        text-align: left;
+        font-size: 13px;
+        font-weight: 500;
+        color: #999;
+        padding: 4px;
+      }
+      td {
+        padding: 4px;
+        border-top: 1px solid #0002;
+        border-bottom: 1px solid #0002;
+        input {
+          padding: 4px 8px;
+        }
+        &:first-child {
+          font-weight: 500;
+        }
+      }
+    }
+    tbody.input-edit {
+      td {
+        input {
+          padding: 2px 6px;
+          border: hidden;
+          outline: none;
+          background-color: rgb(233, 239, 240);
+        }
+      }
+    }
+  }
+}
+button {
+  &.edit {
+    padding: 2px 8px;
+    font-size: 13px;
+    background-color: transparent;
+    color: #71b0e4;
+    border: hidden;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    &:hover {
+      color: #008cff;
+      border: 1px solid #008cff;
+    }
+  }
+  &.delete {
+    padding: 2px 8px;
+    font-size: 13px;
+    color: #aa675e;
+    border: hidden;
+    background-color: transparent;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    &:hover {
+      color: #b12d1c;
+      border: 1px solid #b12d1c;
+    }
+  }
+}
+.fixed-w {
+  button {
+    width: 25px;
+    font-size: 13px;
+  }
+}
+.editable-cell {
+  color: #003f97;
+  border-bottom: 1px solid #1677ff;
+  outline: none;
 }

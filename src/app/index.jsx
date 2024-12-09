@@ -4,13 +4,14 @@ import api from "../components/api";
 import Homepage from "./layout/home";
 import hitech from "../assets/image/hitech.png";
 import load_logo from "../assets/image/app-logo.png";
+import { useUser } from "../components/userContext";
 const Home = () => {
   const navigate = useNavigate();
+  const { user, setUser } = useUser();
   const [searchParams] = useSearchParams();
   const [appLoading, setAppLoading] = useState(true);
   const [loadOut, setLoadOut] = useState(false);
   const [loadShow, setLoadShow] = useState(false);
-  const [user, setUser] = useState();
   const key = import.meta.env.VITE_KEY;
   const author = import.meta.env.VITE_AUTHOR;
   const version = import.meta.env.VITE_VERSION;
@@ -85,7 +86,7 @@ const Home = () => {
           <div className="version">{version}</div>
         </div>
       )}
-      {loadShow && <Homepage user={user} />}
+      {loadShow && <Homepage />}
     </>
   );
 };

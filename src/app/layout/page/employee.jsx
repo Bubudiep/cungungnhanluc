@@ -2,19 +2,22 @@ import React, { useEffect, useState } from "react";
 import api from "../../../components/api";
 import Employee_table from "./employee/employee_table";
 import { useUser } from "../../../components/userContext";
+import { message } from "antd";
 
 const Employee = () => {
   const [loading, setLoading] = useState(false);
   const [empData, setEmpData] = useState(false);
-  const user = useUser();
+  const { user, setUser } = useUser();
+  console.log(user);
   useEffect(() => {
     setLoading(true);
     api
-      .get(`/db-employee/?key=`, api.getCookie("token"))
+      .get(`/db-employee/?key=` + user.key, user.token)
       .then((res) => {
         setEmpData(res || {}); // Cập nhật danh sách nhân viên
       })
       .catch((er) => {
+        message.error(er?.message?.detail ?? "Phát sinh lỗi khi tải dữ liệu!");
         console.error("Lỗi khi tải dữ liệu:", er);
       })
       .finally(() => {
@@ -46,12 +49,12 @@ const Employee = () => {
         </div>
         <div className="items">
           <div className="name">Bộ phận</div>
-          <div className="value">{empData?.totalDPM ?? 0}</div>
+          <div className="value">{user?.company?.department.length ?? 0}</div>
           <div className="content">Tổng số lượng bộ phận</div>
         </div>
         <div className="items">
           <div className="name">Chức vụ</div>
-          <div className="value">{empData?.totalJT ?? 0}</div>
+          <div className="value">{user?.company?.jobtitle.length ?? 0}</div>
           <div className="content">Tổng số lượng chức vụ</div>
         </div>
         <div className="items">
@@ -61,7 +64,7 @@ const Employee = () => {
         </div>
       </div>
       <div className="employee-list">
-        <Employee_table empData={empData} user={user} />
+        <Employee_table empData={empData} user={user} setUser={setUser} />
       </div>
     </div>
   );

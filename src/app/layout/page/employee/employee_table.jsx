@@ -1,16 +1,28 @@
-import { Empty, Pagination, Skeleton, Spin } from "antd";
+import {
+  Button,
+  Empty,
+  message,
+  Pagination,
+  Popconfirm,
+  Skeleton,
+  Spin,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import Tools_list from "./tools_list";
 import Searchbox from "./seach_box";
 import api from "../../../../components/api";
+import EditEmployee from "./tools_list/EditEmployee";
 
-const Employee_table = ({ user }) => {
+const Employee_table = ({ user, setUser }) => {
   const [total, setTotal] = useState(0);
+  const [loadingStates, setLoadingStates] = useState({});
   const [loading, setLoading] = useState(false);
   const [firstload, setFirstload] = useState(false);
   const [showLoad, setShowload] = useState(true);
   const [pagenow, setPagenow] = useState(1);
   const [listEMP, setListEMP] = useState([]);
+  const [selectedEmployee, setSelectedEmployee] = useState(false);
+  const [openEmployeeDetail, setOpenEmployeeDetail] = useState(false);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" }); // Trạng thái sắp xếp
   const handleSort = (key) => {
     let direction = "asc";
@@ -25,7 +37,10 @@ const Employee_table = ({ user }) => {
       api
         .get(url, user.token)
         .then((res) => {
-          setListEMP(res.results || []); // Cập nhật danh sách nhân viên
+          setUser((old) => ({
+            ...old,
+            employee: res.results,
+          }));
         })
         .catch((er) => {
           console.error("Lỗi khi tải dữ liệu:", er);
@@ -36,9 +51,6 @@ const Employee_table = ({ user }) => {
     }, 500);
     return () => clearTimeout(timer);
   };
-  const add_EMP = (data) => {
-    setListEMP((old) => [data, ...old]);
-  };
   const handlePageChange = (page) => {
     setPagenow(page); // Cập nhật trang hiện tại
     setLoading(true); // Hiển thị trạng thái loading
@@ -47,7 +59,10 @@ const Employee_table = ({ user }) => {
       api
         .get(url, user.token)
         .then((res) => {
-          setListEMP(res.results || []); // Cập nhật danh sách nhân viên
+          setUser((old) => ({
+            ...old,
+            employee: res.results,
+          }));
           setTotal(res.count); // Cập nhật tổng số nhân viên
         })
         .catch((er) => {
@@ -59,16 +74,50 @@ const Employee_table = ({ user }) => {
     }, 500);
     return () => clearTimeout(timer);
   };
+  const handleDeactive = (employee, active) => {
+    setLoadingStates((prev) => ({ ...prev, [employee.id]: true }));
+    setTimeout(() => {
+      api
+        .patch(
+          `/employee_account/${employee.id}/`,
+          { isActive: active },
+          user.token
+        )
+        .then((res) => {
+          setUser((old) => ({
+            ...old,
+            employee: old.employee.map(
+              (oldJ) =>
+                oldJ.id === res.id
+                  ? { ...oldJ, ...res } // Cập nhật thông tin
+                  : oldJ // Giữ nguyên phần tử không cần cập nhật
+            ),
+          }));
+          message.success("Trạng thái mới đã cập nhập!");
+        })
+        .catch((er) => {
+          message.error(er?.response?.detail ?? "Phát sinh lỗi!");
+        })
+        .finally(() => {
+          setLoadingStates((prev) => ({ ...prev, [employee.id]: false }));
+        });
+    }, 500);
+  };
   useEffect(() => {
     setFirstload(true);
     const timer = setTimeout(() => {
       api
         .get(`/employee/?page_size=10`, user.token)
         .then((res) => {
+          setUser((old) => ({
+            ...old,
+            employee: res.results,
+          }));
           setTotal(res.count);
           setListEMP(res.results || []); // Cập nhật danh sách nhân viên
         })
         .catch((er) => {
+          message.error(er?.response?.detail ?? "Lỗi khi tải dữ liệu!");
           console.error("Lỗi khi tải dữ liệu:", er);
         })
         .finally(() => {
@@ -79,16 +128,21 @@ const Employee_table = ({ user }) => {
   }, []);
   return (
     <div className="flex flex-1 items-start gap-2">
+      <EditEmployee
+        open={openEmployeeDetail}
+        user={user}
+        setUser={setUser}
+        onCancel={() => {
+          setOpenEmployeeDetail(false);
+        }}
+      />
       <div className="right-box">
         <div className="tools">
           <div className="left">
-            <div className="searchbox">
-              <i className="fa-solid fa-magnifying-glass"></i>
-              <Searchbox />
-            </div>
+            <Searchbox user={user} />
           </div>
           <div className="right">
-            {user.user.isAdmin && <Tools_list user={user} add_EMP={add_EMP} />}
+            {user.user.isAdmin && <Tools_list user={user} setUser={setUser} />}
           </div>
         </div>
         <div className="employeer-table">
@@ -154,7 +208,7 @@ const Employee_table = ({ user }) => {
                   )}
                 </th>
                 <th>Hoạt động tháng này</th>
-                <th>Công cụ</th>
+                <th className="w-20"></th>
               </tr>
             </thead>
             <tbody>
@@ -164,9 +218,12 @@ const Employee_table = ({ user }) => {
                     <Spin size="large" />
                   </td>
                 </tr>
-              ) : listEMP?.length > 0 ? (
-                listEMP?.map((employee) => (
-                  <tr key={employee.id}>
+              ) : user.employee?.length > 0 ? (
+                user.employee?.map((employee) => (
+                  <tr
+                    key={employee.id}
+                    onClick={() => setSelectedEmployee(employee)}
+                  >
                     <td className="isOut">
                       <div className="flex flex-col items-start">
                         {employee.isActive ? (
@@ -176,7 +233,7 @@ const Employee_table = ({ user }) => {
                             <div className="offline">offline</div>
                           )
                         ) : (
-                          <div className="notwork" title={employee.isOnline}>
+                          <div className="notwork">
                             <i className="fa-solid fa-xmark"></i>
                           </div>
                         )}
@@ -197,12 +254,51 @@ const Employee_table = ({ user }) => {
                     <td>{employee.addresse ?? "-"}</td>
                     <td>
                       <div className="flex gap-1">
-                        {user.user.isAdmin && (
-                          <>
-                            <button className="edit">Cập nhập</button>
-                            <button className="remove">Xóa</button>
-                          </>
-                        )}
+                        {user.user.isAdmin &&
+                          (employee.isActive ? (
+                            <>
+                              <Button
+                                type="link"
+                                className="edit"
+                                onClick={() => {
+                                  setOpenEmployeeDetail(employee);
+                                }}
+                              >
+                                <i className="fa-regular fa-pen-to-square"></i>
+                              </Button>
+                              <Popconfirm
+                                title="Xác nhận khóa tài khoản?"
+                                okText="Khóa"
+                                cancelText="Hủy"
+                                onConfirm={() =>
+                                  handleDeactive(employee, false)
+                                }
+                              >
+                                <Button
+                                  type="link"
+                                  className="remove"
+                                  icon={<i className="fa-solid fa-lock"></i>}
+                                  loading={loadingStates[employee.id] || false} // Trạng thái loading chỉ áp dụng cho nhân viên hiện tại
+                                ></Button>
+                              </Popconfirm>
+                            </>
+                          ) : (
+                            <>
+                              <Popconfirm
+                                title="Mở khóa tài khoản?"
+                                okText="Mở"
+                                cancelText="Hủy"
+                                onConfirm={() => handleDeactive(employee, true)}
+                              >
+                                <Button
+                                  type="link"
+                                  className="edit"
+                                  icon={<i className="fa-solid fa-unlock"></i>}
+                                  loading={loadingStates[employee.id] || false} // Trạng thái loading chỉ áp dụng cho nhân viên hiện tại
+                                ></Button>
+                              </Popconfirm>
+                            </>
+                          ))}
                       </div>
                     </td>
                   </tr>
@@ -227,7 +323,11 @@ const Employee_table = ({ user }) => {
       </div>
       <div className="employee-details">
         <div className="full">
-          <Empty description="Chọn một nhân viên..." />
+          {selectedEmployee ? (
+            <></>
+          ) : (
+            <Empty description="Chọn một nhân viên..." />
+          )}
         </div>
       </div>
     </div>

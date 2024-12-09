@@ -2,10 +2,11 @@ import React from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import api from "../../components/api";
 import Top_container from "./top-container";
-import { UserProvider } from "../../components/userContext";
 import avatar from "../../assets/image/avatar.png";
+import { useUser } from "../../components/userContext";
 
-const Homepage = ({ user }) => {
+const Homepage = () => {
+  const { user, setUser } = useUser();
   const location = useLocation();
   const routeNames = {
     "/": "Home",
@@ -14,7 +15,6 @@ const Homepage = ({ user }) => {
     "/company": "Công ty",
     "/profile": "Cá nhân",
   };
-  console.log(user);
   const breadcrumbItems = location.pathname
     .split("/")
     .filter((item) => item) // Bỏ các phần rỗng
@@ -78,9 +78,7 @@ const Homepage = ({ user }) => {
             </div>
           </div>
           <div className="outlet-box">
-            <UserProvider user={user}>
-              <Outlet />
-            </UserProvider>
+            <Outlet />
           </div>
         </div>
       </div>
