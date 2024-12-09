@@ -25,31 +25,33 @@ const Employee_table = ({ user, setUser }) => {
   const [openEmployeeDetail, setOpenEmployeeDetail] = useState(false);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" }); // Trạng thái sắp xếp
   const handleSort = (key) => {
-    let direction = "asc";
-    if (sortConfig.key === key && sortConfig.direction === "asc") {
-      direction = "desc";
+    if (!loading) {
+      let direction = "asc";
+      if (sortConfig.key === key && sortConfig.direction === "asc") {
+        direction = "desc";
+      }
+      setSortConfig({ key, direction });
+      const ordering = direction === "asc" ? key : `-${key}`;
+      const url = `/employee/?page_size=10&ordering=${ordering}`;
+      setLoading(true);
+      const timer = setTimeout(() => {
+        api
+          .get(url, user.token)
+          .then((res) => {
+            setUser((old) => ({
+              ...old,
+              employee: res.results,
+            }));
+          })
+          .catch((er) => {
+            console.error("Lỗi khi tải dữ liệu:", er);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }, 500);
+      return () => clearTimeout(timer);
     }
-    setSortConfig({ key, direction });
-    const ordering = direction === "asc" ? key : `-${key}`;
-    const url = `/employee/?page_size=10&ordering=${ordering}`;
-    setLoading(true);
-    const timer = setTimeout(() => {
-      api
-        .get(url, user.token)
-        .then((res) => {
-          setUser((old) => ({
-            ...old,
-            employee: res.results,
-          }));
-        })
-        .catch((er) => {
-          console.error("Lỗi khi tải dữ liệu:", er);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }, 500);
-    return () => clearTimeout(timer);
   };
   const handlePageChange = (page) => {
     setPagenow(page); // Cập nhật trang hiện tại
@@ -156,7 +158,7 @@ const Employee_table = ({ user, setUser }) => {
                     </>
                   )}
                 </th>
-                <th onClick={() => handleSort("name")}>
+                <th onClick={() => handleSort("name")} style={{ width: 300 }}>
                   Thông tin nhân viên
                   {sortConfig.key === "name" && (
                     <div className="flex flex-col filter">
@@ -173,7 +175,10 @@ const Employee_table = ({ user, setUser }) => {
                     </div>
                   )}
                 </th>
-                <th onClick={() => handleSort("department")}>
+                <th
+                  onClick={() => handleSort("department")}
+                  style={{ width: 200 }}
+                >
                   Bộ phận
                   {sortConfig.key === "department" && (
                     <div className="flex flex-col filter">
@@ -190,7 +195,10 @@ const Employee_table = ({ user, setUser }) => {
                     </div>
                   )}
                 </th>
-                <th onClick={() => handleSort("possition")}>
+                <th
+                  onClick={() => handleSort("possition")}
+                  style={{ width: 200 }}
+                >
                   Chức vụ
                   {sortConfig.key === "possition" && (
                     <div className="flex flex-col filter">
@@ -207,15 +215,23 @@ const Employee_table = ({ user, setUser }) => {
                     </div>
                   )}
                 </th>
-                <th>Hoạt động tháng này</th>
+                <th style={{ width: 100 }}>Thời gian tạo</th>
                 <th className="w-20"></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="fadeIn">
               {firstload ? (
                 <tr>
                   <td colSpan={9999} className="none">
-                    <Spin size="large" />
+                    <Spin
+                      size="large"
+                      style={{
+                        height: 350,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    />
                   </td>
                 </tr>
               ) : user.employee?.length > 0 ? (
@@ -249,9 +265,13 @@ const Employee_table = ({ user, setUser }) => {
                         </div>
                       </div>
                     </td>
-                    <td>{employee.fullNamee ?? "-"}</td>
-                    <td>{employee.dobe ?? "-"}</td>
-                    <td>{employee.addresse ?? "-"}</td>
+                    <td>{employee.department_name ?? "-"}</td>
+                    <td>{employee.possition_name ?? "-"}</td>
+                    <td>
+                      {employee.created_at
+                        ? api.timeSinceOrder(employee.created_at)
+                        : "-"}
+                    </td>
                     <td>
                       <div className="flex gap-1">
                         {user.user.isAdmin &&
@@ -315,6 +335,7 @@ const Employee_table = ({ user, setUser }) => {
         </div>
         <div className="panel-cl">
           <Pagination
+            disabled={loading}
             defaultCurrent={pagenow}
             total={total}
             onChange={handlePageChange}

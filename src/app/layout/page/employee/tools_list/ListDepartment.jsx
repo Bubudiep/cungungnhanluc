@@ -38,6 +38,14 @@ const ListDepartment = ({
         message.error(e?.response?.data?.detail ?? "Phát sinh lỗi!");
       });
   };
+  const handleContentChange = (e, field, record) => {
+    record[field] = e.target.innerText; // Cập nhật nội dung trực tiếp
+  };
+  const handlePaste = (e) => {
+    e.preventDefault(); // Ngăn dán nội dung gốc
+    const text = e.clipboardData.getData("text/plain"); // Lấy nội dung dạng text
+    document.execCommand("insertText", false, text); // Chèn nội dung text vào
+  };
   const handleCancelEdit = () => {
     setEditingKey(null);
     setEditedDepartment({});
@@ -74,34 +82,28 @@ const ListDepartment = ({
                 return (
                   <tr key={dp.id}>
                     <td>
-                      {editable ? (
-                        <Input
-                          value={editedDepartment.name}
-                          onChange={(e) =>
-                            setEditedDepartment({
-                              ...editedDepartment,
-                              name: e.target.value,
-                            })
-                          }
-                        />
-                      ) : (
-                        dp.name
-                      )}
+                      <div
+                        contentEditable={editable}
+                        suppressContentEditableWarning
+                        onInput={(e) => handleContentChange(e, "name", dp)}
+                        onPaste={handlePaste} // Xử lý dán nội dung
+                        className={editable ? "editable-cell" : ""}
+                      >
+                        {dp.name}
+                      </div>
                     </td>
                     <td>
-                      {editable ? (
-                        <Input
-                          value={editedDepartment.description}
-                          onChange={(e) =>
-                            setEditedDepartment({
-                              ...editedDepartment,
-                              description: e.target.value,
-                            })
-                          }
-                        />
-                      ) : (
-                        dp.description
-                      )}
+                      <div
+                        contentEditable={editable}
+                        suppressContentEditableWarning
+                        onInput={(e) =>
+                          handleContentChange(e, "description", dp)
+                        }
+                        onPaste={handlePaste} // Xử lý dán nội dung
+                        className={editable ? "editable-cell" : ""}
+                      >
+                        {dp.description}
+                      </div>
                     </td>
                     <td className="w-20 fixed-w">
                       {editable ? (

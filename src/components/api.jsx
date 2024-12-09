@@ -215,29 +215,19 @@ const random = (length) => {
   }
   return result;
 };
-const banks = [
-  "Vietcombank",
-  "Vietinbank",
-  "BIDV",
-  "Agribank",
-  "Techcombank",
-  "MB Bank",
-  "ACB",
-  "Sacombank",
-  "VPBank",
-  "TPBank",
-  "Eximbank",
-  "SHB",
-  "VIB",
-  "LienVietPostBank",
-  "SeABank",
-  "OCB",
-  "HSBC",
-  "Standard Chartered",
-  "Citibank",
-  "ANZ",
-  // Thêm các ngân hàng khác nếu cần
-]; // Hàm lấy địa chỉ từ tọa độ
+const banks = async () => {
+  try {
+    const res = await fetch("https://api.vietqr.io/v2/banks");
+    if (!res.ok) {
+      throw new Error("Failed to fetch data");
+    }
+    const data = await res.json();
+    return data; // Trả về dữ liệu ngân hàng
+  } catch (error) {
+    console.error("Error fetching banks:", error);
+    return []; // Nếu có lỗi, trả về mảng rỗng
+  }
+};
 const getAddress = async (latitude, longitude) => {
   const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&addressdetails=1`;
   const headers = {
@@ -275,7 +265,6 @@ function resizeImage(img, maxSize) {
   const ctx = canvas.getContext("2d");
   let width = img.width;
   let height = img.height;
-
   if (width > height) {
     if (width > maxSize) {
       height *= maxSize / width;
@@ -392,8 +381,17 @@ const setCookie = (name, value, options = {}) => {
 const send = (a, b) => {
   window.electron.send(a, b);
 };
+const convertToBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+    reader.readAsDataURL(file);
+  });
+};
 // Xuất các phương thức
 export default {
+  convertToBase64,
   VietQR,
   send,
   get,

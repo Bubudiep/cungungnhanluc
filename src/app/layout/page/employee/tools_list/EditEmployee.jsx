@@ -1,4 +1,4 @@
-import { Button, Form, Input, message, Modal, Switch } from "antd";
+import { Button, Form, Input, message, Modal, Select, Switch } from "antd";
 import React, { useState } from "react";
 import api from "../../../../../components/api";
 
@@ -7,6 +7,8 @@ const EditEmployee = ({ open, onCancel, user, setUser }) => {
   const [saving, setSaving] = useState(false);
   const [resetting, setResetting] = useState(false);
   const [newPassword, setNewPassword] = useState(null);
+  const [listPossition, setListPossition] = useState(null);
+  const [listDepartment, setListDepartment] = useState(null);
   const handleSaveEmployee = () => {
     form
       .validateFields()
@@ -25,6 +27,8 @@ const EditEmployee = ({ open, onCancel, user, setUser }) => {
           name: values.name,
           isActive: values.isActive,
           isAdmin: values.isAdmin,
+          possition: values.possition,
+          department: values.department,
         };
         api
           .patch(`/employee_account/${open.id}/`, new_value, user.token)
@@ -93,12 +97,26 @@ const EditEmployee = ({ open, onCancel, user, setUser }) => {
   };
   // Gán dữ liệu ban đầu vào form khi mở modal
   React.useEffect(() => {
+    setListDepartment(
+      user.company.department.map((dpm) => ({
+        label: dpm.name, // Tùy chỉnh hiển thị
+        value: dpm.id,
+      }))
+    );
+    setListPossition(
+      user.company.jobtitle.map((dpm) => ({
+        label: dpm.name, // Tùy chỉnh hiển thị
+        value: dpm.id,
+      }))
+    );
     if (open) {
       form.setFieldsValue({
         name: open.name,
         username: open.username,
         isActive: open.isActive,
         isAdmin: open.isAdmin,
+        department: open.department,
+        possition: open.possition,
       });
     }
   }, [open]);
@@ -149,6 +167,8 @@ const EditEmployee = ({ open, onCancel, user, setUser }) => {
           username: open?.username,
           isActive: open?.isActive,
           isAdmin: open?.isAdmin,
+          department: open?.department,
+          possition: open?.possition,
         }}
       >
         <Form.Item
@@ -166,6 +186,28 @@ const EditEmployee = ({ open, onCancel, user, setUser }) => {
           ]}
         >
           <Input placeholder="Nhập tên đăng nhập" />
+        </Form.Item>
+        <Form.Item name="department" label="Bộ phận">
+          <Select
+            showSearch
+            placeholder="Chọn nhân viên"
+            optionFilterProp="label"
+            style={{
+              width: 220,
+            }}
+            options={listDepartment}
+          />
+        </Form.Item>
+        <Form.Item name="possition" label="Chức vụ">
+          <Select
+            showSearch
+            placeholder="Chọn nhân viên"
+            optionFilterProp="label"
+            style={{
+              width: 220,
+            }}
+            options={listPossition}
+          />
         </Form.Item>
         <Form.Item name="isActive" label="Hoạt động" valuePropName="checked">
           <Switch />

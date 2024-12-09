@@ -14,6 +14,7 @@ const Homepage = () => {
     "/employee": "Nhân viên",
     "/company": "Công ty",
     "/profile": "Cá nhân",
+    "/operator": "Nhân lực",
   };
   const breadcrumbItems = location.pathname
     .split("/")
@@ -34,6 +35,12 @@ const Homepage = () => {
               </div>
               <div className="name">Tổng quan</div>
             </Link>
+            <Link className="item" to="/operator">
+              <div className="icon">
+                <i className="fa-solid fa-users-viewfinder"></i>
+              </div>
+              <div className="name">Nhân lực</div>
+            </Link>
             <Link className="item" to="/employee">
               <div className="icon">
                 <i className="fa-solid fa-users-gear"></i>
@@ -50,7 +57,11 @@ const Homepage = () => {
           <div className="list-app">
             <Link className="item" to="/profile">
               <div className="avatar">
-                {user.profile?.avatar ? <></> : <img src={avatar} />}
+                {user.profile?.avatar ? (
+                  <img src={user.profile?.avatar} />
+                ) : (
+                  <img src={avatar} />
+                )}
               </div>
             </Link>
           </div>
