@@ -46,7 +46,9 @@ const Employee_card = ({ myData, setMyData, user, setUser }) => {
     },
     {
       key: "bank_number",
-      icon_width: 100,
+      icon_width: myData?.bank
+        ? banks?.find((bank) => bank.bin == myData?.bank)?.logo ?? 100
+        : 22,
       icon: myData?.bank
         ? banks?.find((bank) => bank.bin == myData?.bank)?.logo ?? // Lấy `logo` nếu tìm thấy
           "https://api.vietqr.io/img/ICB.png" // Ảnh mặc định
@@ -290,7 +292,7 @@ const Employee_card = ({ myData, setMyData, user, setUser }) => {
                       style={
                         field.icon_width && {
                           width: field.icon_width,
-                          marginLeft: -13,
+                          marginLeft: field.icon_width == 100 ? -13 : 0,
                         }
                       }
                     >
