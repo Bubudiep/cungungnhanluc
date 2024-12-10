@@ -291,7 +291,7 @@ const Employee_table = ({ user, setUser }) => {
                         "-"
                       )}
                     </td>
-                    <td>
+                    <td className="text-[#999]">
                       {employee.created_at
                         ? api.timeSinceOrder(employee.created_at)
                         : "-"}
