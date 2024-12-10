@@ -305,6 +305,14 @@
                 padding: 2px 5px;
                 white-space: nowrap;
                 font-size: 0.8rem;
+                a {
+                  color: #003f97;
+                  transition: all 0.3s;
+                  &:hover {
+                    color: #006aff;
+                    text-decoration: underline;
+                  }
+                }
                 .online {
                   color: #31b401;
                   font-weight: 550;
@@ -586,7 +594,7 @@ body,
     gap: 28px;
     animation: slideIntop 1s ease-out;
     .logo {
-      width: 140px;
+      width: 80px;
       animation: fadeInfinite 2s linear infinite;
       img {
         width: 100%;

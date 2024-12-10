@@ -236,10 +236,7 @@ const Employee_table = ({ user, setUser }) => {
                 </tr>
               ) : user.employee?.length > 0 ? (
                 user.employee?.map((employee) => (
-                  <tr
-                    key={employee.id}
-                    onClick={() => setSelectedEmployee(employee)}
-                  >
+                  <tr key={employee.id}>
                     <td className="isOut">
                       <div className="flex flex-col items-start">
                         {employee.isActive ? (
@@ -258,15 +255,42 @@ const Employee_table = ({ user, setUser }) => {
                     <td>
                       <div className="flex flex-col">
                         <div className="flex text-[#2b67e9]">
-                          {employee.name ?? "-"}
+                          <a
+                            href="#"
+                            onClick={() => setSelectedEmployee(employee)}
+                          >
+                            {employee.name ?? "-"}
+                          </a>
                         </div>
                         <div className="flex text-[#2b67e9] font-semibold">
                           {employee.username ?? "-"}
                         </div>
                       </div>
                     </td>
-                    <td>{employee.department_name ?? "-"}</td>
-                    <td>{employee.possition_name ?? "-"}</td>
+                    <td>
+                      {employee.department_name ? (
+                        <a
+                          href="#"
+                          onClick={() => setSelectedEmployee(employee)}
+                        >
+                          {employee.department_name}
+                        </a>
+                      ) : (
+                        "-"
+                      )}
+                    </td>
+                    <td>
+                      {employee.possition_name ? (
+                        <a
+                          href="#"
+                          onClick={() => setSelectedEmployee(employee)}
+                        >
+                          {employee.possition_name}
+                        </a>
+                      ) : (
+                        "-"
+                      )}
+                    </td>
                     <td>
                       {employee.created_at
                         ? api.timeSinceOrder(employee.created_at)
@@ -347,7 +371,7 @@ const Employee_table = ({ user, setUser }) => {
           {selectedEmployee ? (
             <></>
           ) : (
-            <Empty description="Chọn một nhân viên..." />
+            <Empty description="Chọn một nhân viên hoặc bộ phận, chức vụ để phân quyền..." />
           )}
         </div>
       </div>
