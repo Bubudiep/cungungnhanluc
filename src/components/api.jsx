@@ -1,4 +1,5 @@
 import axios from "axios";
+import dayjs from "dayjs";
 const api = axios.create({
   baseURL: "http://" + location.hostname + ":5005/nl-api", // URL cơ sở cho các yêu cầu
   // baseURL: "https://ipays.vn/api", // URL cơ sở cho các yêu cầu
@@ -389,9 +390,38 @@ const convertToBase64 = (file) => {
     reader.readAsDataURL(file);
   });
 };
+function parseCCCDString(cccdString) {
+  const fields = cccdString.split("|");
+  const so_cccd = fields[0].trim();
+  const ho_va_ten = fields[2].trim();
+  const ngay_sinh_str = fields[3].trim();
+  const gioi_tinh = fields[4].trim();
+  const que_quan = fields[5].trim();
+  const ngay_het_han_str = fields[6].trim();
+  if (fields.length < 6 || fields[0].length < 12) {
+    return undefined;
+  }
+  // Chuyển ngày từ "DDMMYYYY" sang format Date hoặc dayjs
+  const ngay_sinh = dayjs(ngay_sinh_str, "DDMMYYYY").isValid()
+    ? dayjs(ngay_sinh_str, "DDMMYYYY")
+    : null;
+  const ngay_het_han = dayjs(ngay_het_han_str, "DDMMYYYY").isValid()
+    ? dayjs(ngay_het_han_str, "DDMMYYYY")
+    : null;
+  // Trả về một object JSON chứa thông tin
+  return {
+    so_cccd,
+    ho_va_ten,
+    ngay_sinh, // dạng dayjs object
+    gioi_tinh,
+    que_quan,
+    ngay_het_han, // dạng dayjs object
+  };
+}
 // Xuất các phương thức
 export default {
   convertToBase64,
+  parseCCCDString,
   VietQR,
   send,
   get,

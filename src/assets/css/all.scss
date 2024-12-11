@@ -1037,3 +1037,23 @@ button {
     font-size: 11px;
   }
 }
+.ant-modal-body {
+  .h3 {
+    display: flex;
+    font-weight: 600;
+    height: 35px;
+    align-items: center;
+    font-size: 13px;
+  }
+  .list-input {
+    background-color: rgb(235, 245, 255);
+    padding: 4px 8px;
+    border-radius: 10px;
+  }
+  .add_Operator {
+    .ant-form-item {
+      padding: 0px;
+      margin: 10px 0px;
+    }
+  }
+}
