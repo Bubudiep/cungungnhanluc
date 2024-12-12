@@ -667,7 +667,10 @@ body,
     margin-bottom: 0px;
   }
   .ant-modal-body {
-    padding: 20px 24px;
+    padding: 12px 24px;
+    .ant-form-item {
+      margin-bottom: 10px;
+    }
   }
   .ant-modal-footer {
     padding: 0px 24px 20px 24px;
@@ -1098,6 +1101,12 @@ button {
         }
         &:first-child {
           font-weight: 500;
+        }
+        .ant-empty {
+          padding: 8px 0px;
+          .ant-empty-description {
+            color: #cecece;
+          }
         }
       }
     }
