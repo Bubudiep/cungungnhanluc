@@ -17,7 +17,7 @@ const Home = () => {
   const version = import.meta.env.VITE_VERSION;
   const checkUser = async (token) => {
     await api
-      .get("/user/?key=" + key, token)
+      .get("/user/", token)
       .then((res) => {
         setUser({
           ...res,

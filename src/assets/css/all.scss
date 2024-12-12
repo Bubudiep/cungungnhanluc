@@ -1057,3 +1057,59 @@ button {
     }
   }
 }
+.company-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: auto;
+}
+.white-table {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 2px 3px 4px #0001;
+  .h3 {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 12px 8px 12px;
+    font-size: 13px;
+    .text {
+      font-weight: 550;
+    }
+  }
+  table {
+    width: 100%;
+    tr {
+      th {
+        text-align: left;
+        font-size: 13px;
+        font-weight: 500;
+        color: #999;
+        padding: 4px;
+      }
+      td {
+        padding: 4px;
+        border-top: 1px solid #0002;
+        border-bottom: 1px solid #0002;
+        input {
+          padding: 4px 8px;
+        }
+        &:first-child {
+          font-weight: 500;
+        }
+      }
+    }
+    tbody.input-edit {
+      td {
+        input {
+          padding: 2px 6px;
+          border: hidden;
+          outline: none;
+          background-color: rgb(233, 239, 240);
+        }
+      }
+    }
+  }
+}

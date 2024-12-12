@@ -47,12 +47,12 @@ const Homepage = () => {
               </div>
               <div className="name">Nhân viên</div>
             </Link>
-            {/* <Link className="item" to="/company">
+            <Link className="item" to="/company">
               <div className="icon">
                 <i className="fa-regular fa-building"></i>
               </div>
               <div className="name">Công ty</div>
-            </Link> */}
+            </Link>
           </div>
           <div className="list-app">
             <Link className="item" to="/profile">

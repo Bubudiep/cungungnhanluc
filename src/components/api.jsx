@@ -1,5 +1,8 @@
 import axios from "axios";
 import dayjs from "dayjs";
+const key = import.meta.env.VITE_KEY;
+const author = import.meta.env.VITE_AUTHOR;
+const version = import.meta.env.VITE_VERSION;
 const api = axios.create({
   baseURL: "http://" + location.hostname + ":5005/nl-api", // URL cơ sở cho các yêu cầu
   // baseURL: "https://ipays.vn/api", // URL cơ sở cho các yêu cầu
@@ -141,6 +144,7 @@ const get = async (url, token) => {
     const response = await api.get(url, {
       headers: {
         Authorization: `Bearer ${token}`, // Thêm token vào header Authorization
+        ApplicationKey: key,
       },
     });
     return response.data;
@@ -168,6 +172,7 @@ const post = async (url, data, token) => {
     const response = await api.post(url, data, {
       headers: {
         Authorization: `Bearer ${token}`, // Thêm token vào header Authorization
+        ApplicationKey: key,
       },
     });
     return response.data;
@@ -183,6 +188,7 @@ const patch = async (url, data, token) => {
     const response = await api.patch(url, data, {
       headers: {
         Authorization: `Bearer ${token}`, // Thêm token vào header Authorization
+        ApplicationKey: key,
       },
     });
     return response.data;
@@ -198,6 +204,7 @@ const deleteRequest = async (url, token) => {
     const response = await api.delete(url, {
       headers: {
         Authorization: `Bearer ${token}`, // Thêm token vào header Authorization
+        ApplicationKey: key,
       },
     });
     return response.data;

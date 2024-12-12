@@ -17,7 +17,6 @@ const Login = () => {
   const navigate = useNavigate();
   const author = import.meta.env.VITE_AUTHOR;
   const version = import.meta.env.VITE_VERSION;
-  const key = import.meta.env.VITE_KEY;
   const passwordRef = useRef();
   const checkAuth = async () => {
     try {
@@ -25,7 +24,7 @@ const Login = () => {
       console.log(token);
       if (token) {
         // Kiểm tra API để xác thực token
-        api.get("/user/?key=" + key, token).then((res) => {
+        api.get("/user/", token).then((res) => {
           navigate("/?fromLogin=true");
         });
       } else {
@@ -62,7 +61,6 @@ const Login = () => {
         .post(
           "/login/",
           qs.stringify({
-            key: key,
             username: username,
             password: password,
           })

@@ -25,7 +25,10 @@ const OperatorTools = () => {
 
   const handleOpen = () => {
     setVisible(true);
-    form.setFieldsValue({ trang_thai: "di_lam" });
+    form.setFieldsValue({
+      trang_thai: "di_lam",
+      ngay_vao_lam: dayjs(new Date().toISOString().split("T")[0], "YYYY-MM-DD"),
+    });
   };
 
   const handleCancel = () => {
