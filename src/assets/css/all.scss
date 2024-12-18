@@ -1067,14 +1067,68 @@ button {
   width: 100%;
   animation: slideIn 0.6s forwards;
   overflow: auto;
+  .description {
+    margin: 20px 8px 8px 8px;
+    textarea {
+      padding: 4px;
+      border: 1px solid #0003;
+      width: 100%;
+      outline: none;
+      border-radius: 8px;
+    }
+  }
   .company-profile {
     background-color: #fff;
     width: 400px;
+    min-width: 400px;
     border-radius: 12px;
     box-shadow: 2px 3px 4px #0001;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    .profile-container {
+      display: flex;
+      flex-direction: column;
+      padding: 8px;
+      .item {
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid #0002;
+        align-items: center;
+        .left {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          .icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            font-size: 18px;
+            img {
+              width: 18px;
+              user-select: none;
+            }
+          }
+        }
+        .on {
+          color: green;
+          font-size: 13px;
+          font-weight: 500;
+        }
+        .off {
+          color: #999;
+        }
+        &:last-child {
+          .value {
+            padding: 8px 0px;
+            font-size: 13px;
+            color: #999;
+          }
+        }
+      }
+    }
     .avatar-container {
       position: relative;
       display: flex;
@@ -1086,6 +1140,52 @@ button {
         background-size: cover; /* Ảnh nền sẽ phủ kín phần tử */
         background-position: center; /* Căn giữa ảnh nền */
         background-repeat: no-repeat; /* Không lặp ảnh nền */
+        .upload-wall {
+          z-index: 1;
+          position: absolute;
+          bottom: 5px;
+          right: 5px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          background-color: #ffffff;
+          padding: 8px;
+          height: 30px;
+          border-radius: 6px;
+          z-index: 2;
+          opacity: 0.5;
+          transition: all 0.3s;
+          cursor: pointer;
+          label {
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            font-size: 12px;
+            color: #214c85;
+            cursor: pointer;
+            .text {
+              width: 0px;
+              overflow: hidden;
+              transition: all 0.3s;
+            }
+          }
+          i {
+            font-size: 15px;
+          }
+          &:hover {
+            opacity: 1;
+            label {
+              .text {
+                width: 54px;
+                padding-left: 5px;
+              }
+            }
+          }
+          input {
+            display: none;
+          }
+        }
       }
       .avatar {
         z-index: 1;
@@ -1100,9 +1200,54 @@ button {
           border-radius: 12px;
           box-shadow: 2px 2px 4px #0002;
           overflow: hidden;
+          position: relative;
           img {
             width: 100%;
             object-fit: cover;
+          }
+          .upload {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #ced4db;
+            padding: 5px;
+            height: 25px;
+            border-radius: 6px;
+            z-index: 2;
+            opacity: 0.5;
+            transition: all 0.3s;
+            label {
+              display: flex;
+              align-items: center;
+              white-space: nowrap;
+              font-size: 12px;
+              color: #214c85;
+              .text {
+                width: 0px;
+                overflow: hidden;
+                transition: all 0.3s;
+              }
+              cursor: pointer;
+            }
+            i {
+              font-size: 15px;
+            }
+            &:hover {
+              opacity: 1;
+              label {
+                .text {
+                  width: 54px;
+                  padding-left: 5px;
+                }
+              }
+            }
+            input {
+              display: none;
+            }
           }
         }
         .info {

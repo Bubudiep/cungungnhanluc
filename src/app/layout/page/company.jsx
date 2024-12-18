@@ -14,7 +14,7 @@ const Company = () => {
         <div className="company-profile">
           <Company_profile user={user} />
         </div>
-        <div className="flex flex-col w-[800px] gap-2">
+        <div className="flex flex-col w-[800px] gap-2 min-w-[600px]">
           <Customer user={user} />
           <Supplier user={user} />
           <Vendor user={user} />
