@@ -399,15 +399,15 @@ const convertToBase64 = (file) => {
 };
 function parseCCCDString(cccdString) {
   const fields = cccdString.split("|");
+  if (fields.length < 6 || fields[0].length < 12) {
+    return undefined;
+  }
   const so_cccd = fields[0].trim();
   const ho_va_ten = fields[2].trim();
   const ngay_sinh_str = fields[3].trim();
   const gioi_tinh = fields[4].trim();
   const que_quan = fields[5].trim();
   const ngay_het_han_str = fields[6].trim();
-  if (fields.length < 6 || fields[0].length < 12) {
-    return undefined;
-  }
   // Chuyển ngày từ "DDMMYYYY" sang format Date hoặc dayjs
   const ngay_sinh = dayjs(ngay_sinh_str, "DDMMYYYY").isValid()
     ? dayjs(ngay_sinh_str, "DDMMYYYY")
@@ -425,8 +425,32 @@ function parseCCCDString(cccdString) {
     ngay_het_han, // dạng dayjs object
   };
 }
+const zoomAndCrop = (canvas, context) => {
+  const scale = 2; // Phóng to ảnh x2
+  const croppedWidth = canvas.width * 0.8; // Cắt 20% viền
+  const croppedHeight = canvas.height * 0.8;
+  const startX = (canvas.width - croppedWidth) / 2;
+  const startY = (canvas.height - croppedHeight) / 2;
+  const tempCanvas = document.createElement("canvas");
+  const tempContext = tempCanvas.getContext("2d");
+  tempCanvas.width = croppedWidth * scale;
+  tempCanvas.height = croppedHeight * scale;
+  tempContext.drawImage(
+    canvas,
+    startX,
+    startY,
+    croppedWidth,
+    croppedHeight,
+    0,
+    0,
+    tempCanvas.width,
+    tempCanvas.height
+  );
+  return tempCanvas;
+};
 // Xuất các phương thức
 export default {
+  zoomAndCrop,
   convertToBase64,
   parseCCCDString,
   VietQR,

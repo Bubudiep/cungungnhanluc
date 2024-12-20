@@ -1,10 +1,8 @@
-import { Pagination, Spin } from "antd";
+import { Empty, Pagination, Spin } from "antd";
 import React, { useState } from "react";
-const OperatorList = () => {
-  const [firstload, setFirstload] = useState(true);
-  const [loading, setLoading] = useState(false);
+const OperatorList = ({ loading, firstload, opList }) => {
   const [pagenow, setPagenow] = useState(1);
-  const [total, setTotal] = useState(1);
+  const [total, setTotal] = useState(opList?.count);
   const handlePageChange = () => {};
   return (
     <div className="flex flex-1 items-start gap-2">
@@ -51,7 +49,11 @@ const OperatorList = () => {
                     </td>
                   </tr>
                 ) : (
-                  <></>
+                  <tr>
+                    <td colSpan={9999}>
+                      <Empty className="my-40" />
+                    </td>
+                  </tr>
                 )}
               </tbody>
             </table>

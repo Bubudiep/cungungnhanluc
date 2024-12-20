@@ -5,9 +5,9 @@ import { useUser } from "../../../components/userContext";
 import { message } from "antd";
 
 const Employee = () => {
+  const { user, setUser } = useUser();
   const [loading, setLoading] = useState(false);
   const [empData, setEmpData] = useState(false);
-  const { user, setUser } = useUser();
   console.log(user);
   useEffect(() => {
     setLoading(true);

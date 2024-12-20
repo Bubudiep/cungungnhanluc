@@ -19,23 +19,25 @@ const Customer = ({ user, companies, setCompanies }) => {
   const [form] = Form.useForm();
   const [pagenow, setPagenow] = useState(1);
   const [total, setTotal] = useState(0);
-  const fetchCompanies = async () => {
-    setLoading(true);
-    if (user) {
-      setTimeout(() => {
-        api
-          .get("/customers/?page_size=5", user.token)
-          .then((res) => {
-            setCompanies(res.results);
-            setLoading(false);
-            setFirstload(false);
-            setTotal(res.count);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      }, 500);
-    }
+  const handlePageChange = (pagenow = 1) => {
+    setLoading(true); // Hiển thị trạng thái loading
+    const url = `/customers/?page=${pagenow}&page_size=5`; // API với số trang
+    const timer = setTimeout(() => {
+      api
+        .get(url, user.token)
+        .then((res) => {
+          setCompanies({ data: res.results });
+          setTotal(res.count); // Cập nhật tổng số nhân viên
+          setPagenow(pagenow); // Cập nhật trang hiện tại
+        })
+        .catch((er) => {
+          console.error("Lỗi khi tải dữ liệu:", er);
+        })
+        .finally(() => {
+          setLoading(false); // Ẩn trạng thái loading
+        });
+    }, 500);
+    return () => clearTimeout(timer);
   };
   const handleAddCompany = () => {
     setIsModalVisible(true);
@@ -46,7 +48,7 @@ const Customer = ({ user, companies, setCompanies }) => {
       api
         .post("/customers/", values, user.token)
         .then((data) => {
-          fetchCompanies();
+          handlePageChange(pagenow);
           setIsModalVisible(false);
           form.resetFields();
         })
@@ -61,12 +63,6 @@ const Customer = ({ user, companies, setCompanies }) => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-  useEffect(() => {
-    if (companies?.count) {
-      setLoading(false);
-      setTotal(companies.count);
-    }
-  }, [companies]);
   const renderTableBody = () => {
     if (loading && firstload) {
       return (
@@ -107,26 +103,12 @@ const Customer = ({ user, companies, setCompanies }) => {
       </tr>
     ));
   };
-  const handlePageChange = (pagenow) => {
-    setLoading(true); // Hiển thị trạng thái loading
-    const url = `/customers/?page=${pagenow}&page_size=5`; // API với số trang
-    const timer = setTimeout(() => {
-      api
-        .get(url, user.token)
-        .then((res) => {
-          setCompanies(res.results);
-          setTotal(res.count); // Cập nhật tổng số nhân viên
-          setPagenow(pagenow); // Cập nhật trang hiện tại
-        })
-        .catch((er) => {
-          console.error("Lỗi khi tải dữ liệu:", er);
-        })
-        .finally(() => {
-          setLoading(false); // Ẩn trạng thái loading
-        });
-    }, 500);
-    return () => clearTimeout(timer);
-  };
+  useEffect(() => {
+    if (companies?.count) {
+      setLoading(false);
+      setTotal(companies.count);
+    }
+  }, [companies]);
   return (
     <>
       <div className="white-table">

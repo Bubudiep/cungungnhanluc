@@ -25,7 +25,7 @@ const Homepage = () => {
     });
   return (
     <div className="home-page">
-      <Top_container />
+      {window.electron && <Top_container />}
       <div className="body-container">
         <div className="app-container">
           <div className="list-app">

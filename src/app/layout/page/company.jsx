@@ -14,6 +14,7 @@ const Company = () => {
     api
       .get("/company/", user.token)
       .then((res) => {
+        console.log(res);
         setCompanyData(res.results[0]);
         setCustommer(res.results[0].custommer);
       })
