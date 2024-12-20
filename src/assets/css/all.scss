@@ -1095,6 +1095,12 @@ button {
         justify-content: space-between;
         border-top: 1px solid #0002;
         align-items: center;
+        .value {
+          input {
+            outline: none;
+            text-align: right;
+          }
+        }
         .left {
           display: flex;
           align-items: center;
@@ -1302,6 +1308,7 @@ button {
   border-radius: 12px;
   box-shadow: 2px 3px 4px #0001;
   .panel-cl-inline {
+    margin-top: auto;
     padding: 8px;
     display: flex;
     justify-content: center;

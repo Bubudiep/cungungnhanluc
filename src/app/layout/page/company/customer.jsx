@@ -11,18 +11,14 @@ import {
 } from "antd";
 import api from "../../../../components/api";
 
-const Customer = ({ user }) => {
-  const [companies, setCompanies] = useState([]);
-  const [loading, setLoading] = useState(false);
+const Customer = ({ user, companies, setCompanies }) => {
+  const [loading, setLoading] = useState(true);
   const [firstload, setFirstload] = useState(true);
   const [creating, setCreating] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
   const [pagenow, setPagenow] = useState(1);
   const [total, setTotal] = useState(0);
-  useEffect(() => {
-    fetchCompanies();
-  }, []);
   const fetchCompanies = async () => {
     setLoading(true);
     if (user) {
@@ -65,6 +61,12 @@ const Customer = ({ user }) => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+  useEffect(() => {
+    if (companies?.count) {
+      setLoading(false);
+      setTotal(companies.count);
+    }
+  }, [companies]);
   const renderTableBody = () => {
     if (loading && firstload) {
       return (
@@ -83,7 +85,7 @@ const Customer = ({ user }) => {
         </tr>
       );
     }
-    if (!companies || companies.length === 0) {
+    if (!companies.data || companies.data.length === 0) {
       return (
         <tr>
           <td colSpan={999} className="text-center p-8">
@@ -92,7 +94,7 @@ const Customer = ({ user }) => {
         </tr>
       );
     }
-    return companies.map((company, inx) => (
+    return companies.data.map((company, inx) => (
       <tr key={company.id}>
         <td className="text-[13px] text-center px-3">
           {(pagenow - 1) * 5 + (inx + 1)}

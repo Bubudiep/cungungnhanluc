@@ -1,22 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import cpn_bg from "../../../../assets/image/company_bg.png";
 import cpn_avatar from "../../../../assets/image/company_logo.png";
 import zalo_icon from "../../../../assets/image/zalo-icon.png";
 import api from "../../../../components/api";
 
-const CompanyProfile = ({ user }) => {
-  const [editFullname, setEditFullname] = useState(false); // Track whether editing mode is active
-  const [companyName, setCompanyName] = useState("Công ty TNHH Tên công ty"); // Track the company name
-
-  const toggleEditMode = () => {
-    if (editFullname) {
-      console.log("Updated company name:", companyName); // Save the name
-    }
-    setEditFullname(!editFullname); // Toggle editing mode
-  };
-
+const CompanyProfile = ({ user, companyData, setCompanyData }) => {
+  // State để quản lý dữ liệu của user.company
   const handleInputChange = (e) => {
-    setCompanyName(e.target.value); // Update the company name as user types
+    const { name, value } = e.target;
+    setCompanyData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  const handleSave = () => {
+    console.log("Saving company data:", companyData);
+    api
+      .updateCompanyData(companyData)
+      .then((response) => {
+        console.log("Company data updated successfully", response);
+      })
+      .catch((error) => {
+        console.error("Error updating company data", error);
+      });
   };
   const handleUpload = (e, type) => {
     console.log(type);
@@ -42,7 +48,7 @@ const CompanyProfile = ({ user }) => {
         </div>
         <div className="avatar">
           <div className="logo">
-            <img src={cpn_avatar} alt="Company Logo" />
+            <img src={companyData.avatar ?? cpn_avatar} alt="Company Logo" />
             <div className="upload">
               <label htmlFor="upload_avatar">
                 <i className="fa-solid fa-camera"></i>
@@ -51,26 +57,15 @@ const CompanyProfile = ({ user }) => {
               <input
                 type="file"
                 id="upload_avatar"
+                name="avatar"
                 onChange={(e) => handleUpload(e, "avatar")}
               />
             </div>
           </div>
           <div className="info">
-            <div className="name">Tên công ty</div>
+            <div className="name">{companyData.name ?? "Công ty X"}</div>
             <div className="fullname">
-              <input
-                type="text"
-                value={companyName}
-                onChange={handleInputChange}
-                readOnly={!editFullname} // Toggle read-only state
-                className={`edit-input ${editFullname ? "editable" : ""}`}
-                placeholder="Tên đầy đủ của doanh nghiệp..."
-              />
-              <button onClick={toggleEditMode} className="edit-save-button">
-                <i
-                  className={`fa-solid ${editFullname ? "fa-check" : "fa-pen"}`}
-                ></i>
-              </button>
+              {companyData.fullname ?? "Công ty TNHH X"}
             </div>
           </div>
         </div>
@@ -78,10 +73,12 @@ const CompanyProfile = ({ user }) => {
       <div className="description">
         <textarea
           rows="3"
+          value={companyData.shortDescription ?? ""}
           placeholder="Nhập mô tả ngắn về doanh nghiệp của bạn...."
-        ></textarea>
+        />
       </div>
       <div className="profile-container">
+        {/* Input Loại hình */}
         <div className="item">
           <div className="left">
             <div className="icon">
@@ -89,32 +86,27 @@ const CompanyProfile = ({ user }) => {
             </div>
             <div className="name">Loại hình</div>
           </div>
-          <div className="value">{user?.company?.address ?? "-"}</div>
+          <div className="value">{companyData.companyType ?? "-"}</div>
         </div>
+        {/* Input Mã số thuế */}
         <div className="item">
           <div className="left">
             <div className="icon">
               <i className="fa-solid fa-file-code"></i>
             </div>
-            <div className="name">Mã số thuế</div>
-          </div>
-          <div className="value">{user?.company?.address ?? "-"}</div>
-        </div>
-        <div className="item">
-          <div className="left">
-            <div className="icon">
-              <i className="fa-solid fa-circle-check"></i>
-            </div>
-            <div className="name">Tình trạng</div>
+            <div className="name">MST</div>
           </div>
           <div className="value">
-            {user?.company?.isValidate ? (
-              <div className="on">Đã xác minh</div>
-            ) : (
-              <div className="off">Chờ xác minh</div>
-            )}
+            <input
+              type="text"
+              name="taxCode"
+              value={companyData.taxCode}
+              onChange={handleInputChange}
+              placeholder="Nhập mã số thuế"
+            />
           </div>
         </div>
+        {/* Input Địa chỉ */}
         <div className="item">
           <div className="left">
             <div className="icon">
@@ -122,8 +114,17 @@ const CompanyProfile = ({ user }) => {
             </div>
             <div className="name">Địa chỉ</div>
           </div>
-          <div className="value">{user?.company?.address ?? "-"}</div>
+          <div className="value">
+            <input
+              type="text"
+              name="address"
+              value={companyData.address}
+              onChange={handleInputChange}
+              placeholder="Nhập địa chỉ"
+            />
+          </div>
         </div>
+        {/* Input Liên hệ */}
         <div className="item">
           <div className="left">
             <div className="icon">
@@ -131,17 +132,35 @@ const CompanyProfile = ({ user }) => {
             </div>
             <div className="name">Liên hệ</div>
           </div>
-          <div className="value">{user?.company?.address ?? "-"}</div>
+          <div className="value">
+            <input
+              type="text"
+              name="contact"
+              value={companyData.contact}
+              onChange={handleInputChange}
+              placeholder="Số hotline"
+            />
+          </div>
         </div>
+        {/* Input Zalo */}
         <div className="item">
           <div className="left">
             <div className="icon">
-              <img src={zalo_icon} />
+              <img src={zalo_icon} alt="Zalo Icon" />
             </div>
             <div className="name">Zalo</div>
           </div>
-          <div className="value">{user?.company?.address ?? "-"}</div>
+          <div className="value">
+            <input
+              type="text"
+              name="zalo"
+              value={companyData.zalo}
+              onChange={handleInputChange}
+              placeholder="Link Zalo"
+            />
+          </div>
         </div>
+        {/* Input Facebook */}
         <div className="item">
           <div className="left">
             <div className="icon">
@@ -149,8 +168,17 @@ const CompanyProfile = ({ user }) => {
             </div>
             <div className="name">Facebook</div>
           </div>
-          <div className="value">{user?.company?.address ?? "-"}</div>
+          <div className="value">
+            <input
+              type="text"
+              name="facebook"
+              value={companyData.facebook}
+              onChange={handleInputChange}
+              placeholder="Link Facebook"
+            />
+          </div>
         </div>
+        {/* Input Tiktok */}
         <div className="item">
           <div className="left">
             <div className="icon">
@@ -158,8 +186,17 @@ const CompanyProfile = ({ user }) => {
             </div>
             <div className="name">Tiktok</div>
           </div>
-          <div className="value">{user?.company?.address ?? "-"}</div>
+          <div className="value">
+            <input
+              type="text"
+              name="tiktok"
+              value={companyData.tiktok}
+              onChange={handleInputChange}
+              placeholder="Link Tiktok"
+            />
+          </div>
         </div>
+        {/* Input Instagram */}
         <div className="item">
           <div className="left">
             <div className="icon">
@@ -167,8 +204,17 @@ const CompanyProfile = ({ user }) => {
             </div>
             <div className="name">Instagram</div>
           </div>
-          <div className="value">{user?.company?.address ?? "-"}</div>
+          <div className="value">
+            <input
+              type="text"
+              name="instagram"
+              value={companyData.instagram}
+              onChange={handleInputChange}
+              placeholder="Link Instagram"
+            />
+          </div>
         </div>
+        {/* Input Website */}
         <div className="item">
           <div className="left">
             <div className="icon">
@@ -176,13 +222,19 @@ const CompanyProfile = ({ user }) => {
             </div>
             <div className="name">Website</div>
           </div>
-          <div className="value">{user?.company?.address ?? "-"}</div>
+          <div className="value">
+            <input
+              type="text"
+              name="website"
+              value={companyData.website}
+              onChange={handleInputChange}
+              placeholder="Thông tin Website"
+            />
+          </div>
         </div>
         <div className="item">
           <div className="left"></div>
-          <div className="value">
-            Ngày khởi tạo: {api.timeSinceOrder(user.company.created_at)}
-          </div>
+          <div className="value">Cập nhập lần cuối:</div>
         </div>
       </div>
     </div>
