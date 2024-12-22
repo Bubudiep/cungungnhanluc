@@ -243,7 +243,16 @@ const NewOPForm = ({ form, user }) => {
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item name="nguoituyen" label="Người tuyển">
+              <Form.Item
+                name="nguoituyen"
+                label="Người tuyển"
+                rules={[
+                  {
+                    required: true,
+                    message: "Chưa chọn người tuyển!",
+                  },
+                ]}
+              >
                 <Select
                   placeholder="Chọn người tuyển"
                   options={nguoiTuyenOptions}
@@ -260,22 +269,26 @@ const NewOPForm = ({ form, user }) => {
           </Row>
           <Row gutter={16} className="add_Operator">
             <Col span={8}>
+              <Form.Item
+                name="cong_ty"
+                label="Công ty"
+                rules={[{ required: true, message: "Chưa chọn công ty" }]}
+              >
+                <Select
+                  placeholder="Chọn công ty"
+                  showSearch={true}
+                  allowClear
+                  options={congTyOptions}
+                />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
               <Form.Item name="nhachinh" label="Nhà chính">
                 <Select
                   placeholder="Chọn nhà chính"
                   options={nhaChinhOptions}
                   showSearch={true}
                   allowClear
-                />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item name="cong_ty" label="Công ty">
-                <Select
-                  placeholder="Chọn công ty"
-                  showSearch={true}
-                  allowClear
-                  options={congTyOptions}
                 />
               </Form.Item>
             </Col>
