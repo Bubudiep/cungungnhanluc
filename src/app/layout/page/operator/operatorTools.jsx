@@ -15,7 +15,7 @@ import NewOPForm from "./newOPForm";
 import api from "../../../../components/api";
 import dayjs from "dayjs";
 const { TextArea } = Input;
-const OperatorTools = ({ user }) => {
+const OperatorTools = ({ user, setOpList }) => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
   const [isAdd, setIsAdd] = useState(false);
@@ -49,6 +49,10 @@ const OperatorTools = ({ user }) => {
           .post("/operators/", revalues, user.token)
           .then((res) => {
             console.log(res);
+            setOpList((old) => ({
+              ...old,
+              results: [res, ...old.results],
+            }));
             message.success("Đã thêm người lao động mới!");
           })
           .catch((e) => {
@@ -85,7 +89,7 @@ const OperatorTools = ({ user }) => {
         width={1000}
       >
         <div className="flex flex-col gap-1">
-          <NewOPForm form={form} />
+          <NewOPForm form={form} user={user} />
         </div>
       </Modal>
     </div>

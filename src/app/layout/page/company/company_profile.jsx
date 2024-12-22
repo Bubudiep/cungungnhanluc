@@ -16,7 +16,6 @@ const CompanyProfile = ({ user, companyData, setCompanyData }) => {
   };
   const handleSave = () => {
     setOnSave(true);
-    console.log("Saving company data:", companyData);
     api
       .patch(`/company/${companyData.id}/`, companyData, user.token)
       .then((response) => {
@@ -32,15 +31,56 @@ const CompanyProfile = ({ user, companyData, setCompanyData }) => {
       })
       .finally(setOnSave(false));
   };
-  const handleUpload = (e, type) => {
-    console.log(type);
+  const handleUpdate = (key, value) => {
+    api
+      .patch(
+        `/company/${companyData.id}/`,
+        {
+          [key]: value,
+        },
+        user.token
+      )
+      .then((res) => {
+        message.success("Đã cập nhập thông tin mới!");
+        console.log(res);
+        setCompanyData(res);
+      })
+      .catch((er) => {
+        message.error(er?.response?.detail ?? "Lỗi khi cập nhập!");
+      });
+  };
+  const handleUpload = async (e, type) => {
+    const file = e.target.files[0];
+    const name = file.name; // Tên tệp
+    const size = file.size; // Kích thước tệp (byte)
+    const typeFile = file.type; // Loại tệp (ví dụ: image/jpeg, image/png)
+    if (!file) return;
+    let base64 = await api.convertToBase64(file);
+    const img = new Image();
+    img.src = base64;
+    img.onload = async () => {
+      const resizedBase64 = await api.resizeImage(
+        img,
+        type === "avatar" ? 200 : 500
+      );
+      const width = img.width; // Chiều rộng ảnh
+      const height = img.height; // Chiều cao ảnh
+      handleUpdate(type, {
+        data: resizedBase64,
+        name: name,
+        size: size,
+        typeFile: typeFile,
+        width: width,
+        height: height,
+      });
+    };
   };
   return (
     <div className="fadeIn">
       <div className="avatar-container">
         <div
           className="background"
-          style={{ backgroundImage: `url(${cpn_bg})` }}
+          style={{ backgroundImage: `url(${companyData.wallpaper ?? cpn_bg})` }}
         >
           <div className="upload-wall">
             <label htmlFor="upload_wall">
@@ -50,7 +90,8 @@ const CompanyProfile = ({ user, companyData, setCompanyData }) => {
             <input
               type="file"
               id="upload_wall"
-              onChange={(e) => handleUpload(e, "background")}
+              accept="image/*"
+              onChange={(e) => handleUpload(e, "wallpaper")}
             />
           </div>
         </div>
@@ -66,6 +107,7 @@ const CompanyProfile = ({ user, companyData, setCompanyData }) => {
                 type="file"
                 id="upload_avatar"
                 name="avatar"
+                accept="image/*"
                 onChange={(e) => handleUpload(e, "avatar")}
               />
             </div>
@@ -73,7 +115,9 @@ const CompanyProfile = ({ user, companyData, setCompanyData }) => {
           <div className="info">
             <div className="name">{companyData.name ?? "Công ty X"}</div>
             <div className="fullname">
-              {companyData.fullname ?? "Công ty TNHH X"}
+              {!companyData.fullname || companyData.fullname != ""
+                ? "Công ty TNHH X"
+                : companyData.fullname}
             </div>
           </div>
         </div>

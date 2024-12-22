@@ -15,7 +15,7 @@ const Operator = () => {
     api
       .get("/operators/?page=" + page + "&page_size=15", user.token)
       .then((res) => {
-        setOpList(res.results);
+        setOpList(res);
         setFirstload(false);
       });
   };
@@ -27,7 +27,7 @@ const Operator = () => {
       <OperatorDb />
       <div className="operator-body flex gap-1">
         <div className="flex flex-col gap-2">
-          <OperatorTools opList={setOpList} user={user} />
+          <OperatorTools setOpList={setOpList} user={user} />
           <OperatorList
             opList={opList}
             loading={loading}

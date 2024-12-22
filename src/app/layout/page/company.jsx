@@ -25,7 +25,7 @@ const Company = () => {
   }, []);
   return (
     <div className="company-page">
-      <div className="flex gap-2">
+      <div className="flex gap-2 items-start">
         <div className="company-profile">
           <Company_profile
             user={user}

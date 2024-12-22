@@ -13,9 +13,10 @@ import {
 import jsQR from "jsqr";
 import dayjs from "dayjs";
 import api from "../../../../components/api";
+import { useUser } from "../../../../components/userContext";
 const { TextArea } = Input;
 
-const NewOPForm = ({ form }) => {
+const NewOPForm = ({ form, user }) => {
   const [fileList, setFileList] = useState([]);
   const [readQR, setReadQR] = useState(false);
   const trangThaiOptions = [
@@ -24,9 +25,9 @@ const NewOPForm = ({ form }) => {
     { label: "Dự kiến", value: "du_kien" },
   ];
   const [nganHangOptions, setNganHangOptions] = useState([]);
-  const nguoiTuyenOptions = useState([]);
-  const nhaChinhOptions = useState([]);
-  const congTyOptions = useState([]);
+  const [nguoiTuyenOptions, setnguoiTuyenOptions] = useState([]);
+  const [nhaChinhOptions, setnhaChinhOptions] = useState([]);
+  const [congTyOptions, setcongTyOptions] = useState([]);
   const loaiTaiKhoanOptions = [
     { label: "Tài khoản cá nhân", value: "ca_nhan" },
     { label: "Tài khoản người thân", value: "nguoi_than" },
@@ -116,6 +117,28 @@ const NewOPForm = ({ form }) => {
     reader.readAsDataURL(file);
   };
   useEffect(() => {
+    api.get("/company_sublist/", user.token).then((res) => {
+      setnguoiTuyenOptions(
+        res.results[0].staff.data.map((staff) => ({
+          value: staff.id,
+          label: `${staff.name} ${
+            staff.full_name ? `(${staff.full_name})` : ""
+          }`,
+        }))
+      );
+      setnhaChinhOptions(
+        res.results[0].supplier.data.map((sup) => ({
+          value: sup.id,
+          label: sup.fullname,
+        }))
+      );
+      setcongTyOptions(
+        res.results[0].custommer.data.map((cus) => ({
+          value: cus.id,
+          label: cus.fullname,
+        }))
+      );
+    });
     const loadBanks = async () => {
       const banks = await api.banks();
       const options = banks.data.map((bank) => ({
@@ -160,15 +183,6 @@ const NewOPForm = ({ form }) => {
           <Row gutter={16} className="add_Operator">
             <Col span={8}>
               <Form.Item
-                name="ho_ten"
-                label="Họ và tên"
-                rules={[{ required: true, message: "Vui lòng nhập họ và tên" }]}
-              >
-                <Input placeholder="Nhập họ và tên" />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item
                 name="sdt"
                 label="SĐT"
                 rules={[
@@ -176,6 +190,15 @@ const NewOPForm = ({ form }) => {
                 ]}
               >
                 <Input placeholder="Nhập số điện thoại" />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item
+                name="ho_ten"
+                label="Họ và tên"
+                rules={[{ required: true, message: "Vui lòng nhập họ và tên" }]}
+              >
+                <Input placeholder="Nhập họ và tên" />
               </Form.Item>
             </Col>
             <Col span={8}>
@@ -224,6 +247,7 @@ const NewOPForm = ({ form }) => {
                 <Select
                   placeholder="Chọn người tuyển"
                   options={nguoiTuyenOptions}
+                  allowClear
                   showSearch={true}
                 />
               </Form.Item>
@@ -236,8 +260,13 @@ const NewOPForm = ({ form }) => {
           </Row>
           <Row gutter={16} className="add_Operator">
             <Col span={8}>
-              <Form.Item name="ten_goc" label="Tên chính xác">
-                <Input placeholder="Nhập tên chính xác" />
+              <Form.Item name="nhachinh" label="Nhà chính">
+                <Select
+                  placeholder="Chọn nhà chính"
+                  options={nhaChinhOptions}
+                  showSearch={true}
+                  allowClear
+                />
               </Form.Item>
             </Col>
             <Col span={8}>
@@ -245,6 +274,7 @@ const NewOPForm = ({ form }) => {
                 <Select
                   placeholder="Chọn công ty"
                   showSearch={true}
+                  allowClear
                   options={congTyOptions}
                 />
               </Form.Item>
@@ -264,6 +294,8 @@ const NewOPForm = ({ form }) => {
                 <Select
                   placeholder="Chọn ngân hàng"
                   options={nganHangOptions}
+                  allowClear
+                  showSearch={true}
                 />
               </Form.Item>
             </Col>
@@ -291,11 +323,8 @@ const NewOPForm = ({ form }) => {
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item name="nhachinh" label="Nhà chính">
-                <Select
-                  placeholder="Chọn nhà chính"
-                  options={nhaChinhOptions}
-                />
+              <Form.Item name="ten_goc" label="Tên chính xác">
+                <Input placeholder="Nhập tên chính xác" />
               </Form.Item>
             </Col>
             <Col span={8}>

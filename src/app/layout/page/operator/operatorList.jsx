@@ -1,6 +1,7 @@
 import { Empty, Pagination, Spin } from "antd";
 import React, { useState } from "react";
 const OperatorList = ({ loading, firstload, opList }) => {
+  console.log(opList);
   const [pagenow, setPagenow] = useState(1);
   const [total, setTotal] = useState(opList?.count);
   const handlePageChange = () => {};
@@ -49,11 +50,28 @@ const OperatorList = ({ loading, firstload, opList }) => {
                     </td>
                   </tr>
                 ) : (
-                  <tr>
-                    <td colSpan={9999}>
-                      <Empty className="my-40" />
-                    </td>
-                  </tr>
+                  <>
+                    {opList.results.length > 0 ? (
+                      opList.results.map((op, idx) => (
+                        <tr key={idx}>
+                          <td>{(pagenow - 1) * 15 + (idx + 1)}</td>
+                          <td>{op.ma_nhanvien}</td>
+                          <td>{op.ho_ten}</td>
+                          <td>{op.ten_goc ?? "-"}</td>
+                          <td>{op.sdt ?? "-"}</td>
+                          <td>{op.nhachinh ?? "-"}</td>
+                          <td>{op.congty_danglam ?? "-"}</td>
+                          <td>{op.ma_nhanvien}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={9999}>
+                          <Empty className="my-40" />
+                        </td>
+                      </tr>
+                    )}
+                  </>
                 )}
               </tbody>
             </table>
