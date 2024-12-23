@@ -5,6 +5,7 @@ import OperatorTools from "./operator/operatorTools";
 import OperatorList from "./operator/operatorList";
 import { useUser } from "../../../components/userContext";
 import api from "../../../components/api";
+import OperatorSelected from "./operator/operatorSelected";
 
 const Operator = () => {
   const { user, setUser } = useUser();
@@ -26,8 +27,8 @@ const Operator = () => {
     <div className="employee-page pr-1">
       <div className="flex flex-col gap-2">
         <OperatorDb />
-        <div className="operator-body flex gap-1">
-          <div className="flex flex-col gap-2">
+        <div className="operator-body flex gap-2">
+          <div className="flex flex-col gap-2 right-box">
             <OperatorTools setOpList={setOpList} user={user} />
             <OperatorList
               opList={opList}
@@ -35,6 +36,9 @@ const Operator = () => {
               loadOP={loadOP}
               firstload={firstload}
             />
+          </div>
+          <div className="flex flex-col">
+            <OperatorSelected />
           </div>
         </div>
       </div>

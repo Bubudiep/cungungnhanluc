@@ -356,6 +356,13 @@
                     align-items: center;
                   }
                 }
+                div {
+                  a {
+                    max-width: 100px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                  }
+                }
                 button {
                   padding: 6px 10px;
                   font-size: 0.8rem;
@@ -1377,4 +1384,11 @@ button {
       }
     }
   }
+}
+.white-box {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 2px 2px 4px #0001;
 }
