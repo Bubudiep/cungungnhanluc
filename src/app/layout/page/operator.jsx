@@ -13,7 +13,7 @@ const Operator = () => {
   const [opList, setOpList] = useState([]);
   const loadOP = (page = 1) => {
     api
-      .get("/operators/?page=" + page + "&page_size=15", user.token)
+      .get("/operators_list/?page=" + page + "&page_size=10", user.token)
       .then((res) => {
         setOpList(res);
         setFirstload(false);
@@ -23,16 +23,19 @@ const Operator = () => {
     loadOP();
   }, []);
   return (
-    <div className="employee-page">
-      <OperatorDb />
-      <div className="operator-body flex gap-1">
-        <div className="flex flex-col gap-2">
-          <OperatorTools setOpList={setOpList} user={user} />
-          <OperatorList
-            opList={opList}
-            loading={loading}
-            firstload={firstload}
-          />
+    <div className="employee-page pr-1">
+      <div className="flex flex-col gap-2">
+        <OperatorDb />
+        <div className="operator-body flex gap-1">
+          <div className="flex flex-col gap-2">
+            <OperatorTools setOpList={setOpList} user={user} />
+            <OperatorList
+              opList={opList}
+              loading={loading}
+              loadOP={loadOP}
+              firstload={firstload}
+            />
+          </div>
         </div>
       </div>
     </div>

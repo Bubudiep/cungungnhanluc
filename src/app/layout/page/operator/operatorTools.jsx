@@ -14,12 +14,15 @@ import {
 import NewOPForm from "./newOPForm";
 import api from "../../../../components/api";
 import dayjs from "dayjs";
+import OPsearch_box from "./search_box";
 const { TextArea } = Input;
 const OperatorTools = ({ user, setOpList }) => {
   const [form] = Form.useForm();
   const [visible, setVisible] = useState(false);
   const [isAdd, setIsAdd] = useState(false);
+  const [key, setKey] = useState(0);
   const handleOpen = () => {
+    setKey((prevKey) => prevKey + 1);
     setVisible(true);
     form.setFieldsValue({
       trang_thai: "di_lam",
@@ -68,30 +71,35 @@ const OperatorTools = ({ user, setOpList }) => {
       });
   };
   return (
-    <div className="tool-list">
-      <div className="left">
-        <Button
-          type="primary"
-          onClick={handleOpen}
-          icon={<i className="fa-solid fa-plus"></i>}
-        >
-          Thêm NLĐ
-        </Button>
-      </div>
-      <Modal
-        title="Thêm người lào động"
-        open={visible}
-        onCancel={handleCancel}
-        onOk={handleOk}
-        loading={isAdd}
-        okText="Lưu"
-        cancelText="Hủy"
-        width={1000}
-      >
-        <div className="flex flex-col gap-1">
-          <NewOPForm form={form} user={user} />
+    <div className="right-box">
+      <div className="tools flex justify-between">
+        <div className="left">
+          <OPsearch_box user={user} />
         </div>
-      </Modal>
+        <div className="right">
+          <Button
+            type="primary"
+            onClick={handleOpen}
+            icon={<i className="fa-solid fa-plus"></i>}
+          >
+            Thêm NLĐ
+          </Button>
+        </div>
+        <Modal
+          title="Thêm người lào động"
+          open={visible}
+          onCancel={handleCancel}
+          onOk={handleOk}
+          loading={isAdd}
+          okText="Lưu"
+          cancelText="Hủy"
+          width={1000}
+        >
+          <div className="flex flex-col gap-1">
+            <NewOPForm key={key} form={form} user={user} />
+          </div>
+        </Modal>
+      </div>
     </div>
   );
 };

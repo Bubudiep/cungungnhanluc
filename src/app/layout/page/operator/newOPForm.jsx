@@ -121,21 +121,19 @@ const NewOPForm = ({ form, user }) => {
       setnguoiTuyenOptions(
         res.results[0].staff.data.map((staff) => ({
           value: staff.id,
-          label: `${staff.name} ${
-            staff.full_name ? `(${staff.full_name})` : ""
-          }`,
+          label: `${staff.name} ${staff.fullname ? `(${staff.fullname})` : ""}`,
         }))
       );
       setnhaChinhOptions(
         res.results[0].supplier.data.map((sup) => ({
           value: sup.id,
-          label: sup.fullname,
+          label: `${sup.name} ${sup.fullname ? `(${sup.fullname})` : ""}`,
         }))
       );
       setcongTyOptions(
         res.results[0].custommer.data.map((cus) => ({
           value: cus.id,
-          label: cus.fullname,
+          label: `${cus.name} ${cus.fullname ? `(${cus.fullname})` : ""}`,
         }))
       );
     });
@@ -270,7 +268,7 @@ const NewOPForm = ({ form, user }) => {
           <Row gutter={16} className="add_Operator">
             <Col span={8}>
               <Form.Item
-                name="cong_ty"
+                name="congty_danglam"
                 label="Công ty"
                 rules={[{ required: true, message: "Chưa chọn công ty" }]}
               >

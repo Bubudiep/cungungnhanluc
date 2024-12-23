@@ -52,6 +52,13 @@ const AddEmployee = ({
             <Input placeholder="Nhập mã nhân viên..." />
           </Form.Item>
           <Form.Item
+            name="fullname"
+            label="Họ và tên"
+            rules={[{ required: true, message: "Vui lòng nhập họ và tên!" }]}
+          >
+            <Input placeholder="Nhập họ và tên..." />
+          </Form.Item>
+          <Form.Item
             name="username"
             label="Tên đăng nhập"
             rules={[

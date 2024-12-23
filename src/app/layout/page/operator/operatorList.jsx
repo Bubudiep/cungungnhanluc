@@ -1,10 +1,11 @@
-import { Empty, Pagination, Spin } from "antd";
+import { Button, Empty, Pagination, Spin } from "antd";
 import React, { useState } from "react";
-const OperatorList = ({ loading, firstload, opList }) => {
-  console.log(opList);
+const OperatorList = ({ loading, firstload, opList, loadOP }) => {
   const [pagenow, setPagenow] = useState(1);
-  const [total, setTotal] = useState(opList?.count);
-  const handlePageChange = () => {};
+  const handlePageChange = (e) => {
+    setPagenow(e);
+    loadOP(e);
+  };
   return (
     <div className="flex flex-1 items-start gap-2">
       <div className="right-box">
@@ -20,15 +21,12 @@ const OperatorList = ({ loading, firstload, opList }) => {
                       </>
                     )}
                   </th>
-                  <th>Mã NV</th>
                   <th>Họ và tên</th>
                   <th>Tên gốc</th>
                   <th>SĐT</th>
                   <th>Nhà chính</th>
                   <th>Công ty</th>
                   <th>Ngày vào làm</th>
-                  <th>Ghi chú</th>
-                  <th>Số tài khoản</th>
                   <th>Người tuyển</th>
                   <th>Quản lý</th>
                   <th></th>
@@ -55,13 +53,64 @@ const OperatorList = ({ loading, firstload, opList }) => {
                       opList.results.map((op, idx) => (
                         <tr key={idx}>
                           <td>{(pagenow - 1) * 15 + (idx + 1)}</td>
-                          <td>{op.ma_nhanvien}</td>
-                          <td>{op.ho_ten}</td>
+                          <td>
+                            <div className="flex flex-col">
+                              <a className="flex">{op.ho_ten}</a>
+                              <a className="flex">{op.ma_nhanvien}</a>
+                            </div>
+                          </td>
                           <td>{op.ten_goc ?? "-"}</td>
                           <td>{op.sdt ?? "-"}</td>
-                          <td>{op.nhachinh ?? "-"}</td>
-                          <td>{op.congty_danglam ?? "-"}</td>
-                          <td>{op.ma_nhanvien}</td>
+                          <td>{op.nhachinh?.name ?? "-"}</td>
+                          <td>{op?.work?.customer?.name ?? "-"}</td>
+                          <td>
+                            <div className="flex flex-col">
+                              <div className="flex">
+                                {op?.work?.start_date &&
+                                  new Date(op?.work?.start_date)
+                                    ?.toISOString()
+                                    ?.split("T")[0]}
+                              </div>
+                              <div className="flex">
+                                {op?.work?.end_date
+                                  ? new Date(op?.work?.end_date)
+                                      ?.toISOString()
+                                      ?.split("T")[0]
+                                  : "-"}
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            {op?.nguoituyen && (
+                              <>
+                                <a className="flex">
+                                  {op?.nguoituyen?.name ?? "-"}
+                                </a>
+                                <div className="flex">
+                                  {op?.nguoituyen?.full_name ?? "-"}
+                                </div>
+                              </>
+                            )}
+                          </td>
+                          <td>
+                            {op?.nguoibaocao && (
+                              <>
+                                <a className="flex">
+                                  {op?.nguoibaocao?.name ?? "-"}
+                                </a>
+                                <div className="flex">
+                                  {op?.nguoibaocao?.full_name ?? "-"}
+                                </div>
+                              </>
+                            )}
+                          </td>
+                          <td>
+                            <div className="flex gap-1 ml-2">
+                              <button className="edit">
+                                <i className="fa-regular fa-pen-to-square"></i>
+                              </button>
+                            </div>
+                          </td>
                         </tr>
                       ))
                     ) : (
@@ -81,7 +130,7 @@ const OperatorList = ({ loading, firstload, opList }) => {
           <Pagination
             disabled={loading}
             defaultCurrent={pagenow}
-            total={total}
+            total={opList.count}
             onChange={handlePageChange}
           />
         </div>
