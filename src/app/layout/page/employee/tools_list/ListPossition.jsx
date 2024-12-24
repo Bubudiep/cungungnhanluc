@@ -13,11 +13,9 @@ const ListPossition = ({
 }) => {
   const [editingKey, setEditingKey] = useState(null);
   const isEditing = (record) => record.id === editingKey;
-
   const handleEdit = (record) => {
     setEditingKey(record.id);
   };
-
   const handleSaveEdit = (record) => {
     api
       .patch(

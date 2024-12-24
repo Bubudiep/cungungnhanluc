@@ -12,6 +12,7 @@ const Operator = () => {
   const [loading, setLoading] = useState(false);
   const [firstload, setFirstload] = useState(true);
   const [opList, setOpList] = useState([]);
+  const [seletedUser, setseletedUser] = useState(false);
   const loadOP = (page = 1) => {
     api
       .get("/operators_list/?page=" + page + "&page_size=10", user.token)
@@ -35,10 +36,15 @@ const Operator = () => {
               loading={loading}
               loadOP={loadOP}
               firstload={firstload}
+              setseletedUser={setseletedUser}
             />
           </div>
           <div className="flex flex-col">
-            <OperatorSelected />
+            <OperatorSelected
+              user={user}
+              seletedUser={seletedUser}
+              setseletedUser={setseletedUser}
+            />
           </div>
         </div>
       </div>

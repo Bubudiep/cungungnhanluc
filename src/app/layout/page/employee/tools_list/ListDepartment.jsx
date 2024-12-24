@@ -39,7 +39,7 @@ const ListDepartment = ({
       });
   };
   const handleContentChange = (e, field, record) => {
-    record[field] = e.target.innerText; // Cập nhật nội dung trực tiếp
+    editedDepartment[field] = e.target.innerText; // Cập nhật nội dung trực tiếp
   };
   const handlePaste = (e) => {
     e.preventDefault(); // Ngăn dán nội dung gốc

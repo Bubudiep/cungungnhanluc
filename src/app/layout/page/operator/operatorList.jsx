@@ -1,6 +1,12 @@
 import { Button, Empty, Pagination, Spin } from "antd";
 import React, { useState } from "react";
-const OperatorList = ({ loading, firstload, opList, loadOP }) => {
+const OperatorList = ({
+  loading,
+  firstload,
+  opList,
+  loadOP,
+  setseletedUser,
+}) => {
   const [pagenow, setPagenow] = useState(1);
   const handlePageChange = (e) => {
     setPagenow(e);
@@ -54,8 +60,20 @@ const OperatorList = ({ loading, firstload, opList, loadOP }) => {
                         <td>{(pagenow - 1) * 10 + (idx + 1)}</td>
                         <td>
                           <div className="flex flex-col">
-                            <a>{op.ho_ten}</a>
-                            <a>{op.ma_nhanvien}</a>
+                            <a
+                              onClick={(e) =>
+                                setseletedUser({ user: op, option: 1 })
+                              }
+                            >
+                              {op.ho_ten}
+                            </a>
+                            <a
+                              onClick={(e) =>
+                                setseletedUser({ user: op, option: 1 })
+                              }
+                            >
+                              {op.ma_nhanvien}
+                            </a>
                           </div>
                         </td>
                         <td>{op.ten_goc ?? "-"}</td>
@@ -105,8 +123,13 @@ const OperatorList = ({ loading, firstload, opList, loadOP }) => {
                         </td>
                         <td>
                           <div className="flex gap-1 ml-2">
-                            <button className="edit">
-                              <i className="fa-regular fa-pen-to-square"></i>
+                            <button
+                              className="edit"
+                              onClick={(e) =>
+                                setseletedUser({ user: op, option: 2 })
+                              }
+                            >
+                              <i className="fa-solid fa-clock-rotate-left"></i>
                             </button>
                           </div>
                         </td>
