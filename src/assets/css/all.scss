@@ -1385,37 +1385,129 @@ button {
     }
   }
 }
+.tabs {
+  display: flex;
+  background-color: #fff;
+  padding: 4px;
+  gap: 2px;
+  border-radius: 12px 12px 0px 0px;
+  .item {
+    border-radius: 8px;
+    font-size: 13px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s;
+    color: #999;
+    cursor: pointer;
+    &:hover {
+      background-color: #f3f9ff;
+      color: #0b4aa3;
+    }
+    &.active {
+      color: #0059d6;
+    }
+  }
+}
 .white-box {
   display: flex;
   flex-direction: column;
   background-color: #fff;
-  border-radius: 20px;
+  border-radius: 12px;
   box-shadow: 2px 2px 4px #0001;
   &.operator-selected {
     width: 500px;
     min-height: 600px;
     overflow: hidden;
     border-radius: 12px;
+    border-radius: 0px 12px 12px 12px;
+    .animationbox {
+      animation: slideIn 0.6s forwards;
+    }
+    .op-tools {
+      display: grid;
+      padding: 12px;
+      grid-template-columns: repeat(
+        4,
+        minmax(60px, 1fr)
+      ); /* Định nghĩa số cột tự động */
+      gap: 10px; /* Khoảng cách giữa các item */
+      justify-content: center; /* Căn giữa nếu còn khoảng trống */
+      align-content: center; /* Căn dọc nếu còn khoảng trống */
+      width: 100%; /* Chiếm toàn bộ chiều rộng container */
+      .item {
+        background-color: #e8f1ff;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+        max-width: 300px;
+        .left {
+          display: flex;
+          color: #47568a;
+          align-items: center;
+          flex-direction: column;
+          padding: 12px 8px;
+          overflow: hidden;
+          .icon {
+            height: 34px;
+            font-size: 18px;
+            margin-left: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .name {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+        &:hover {
+          background-color: #b8cdeb;
+          .left {
+            color: #000;
+            transition: all 0.3s;
+          }
+        }
+        &.out {
+          background-color: #faeaea;
+          .left {
+            color: #c50000;
+          }
+          &:hover {
+            background-color: #ffe2e2;
+            .left {
+              color: #f80000;
+              transition: all 0.3s;
+            }
+          }
+        }
+      }
+    }
     .history {
       display: flex;
       flex-direction: column;
       padding: 0px 8px;
       .item {
-        border-left: 4px solid #0003;
+        border-left: 4px solid #b8ddff;
         padding-left: 12px;
         display: flex;
         flex-direction: column;
         gap: 2px;
         position: relative;
-        &::before {
+        &.online::before {
           content: " ";
           position: absolute;
-          left: -6px;
-          top: 10px;
-          width: 8px;
-          height: 8px;
+          left: -7px;
+          top: calc(50% - 5px);
+          width: 10px;
+          height: 10px;
           border-radius: 50%;
-          background-color: #000000;
+          background: #1677ff;
+          border: 1px solid #1677ff;
         }
         .time {
           font-size: 13px;
@@ -1433,8 +1525,8 @@ button {
     .op-card {
       padding: 8px;
       .box {
-        background: linear-gradient(120deg, #f5f9ff, #ddecff);
         height: 150px;
+        background: linear-gradient(187deg, #f5f9ff, #c0cbd9, #b8c3d1);
         border-radius: 12px;
         display: flex;
         .left {
