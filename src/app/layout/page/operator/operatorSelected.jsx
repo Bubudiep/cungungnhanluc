@@ -1,6 +1,8 @@
-import { Empty } from "antd";
+import { Empty, Popconfirm } from "antd";
 import React, { useEffect, useState } from "react";
 import api from "../../../../components/api";
+import Op_tools from "./selected.jsx/op_tool";
+import Op_hiss from "./selected.jsx/op_his";
 
 const OperatorSelected = ({ user, seletedUser, setseletedUser }) => {
   const [isEdit_info, setIsEdit_info] = useState(false);
@@ -10,10 +12,13 @@ const OperatorSelected = ({ user, seletedUser, setseletedUser }) => {
       api
         .get(`/operators_details/${seletedUser.user.id}/`, user?.token)
         .then((res) => {
-          setOpDetails(res);
+          setOpDetails((old) => ({
+            ...old,
+            user: res,
+          }));
         });
     }
-  }, [seletedUser]);
+  }, [seletedUser.user]);
   return (
     <div className="flex flex-col items-start">
       {seletedUser ? (
@@ -237,142 +242,30 @@ const OperatorSelected = ({ user, seletedUser, setseletedUser }) => {
           ) : seletedUser.option == 2 ? (
             <>
               <div key={2} className="white-box operator-selected">
-                <div className="animationbox">
-                  <div className="op-card">
-                    <div className="box">
-                      <div className="left">
-                        <div className="avatar"></div>
-                        <div className="id">
-                          {seletedUser.user?.ma_nhanvien}
-                        </div>
-                      </div>
-                      <div className="right">
-                        <div className="user-info">
-                          <div className="name item">
-                            <div className="type">Họ và tên</div>
-                            <div className="value">
-                              {seletedUser.user?.ho_ten ?? ""}
-                            </div>
-                          </div>
-                          <div className="name item">
-                            <div className="type">Giới tính</div>
-                            <div className="value">
-                              {seletedUser.user?.gioi_tinh ?? ""}
-                            </div>
-                          </div>
-                          <div className="name item">
-                            <div className="type">Ngày sinh</div>
-                            <div className="value">
-                              {seletedUser.user?.ngaysinh ?? ""}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="address text-[#0027a8] font-[500]">
-                          {seletedUser.user?.congty_danglam?.fullname ?? ""}
-                        </div>
-                        <div className="address">
-                          {seletedUser.user?.quequan ?? ""}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="history">
-                    {opDetails?.work?.map((his) => (
-                      <div
-                        className={`item ${his.end_date ? "pass" : "online"}`}
-                      >
-                        <div className="flex gap-2">
-                          <div className="time">
-                            {his.start_date &&
-                              new Date(his.start_date)
-                                .toISOString()
-                                .split("T")[0]}
-                          </div>
-                          -
-                          <div className="time">
-                            {his.end_date
-                              ? new Date(his.end_date)
-                                  .toISOString()
-                                  .split("T")[0]
-                              : "Hiện tại"}
-                          </div>
-                        </div>
-                        <div className="company">
-                          {his.customer.fullname ?? his.customer.name}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <Op_hiss user={user} opDetails={opDetails} />
               </div>
             </>
           ) : (
             <>
               <div key={3} className="white-box operator-selected">
-                <div className="animationbox">
-                  <div className="op-tools">
-                    <div className="item">
-                      <div className="left">
-                        <div className="icon">
-                          <i className="fa-solid fa-handshake-simple"></i>
-                        </div>
-                        <div className="name">Lịch sử ứng</div>
-                        <div className="value">1.000.000 VNĐ</div>
-                      </div>
-                    </div>
-                    <div className="item">
-                      <div className="left">
-                        <div className="icon">
-                          <i className="fa-solid fa-sack-dollar"></i>
-                        </div>
-                        <div className="name">Lịch sử trả lương</div>
-                      </div>
-                    </div>
-                    <div className="item">
-                      <div className="left">
-                        <div className="icon">
-                          <i className="fa-solid fa-file-export"></i>
-                        </div>
-                        <div className="name">Xuất bảng công</div>
-                      </div>
-                    </div>
-                    <div className="item">
-                      <div className="left">
-                        <div className="icon">
-                          <i className="fa-solid fa-link"></i>
-                        </div>
-                        <div className="name">Nối hợp đồng</div>
-                      </div>
-                    </div>
-                    <div className="item">
-                      <div className="left">
-                        <div className="icon">
-                          <i className="fa-solid fa-seedling"></i>
-                        </div>
-                        <div className="name">Báo ứng</div>
-                      </div>
-                    </div>
-                    <div className="item out">
-                      <div className="left">
-                        <div className="icon">
-                          <i className="fa-solid fa-right-from-bracket"></i>
-                        </div>
-                        <div className="name">Nghỉ việc</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <Op_tools
+                  user={user}
+                  seletedUser={seletedUser}
+                  setseletedUser={setseletedUser}
+                />
               </div>
             </>
           )}
         </>
       ) : (
-        <div key={3} className="white-box">
-          <div className="flex w-[500px] items-center justify-center h-[200px]">
-            <Empty
-              description="Chọn một nhân lực để xem chi tiết!"
-              className="flex flex-col "
-            />
+        <div key={4} className="white-box">
+          <div className="animationbox flex flex-1 mt-10 mb-10">
+            <div className="flex w-[500px] items-center justify-center">
+              <Empty
+                description="Chọn một nhân lực để xem chi tiết!"
+                className="flex flex-col "
+              />
+            </div>
           </div>
         </div>
       )}

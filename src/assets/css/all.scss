@@ -1394,18 +1394,36 @@ button {
   .item {
     border-radius: 8px;
     font-size: 13px;
-    padding: 8px 12px;
+    padding: 8px 12px 4px 12px;
     display: flex;
     align-items: center;
     transition: all 0.3s;
     color: #999;
+    flex-direction: column;
     cursor: pointer;
+    &::after {
+      margin-top: 2px;
+      height: 3px;
+      border-radius: 5px;
+      width: 0%;
+      background-color: #008cff;
+      content: " ";
+      transition: all 0.3s;
+    }
     &:hover {
       background-color: #f3f9ff;
       color: #0b4aa3;
     }
     &.active {
       color: #0059d6;
+      &::after {
+        margin-top: 2px;
+        height: 3px;
+        border-radius: 5px;
+        width: 100%;
+        background-color: #008cff;
+        content: " ";
+      }
     }
   }
 }
@@ -1442,27 +1460,21 @@ button {
         transition: all 0.3s;
         max-width: 300px;
         .left {
-          display: flex;
           color: #47568a;
-          align-items: center;
-          flex-direction: column;
-          padding: 12px 8px;
-          overflow: hidden;
+          @apply flex items-center flex-col py-3 px-2 h-full overflow-hidden;
           .icon {
             height: 34px;
             font-size: 18px;
-            margin-left: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            @apply justify-center items-center flex ml-1;
           }
           .name {
-            display: flex;
-            align-items: center;
             font-size: 13px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            @apply flex items-center whitespace-nowrap overflow-hidden mt-auto text-ellipsis;
+          }
+          .value {
+            font-size: 11px;
+            font-weight: 500;
+            height: 15px;
           }
         }
         &:hover {
@@ -1498,6 +1510,8 @@ button {
         flex-direction: column;
         gap: 2px;
         position: relative;
+        color: #323538;
+        font-size: 13px;
         &.online::before {
           content: " ";
           position: absolute;
@@ -1512,13 +1526,17 @@ button {
         .time {
           font-size: 13px;
           font-weight: 500;
-          color: #a1a1a1;
+          color: #197ec2;
         }
         .company {
-          color: #57759e;
           background-color: #e8f4ff;
           border-radius: 6px;
-          padding: 6px;
+          padding: 8px;
+          display: flex;
+          flex-direction: column;
+          .name {
+            color: #156ce6;
+          }
         }
       }
     }
@@ -1643,6 +1661,31 @@ button {
             padding: 4px;
             text-align: right;
             width: -webkit-fill-available;
+          }
+        }
+      }
+    }
+  }
+}
+.ant-popover-content {
+  .ant-popconfirm-inner-content {
+    .ant-popconfirm-message {
+      .ant-popconfirm-message-icon {
+        margin-right: 8px;
+        font-size: 13px;
+      }
+    }
+    .ant-popconfirm-buttons {
+      button {
+        font-size: 13px;
+        padding: 6px 8px;
+        height: 28px;
+        &.ant-btn-warning {
+          border: 1px solid rgb(211, 191, 191);
+          color: rgb(214, 35, 35);
+          &:hover {
+            color: red;
+            border-color: red;
           }
         }
       }

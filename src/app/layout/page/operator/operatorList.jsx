@@ -79,7 +79,11 @@ const OperatorList = ({
                         <td>{op.ten_goc ?? "-"}</td>
                         <td>{op.sdt ?? "-"}</td>
                         <td>{op.nhachinh?.name ?? "-"}</td>
-                        <td>{op?.work?.customer?.name ?? "-"}</td>
+                        <td>
+                          {op?.congty_danglam?.name ?? (
+                            <i className="fa-solid fa-ban"></i>
+                          )}
+                        </td>
                         <td>
                           <div className="flex flex-col">
                             <div className="flex">
