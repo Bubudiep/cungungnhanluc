@@ -19,7 +19,10 @@ const Op_tools = ({ user, seletedUser, setseletedUser }) => {
         user.token
       )
       .then((res) => {
-        setseletedUser(res);
+        setseletedUser((old) => ({
+          ...old,
+          user: res,
+        }));
         setIsModalOpen(false);
         message.success("Đã ghi nhận nghỉ việc thành công!");
       })
