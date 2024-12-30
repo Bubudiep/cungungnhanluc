@@ -4,7 +4,13 @@ import api from "../../../../components/api";
 import Op_tools from "./selected.jsx/op_tool";
 import Op_hiss from "./selected.jsx/op_his";
 
-const OperatorSelected = ({ user, seletedUser, setseletedUser }) => {
+const OperatorSelected = ({
+  user,
+  seletedUser,
+  setseletedUser,
+  setOpList,
+  opList,
+}) => {
   const [isEdit_info, setIsEdit_info] = useState(false);
   const [opDetails, setOpDetails] = useState({});
   useEffect(() => {
@@ -16,6 +22,11 @@ const OperatorSelected = ({ user, seletedUser, setseletedUser }) => {
             ...old,
             user: res,
           }));
+          const newArray = opList.results.map((item) =>
+            item.id === res.id ? { ...item, ...res } : item
+          );
+          console.log(newArray);
+          setOpList((old) => ({ ...old, results: newArray }));
         });
     }
   }, [seletedUser.user]);
@@ -38,15 +49,7 @@ const OperatorSelected = ({ user, seletedUser, setseletedUser }) => {
                 setseletedUser({ ...seletedUser, option: 2 });
               }}
             >
-              Quá trình
-            </div>
-            <div
-              className={`item ${seletedUser.option == 3 ? "active" : ""}`}
-              onClick={() => {
-                setseletedUser({ ...seletedUser, option: 3 });
-              }}
-            >
-              Công cụ
+              Quá trình làm việc
             </div>
           </div>
           {seletedUser.option == 1 ? (
@@ -242,7 +245,12 @@ const OperatorSelected = ({ user, seletedUser, setseletedUser }) => {
           ) : seletedUser.option == 2 ? (
             <>
               <div key={2} className="white-box operator-selected">
-                <Op_hiss user={user} opDetails={opDetails} />
+                <Op_hiss
+                  user={user}
+                  opDetails={opDetails}
+                  seletedUser={seletedUser}
+                  setseletedUser={setseletedUser}
+                />
               </div>
             </>
           ) : (

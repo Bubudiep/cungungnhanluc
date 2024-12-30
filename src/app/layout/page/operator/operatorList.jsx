@@ -56,20 +56,29 @@ const OperatorList = ({
                 <>
                   {opList.results.length > 0 ? (
                     opList.results.map((op, idx) => (
-                      <tr key={idx}>
-                        <td>{(pagenow - 1) * 10 + (idx + 1)}</td>
+                      <tr
+                        key={idx}
+                        className={op?.congty_danglam?.name ?? "opacity-50"}
+                      >
+                        <td className="!text-[11px]">
+                          {op?.congty_danglam?.name ? (
+                            <div className="online">Online</div>
+                          ) : (
+                            <div className="offline">Offline</div>
+                          )}
+                        </td>
                         <td>
                           <div className="flex flex-col">
                             <a
                               onClick={(e) =>
-                                setseletedUser({ user: op, option: 1 })
+                                setseletedUser({ user: op, option: 2 })
                               }
                             >
                               {op.ho_ten}
                             </a>
                             <a
                               onClick={(e) =>
-                                setseletedUser({ user: op, option: 1 })
+                                setseletedUser({ user: op, option: 2 })
                               }
                             >
                               {op.ma_nhanvien}
@@ -87,14 +96,15 @@ const OperatorList = ({
                         <td>
                           <div className="flex flex-col">
                             <div className="flex">
-                              {op?.work?.start_date &&
-                                new Date(op?.work?.start_date)
+                              {op?.work?.length > 0 &&
+                                op?.work[0].start_date &&
+                                new Date(op?.work[0].start_date)
                                   ?.toISOString()
                                   ?.split("T")[0]}
                             </div>
                             <div className="flex">
-                              {op?.work?.end_date
-                                ? new Date(op?.work?.end_date)
+                              {op?.work?.length > 0 && op?.work[0].end_date
+                                ? new Date(op?.work[0].end_date)
                                     ?.toISOString()
                                     ?.split("T")[0]
                                 : "-"}
@@ -130,7 +140,7 @@ const OperatorList = ({
                             <button
                               className="edit"
                               onClick={(e) =>
-                                setseletedUser({ user: op, option: 2 })
+                                setseletedUser({ user: op, option: 1 })
                               }
                             >
                               <i className="fa-solid fa-clock-rotate-left"></i>

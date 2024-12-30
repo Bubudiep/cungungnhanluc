@@ -86,7 +86,7 @@ const OperatorTools = ({ user, setOpList }) => {
           </Button>
         </div>
         <Modal
-          title="Thêm người lào động"
+          title="Thêm người lao động"
           open={visible}
           onCancel={handleCancel}
           onOk={handleOk}

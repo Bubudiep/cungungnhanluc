@@ -1,6 +1,8 @@
 import React from "react";
+import OP_DiLam from "./op_tools/op_dilam";
+import OP_NghiViec from "./op_tools/op_nghiviec";
 
-const Op_hiss = ({ opDetails }) => {
+const Op_hiss = ({ opDetails, user, seletedUser, setseletedUser }) => {
   console.log(opDetails);
   return (
     <div className="animationbox">
@@ -32,8 +34,69 @@ const Op_hiss = ({ opDetails }) => {
           </div>
         </div>
       </div>
-      <div className="history">
-        {opDetails.user.work &&
+      <div className="op-tools">
+        <div className="item">
+          <div className="left">
+            <div className="icon">
+              <i className="fa-solid fa-handshake-simple"></i>
+            </div>
+            <div className="name">Lịch sử ứng</div>
+            <div className="value">1.000.000 VNĐ</div>
+          </div>
+        </div>
+        <div className="item">
+          <div className="left">
+            <div className="icon">
+              <i className="fa-solid fa-sack-dollar"></i>
+            </div>
+            <div className="name">Lịch sử trả lương</div>
+            <div className="value">0 VNĐ</div>
+          </div>
+        </div>
+        <div className="item">
+          <div className="left">
+            <div className="icon">
+              <i className="fa-solid fa-file-export"></i>
+            </div>
+            <div className="name">Bảng công</div>
+            <div className="value">0 NGÀY</div>
+          </div>
+        </div>
+        <div className="item">
+          <div className="left">
+            <div className="icon">
+              <i className="fa-solid fa-link"></i>
+            </div>
+            <div className="name">Nối hợp đồng</div>
+            <div className="value">0 NGÀY</div>
+          </div>
+        </div>
+        <OP_DiLam
+          user={user}
+          seletedUser={seletedUser}
+          setseletedUser={setseletedUser}
+        />
+        <div className="item">
+          <div className="left">
+            <div className="icon">
+              <i className="fa-solid fa-seedling"></i>
+            </div>
+            <div className="name">Báo ứng</div>
+          </div>
+        </div>
+        <OP_NghiViec
+          user={user}
+          seletedUser={seletedUser}
+          setseletedUser={setseletedUser}
+        />
+      </div>
+      <div className="h3 p-2 text-[#0041bb] gap-2 flex items-center">
+        <i className="fa-solid fa-clock-rotate-left text-[13px] mt-[2px]"></i>
+        <div className="text">Quá trình làm việc</div>
+      </div>
+      <div className="history ml-5">
+        {opDetails.user &&
+          opDetails.user.work &&
           opDetails.user.work.map((his, idx) => (
             <div
               key={idx}

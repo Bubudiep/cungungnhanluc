@@ -1069,9 +1069,81 @@ button {
     border-radius: 10px;
   }
   .add_Operator {
+    .avatar {
+      padding: 4px;
+      .box {
+        position: relative;
+        background-color: #fff;
+        border-radius: 8px;
+        height: 110px;
+        width: 90px;
+        border: 1px solid #0003;
+        overflow: hidden;
+        .ant-upload-list {
+          display: none;
+        }
+        button {
+          position: absolute;
+          bottom: 2px;
+          right: 2px;
+          width: 20px;
+          font-size: 10px;
+          height: 20px;
+          padding: 0px;
+          margin: 0px;
+          overflow: hidden;
+          background-color: #0000007e;
+          color: #fff;
+          border: hidden;
+          &:hover {
+            background-color: #000000a4;
+          }
+        }
+      }
+    }
     .ant-form-item {
       padding: 0px;
       margin: 10px 0px;
+    }
+    .img-box {
+      border: 1px solid #0003;
+      height: 150px;
+      overflow: hidden;
+      border-radius: 8px;
+      margin: 4px 0px;
+      background-color: #fff;
+      overflow: hidden;
+      position: relative;
+      .ant-upload-list {
+        display: none;
+      }
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Hình ảnh bao phủ toàn bộ khung */
+        position: absolute; /* Giúp căn chỉnh hình ảnh */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%); /* Căn giữa */
+      }
+      button {
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        font-size: 13px;
+        width: 25px;
+        height: 25px;
+        padding: 0px;
+        margin: 0px;
+        overflow: hidden;
+        background-color: #0000007e;
+        color: #fff;
+        border: hidden;
+        &:hover {
+          background-color: #000000a4;
+          color: #fff;
+        }
+      }
     }
   }
 }
@@ -1401,6 +1473,7 @@ button {
     color: #999;
     flex-direction: column;
     cursor: pointer;
+    user-select: none;
     &::after {
       margin-top: 2px;
       height: 3px;
@@ -1444,7 +1517,7 @@ button {
     }
     .op-tools {
       display: grid;
-      padding: 12px;
+      padding: 0px 8px 8px 8px;
       grid-template-columns: repeat(
         4,
         minmax(60px, 1fr)
@@ -1538,13 +1611,27 @@ button {
             color: #156ce6;
           }
         }
+        &.pass {
+          border-left: 4px solid #999999;
+          .time {
+            font-size: 13px;
+            font-weight: 500;
+            color: unset;
+          }
+          .company {
+            background-color: #ececec;
+            .name {
+              color: #808080;
+            }
+          }
+        }
       }
     }
     .op-card {
       padding: 8px;
       .box {
         height: 150px;
-        background: linear-gradient(187deg, #f5f9ff, #c0cbd9, #b8c3d1);
+        background: linear-gradient(187deg, #f5f9ff, #e5f0ff, #edf5ff);
         border-radius: 12px;
         display: flex;
         .left {
@@ -1575,7 +1662,7 @@ button {
           display: flex;
           flex-direction: column;
           font-size: 13px;
-          gap: 12px;
+          gap: 4px;
           .address {
             font-size: 12px;
             &:last-child {

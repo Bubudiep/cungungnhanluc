@@ -17,6 +17,12 @@ import { useUser } from "../../../../components/userContext";
 const { TextArea } = Input;
 
 const NewOPForm = ({ form, user }) => {
+  const [fileListFront, setFileListFront] = useState([]);
+  const [fileListAvatar, setFileListAvatar] = useState([]);
+  const [fileListBack, setFileListBack] = useState([]);
+  const [previewFront, setPreviewFront] = useState(null);
+  const [previewBack, setPreviewBack] = useState(null);
+  const [previewAvatar, setPreviewAvatar] = useState(null);
   const [fileList, setFileList] = useState([]);
   const [readQR, setReadQR] = useState(false);
   const trangThaiOptions = [
@@ -40,6 +46,41 @@ const NewOPForm = ({ form, user }) => {
       return Upload.LIST_IGNORE;
     }
     return false;
+  };
+  const handleUploadFront = (info) => {
+    if (info.fileList && info.fileList.length > 0) {
+      const file = info.fileList[0].originFileObj;
+      handleReadQR(file);
+      setFileListFront([info.fileList[0]]);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreviewFront(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleUploadAvatar = (info) => {
+    if (info.fileList && info.fileList.length > 0) {
+      const file = info.fileList[0].originFileObj;
+      setFileListAvatar([info.fileList[0]]);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreviewAvatar(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  const handleUploadBack = (info) => {
+    if (info.fileList && info.fileList.length > 0) {
+      const file = info.fileList[0].originFileObj;
+      setFileListBack([info.fileList[0]]);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPreviewBack(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
   const handleChangeFile = (info) => {
     if (info.fileList && info.fileList.length > 0) {
@@ -150,22 +191,9 @@ const NewOPForm = ({ form, user }) => {
   return (
     <>
       <div className="h3">
-        Thông tin người lao động
-        <div className="ml-auto flex gap-2 items-center">
-          <Upload
-            beforeUpload={handleBeforeUpload}
-            fileList={fileList}
-            onChange={handleChangeFile}
-            maxCount={1}
-            accept="image/*"
-          >
-            <Button
-              loading={readQR}
-              icon={<i className="fa-solid fa-qrcode"></i>}
-            >
-              Upload ảnh CCCD
-            </Button>
-          </Upload>
+        Thông tin trong công ty của bạn{" "}
+        <div className="ml-1 font-normal text-red-500">
+          (*) Không phải công ty khách hàng
         </div>
       </div>
       <Form
@@ -177,7 +205,73 @@ const NewOPForm = ({ form, user }) => {
         labelCol={{ span: 10 }}
         wrapperCol={{ span: 16 }}
       >
-        <div className="flex flex-col list-input list-input">
+        <div className="flex flex-col list-input">
+          <Row gutter={16} className="add_Operator items-start">
+            <Col span={8} className="flex flex-col flex-1 items-center">
+              <div className="avatar">
+                <div className="box">
+                  <img src={previewAvatar} alt="Ảnh 3x4" />
+                  <Upload
+                    beforeUpload={handleBeforeUpload}
+                    fileList={fileListAvatar}
+                    onChange={handleUploadAvatar}
+                    maxCount={1}
+                    accept="image/*"
+                  >
+                    <Button>
+                      <i className="fa-solid fa-camera"></i>
+                    </Button>
+                  </Upload>
+                </div>
+              </div>
+              <Form.Item
+                name="so_taikhoan"
+                label="Mã nhân viên"
+                className="!my-1"
+                rules={[
+                  { required: true, message: "Vui lòng nhập mã nhân viên" },
+                ]}
+              >
+                <Input placeholder="Nhập mã nhân viên" />
+              </Form.Item>
+            </Col>
+            <Col span={8} className="flex flex-col flex-1">
+              <div className="img-box">
+                <div>
+                  <img src={previewFront} alt="Ảnh CCCD mặt trước" />
+                  <Upload
+                    beforeUpload={handleBeforeUpload}
+                    fileList={fileListFront}
+                    onChange={handleUploadFront}
+                    maxCount={1}
+                    accept="image/*"
+                  >
+                    <Button>
+                      <i className="fa-solid fa-camera"></i>
+                    </Button>
+                  </Upload>
+                </div>
+              </div>
+            </Col>
+            <Col span={8} className="flex flex-col flex-1">
+              <div className="img-box">
+                <div>
+                  <img src={previewBack} alt="Ảnh CCCD mặt sau" />
+                  <Upload
+                    beforeUpload={handleBeforeUpload}
+                    fileList={fileListBack}
+                    onChange={handleUploadBack}
+                    maxCount={1}
+                    accept="image/*"
+                  >
+                    <Button>
+                      <i className="fa-solid fa-camera"></i>
+                    </Button>
+                  </Upload>
+                </div>
+              </div>
+            </Col>
+          </Row>
           <Row gutter={16} className="add_Operator">
             <Col span={8}>
               <Form.Item
@@ -218,80 +312,6 @@ const NewOPForm = ({ form, user }) => {
             </Col>
             <Col span={8}>
               <Form.Item name="ngaysinh" label="Ngày sinh">
-                <DatePicker style={{ width: "100%" }} placeholder="Chọn ngày" />
-              </Form.Item>
-            </Col>
-          </Row>
-        </div>
-        <div className="h3">Thông tin đi làm</div>
-        <div className="flex flex-col list-input">
-          <Row gutter={16} className="add_Operator">
-            <Col span={8}>
-              <Form.Item
-                name="trangthai"
-                label="Trạng thái"
-                rules={[
-                  { required: true, message: "Vui lòng chọn trạng thái" },
-                ]}
-              >
-                <Select
-                  placeholder="Chọn trạng thái"
-                  options={trangThaiOptions}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item
-                name="nguoituyen"
-                label="Người tuyển"
-                rules={[
-                  {
-                    required: true,
-                    message: "Chưa chọn người tuyển!",
-                  },
-                ]}
-              >
-                <Select
-                  placeholder="Chọn người tuyển"
-                  options={nguoiTuyenOptions}
-                  allowClear
-                  showSearch={true}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item name="ma_nhanvien" label="Mã NV">
-                <Input placeholder="Nhập mã nhân viên" />
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={16} className="add_Operator">
-            <Col span={8}>
-              <Form.Item
-                name="congty_danglam"
-                label="Công ty"
-                rules={[{ required: true, message: "Chưa chọn công ty" }]}
-              >
-                <Select
-                  placeholder="Chọn công ty"
-                  showSearch={true}
-                  allowClear
-                  options={congTyOptions}
-                />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item name="nhachinh" label="Nhà chính">
-                <Select
-                  placeholder="Chọn nhà chính"
-                  options={nhaChinhOptions}
-                  showSearch={true}
-                  allowClear
-                />
-              </Form.Item>
-            </Col>
-            <Col span={8}>
-              <Form.Item name="ngay_vao_lam" label="Ngày vào làm">
                 <DatePicker style={{ width: "100%" }} placeholder="Chọn ngày" />
               </Form.Item>
             </Col>

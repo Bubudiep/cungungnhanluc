@@ -42,6 +42,8 @@ const Operator = () => {
           <div className="flex flex-col">
             <OperatorSelected
               user={user}
+              opList={opList}
+              setOpList={setOpList}
               seletedUser={seletedUser}
               setseletedUser={setseletedUser}
             />

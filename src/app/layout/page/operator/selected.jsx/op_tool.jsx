@@ -1,12 +1,18 @@
-import { message, Popconfirm, Modal, DatePicker, Button } from "antd";
+import { message, Popconfirm, Modal, DatePicker, Button, Input } from "antd";
 import React, { useState } from "react";
 import moment from "moment";
 import api from "../../../../../components/api";
+import OP_NghiViec from "./op_tools/op_nghiviec";
+import OP_DiLam from "./op_tools/op_dilam";
 
 const Op_tools = ({ user, seletedUser, setseletedUser }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDILamModalOpen, setIsDILamModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(moment());
-
+  const [workDetails, setWorkDetails] = useState({
+    timeStart: null,
+    timeEnd: null,
+  });
   const handleNghiviec = () => {
     if (!selectedDate) {
       message.warning("Vui lòng chọn ngày nghỉ!");
@@ -31,11 +37,33 @@ const Op_tools = ({ user, seletedUser, setseletedUser }) => {
       });
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    setSelectedDate(null);
+  const handleDiLam = () => {
+    if (!workDetails.timeStart || !workDetails.timeEnd) {
+      message.warning("Vui lòng điền đủ thông tin làm việc!");
+      return;
+    }
+    api
+      .post(
+        `/operators/${seletedUser.user.id}/dilam/`,
+        {
+          timeStart: workDetails.timeStart,
+          timeEnd: workDetails.timeEnd,
+        },
+        user.token
+      )
+      .then(() => {
+        setIsDILamModalOpen(false);
+        message.success("Đã ghi nhận đi làm thành công!");
+      })
+      .catch((er) => {
+        message.error(er.response?.data?.detail ?? "Lỗi: không xác định!");
+      });
   };
 
+  const handleCancelDiLam = () => {
+    setIsDILamModalOpen(false);
+    setWorkDetails({ timeStart: null, timeEnd: null });
+  };
   return (
     <div className="animationbox">
       <div className="op-tools">
@@ -75,6 +103,11 @@ const Op_tools = ({ user, seletedUser, setseletedUser }) => {
             <div className="value">0 NGÀY</div>
           </div>
         </div>
+        <OP_DiLam
+          user={user}
+          seletedUser={seletedUser}
+          setseletedUser={setseletedUser}
+        />
         <div className="item">
           <div className="left">
             <div className="icon">
@@ -83,33 +116,12 @@ const Op_tools = ({ user, seletedUser, setseletedUser }) => {
             <div className="name">Báo ứng</div>
           </div>
         </div>
-        <div className="item out" onClick={() => setIsModalOpen(true)}>
-          <div className="left">
-            <div className="icon">
-              <i className="fa-solid fa-right-from-bracket"></i>
-            </div>
-            <div className="name">Nghỉ việc</div>
-          </div>
-        </div>
+        <OP_NghiViec
+          user={user}
+          seletedUser={seletedUser}
+          setseletedUser={setseletedUser}
+        />
       </div>
-
-      <Modal
-        title="Xác nhận nghỉ việc"
-        open={isModalOpen}
-        onOk={handleNghiviec}
-        onCancel={handleCancel}
-        okText="Xác nhận"
-        cancelText="Hủy"
-      >
-        <div className="flex flex-col gap-3">
-          <p>Vui lòng chọn ngày nghỉ:</p>
-          <DatePicker
-            onChange={(date) => setSelectedDate(date)}
-            style={{ width: "100%" }}
-            defaultValue={selectedDate}
-          />
-        </div>
-      </Modal>
     </div>
   );
 };
