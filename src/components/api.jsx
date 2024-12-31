@@ -268,7 +268,7 @@ const getAddress = async (latitude, longitude) => {
     return {};
   }
 };
-function resizeImage(img, maxSize) {
+function resizeImage(img, maxSize, outputFormat = "image/jpeg", quality = 0.8) {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
   let width = img.width;
@@ -287,7 +287,7 @@ function resizeImage(img, maxSize) {
   canvas.width = width;
   canvas.height = height;
   ctx.drawImage(img, 0, 0, width, height);
-  return canvas.toDataURL("image/png");
+  return canvas.toDataURL(outputFormat, quality);
 }
 function timeSinceOrder(createdAt) {
   const orderDate = new Date(createdAt); // Convert order.created_at to a Date object

@@ -47,16 +47,24 @@ const NewOPForm = ({ form, user }) => {
     }
     return false;
   };
-  const handleUploadFront = (info) => {
+  const handleUploadFront = async (info) => {
     if (info.fileList && info.fileList.length > 0) {
       const file = info.fileList[0].originFileObj;
       handleReadQR(file);
       setFileListFront([info.fileList[0]]);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setPreviewFront(e.target.result);
+      let base64 = await api.convertToBase64(file);
+      const img = new Image();
+      img.src = base64;
+      img.onload = async () => {
+        const resizedBase64 = await api.resizeImage(
+          img,
+          600,
+          "image/jpeg",
+          0.9
+        );
+        console.log(resizedBase64);
+        setPreviewFront(resizedBase64);
       };
-      reader.readAsDataURL(file);
     }
   };
 
@@ -71,15 +79,18 @@ const NewOPForm = ({ form, user }) => {
       reader.readAsDataURL(file);
     }
   };
-  const handleUploadBack = (info) => {
+  const handleUploadBack = async (info) => {
     if (info.fileList && info.fileList.length > 0) {
       const file = info.fileList[0].originFileObj;
       setFileListBack([info.fileList[0]]);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setPreviewBack(e.target.result);
+      let base64 = await api.convertToBase64(file);
+      const img = new Image();
+      img.src = base64;
+      img.onload = async () => {
+        const resizedBase64 = await api.resizeImage(img, 500);
+        console.log(resizedBase64);
+        setPreviewBack(resizedBase64);
       };
-      reader.readAsDataURL(file);
     }
   };
   const handleChangeFile = (info) => {
@@ -97,7 +108,6 @@ const NewOPForm = ({ form, user }) => {
       img.onload = function () {
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
-        // Vẽ ảnh lên canvas
         canvas.width = img.width;
         canvas.height = img.height;
         context.drawImage(img, 0, 0, img.width, img.height);
@@ -207,8 +217,8 @@ const NewOPForm = ({ form, user }) => {
       >
         <div className="flex flex-col list-input">
           <Row gutter={16} className="add_Operator items-start">
-            <Col span={8} className="flex flex-col flex-1 items-center">
-              <div className="avatar">
+            <Col span={8} className="flex flex-col flex-1">
+              <div className="avatar flex justify-center">
                 <div className="box">
                   <img src={previewAvatar} alt="Ảnh 3x4" />
                   <Upload
