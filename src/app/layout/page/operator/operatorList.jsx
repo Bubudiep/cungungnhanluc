@@ -143,7 +143,7 @@ const OperatorList = ({
                                 setseletedUser({ user: op, option: 1 })
                               }
                             >
-                              <i className="fa-solid fa-clock-rotate-left"></i>
+                              <i className="fa-solid fa-circle-info"></i>
                             </button>
                           </div>
                         </td>
