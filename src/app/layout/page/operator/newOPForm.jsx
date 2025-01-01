@@ -235,7 +235,7 @@ const NewOPForm = ({ form, user }) => {
                 </div>
               </div>
               <Form.Item
-                name="so_taikhoan"
+                name="ma_nhanvien"
                 label="Mã nhân viên"
                 className="!my-1"
                 rules={[
