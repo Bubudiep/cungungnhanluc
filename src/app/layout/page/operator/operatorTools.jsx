@@ -62,6 +62,7 @@ const OperatorTools = ({ user, setOpList }) => {
             message.error(e?.response?.data?.detail ?? "Lỗi khi thêm!");
           })
           .finally(setIsAdd(false));
+
         // setVisible(false);
         // form.resetFields();
       })

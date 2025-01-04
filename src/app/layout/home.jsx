@@ -15,6 +15,9 @@ const Homepage = () => {
     "/company": "Công ty",
     "/profile": "Cá nhân",
     "/operator": "Nhân lực",
+    "/approver": "Phê duyệt",
+    "/attendance": "Bảng công",
+    "/op_salary": "Bảng lương",
   };
   const breadcrumbItems = location.pathname
     .split("/")
@@ -23,31 +26,73 @@ const Homepage = () => {
       const to = "/" + arr.slice(0, index + 1).join("/"); // Xây dựng đường dẫn cho từng phần
       return { name: routeNames[to] || item, path: to };
     });
+
+  const isActive = (path) => location.pathname === path;
+
   return (
     <div className="home-page">
       {window.electron && <Top_container />}
       <div className="body-container">
         <div className="app-container">
           <div className="list-app">
-            <Link className="item" to="/dashboard">
+            <Link
+              className={`item ${isActive("/dashboard") ? "active" : ""}`}
+              to="/dashboard"
+            >
               <div className="icon">
                 <i className="fa-solid fa-chart-simple"></i>
               </div>
               <div className="name">Tổng quan</div>
             </Link>
-            <Link className="item" to="/operator">
+            <Link
+              className={`item ${isActive("/operator") ? "active" : ""}`}
+              to="/operator"
+            >
               <div className="icon">
                 <i className="fa-solid fa-users-viewfinder"></i>
               </div>
               <div className="name">Nhân lực</div>
             </Link>
-            <Link className="item" to="/employee">
+            <Link
+              className={`item ${isActive("/attendance") ? "active" : ""}`}
+              to="/attendance"
+            >
+              <div className="icon">
+                <i className="fa-solid fa-calendar-days"></i>
+              </div>
+              <div className="name">Bảng công</div>
+            </Link>
+            <Link
+              className={`item ${isActive("/op_salary") ? "active" : ""}`}
+              to="/op_salary"
+            >
+              <div className="icon">
+                <i className="fa-solid fa-money-bill-transfer"></i>
+              </div>
+              <div className="name">Lương NLĐ</div>
+            </Link>
+            <Link
+              className={`item ${isActive("/approver") ? "active" : ""}`}
+              to="/approver"
+            >
+              <div className="icon">
+                <i className="fa-solid fa-file-invoice-dollar"></i>
+              </div>
+              <div className="name">Phê duyệt</div>
+            </Link>
+            <Link
+              className={`item ${isActive("/employee") ? "active" : ""}`}
+              to="/employee"
+            >
               <div className="icon">
                 <i className="fa-solid fa-users-gear"></i>
               </div>
               <div className="name">Nhân viên</div>
             </Link>
-            <Link className="item" to="/company">
+            <Link
+              className={`item ${isActive("/company") ? "active" : ""}`}
+              to="/company"
+            >
               <div className="icon">
                 <i className="fa-regular fa-building"></i>
               </div>
@@ -55,12 +100,15 @@ const Homepage = () => {
             </Link>
           </div>
           <div className="list-app">
-            <Link className="item" to="/profile">
+            <Link
+              className={`item ${isActive("/profile") ? "active" : ""}`}
+              to="/profile"
+            >
               <div className="avatar">
                 {user.profile?.avatar ? (
-                  <img src={user.profile?.avatar} />
+                  <img src={user.profile?.avatar} alt="Avatar" />
                 ) : (
-                  <img src={avatar} />
+                  <img src={avatar} alt="Default Avatar" />
                 )}
               </div>
             </Link>

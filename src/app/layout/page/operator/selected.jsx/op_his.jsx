@@ -9,7 +9,9 @@ const Op_hiss = ({ opDetails, user, seletedUser, setseletedUser }) => {
       <div className="op-card">
         <div className="box">
           <div className="left">
-            <div className="avatar"></div>
+            <div className="avatar">
+              <img src={opDetails?.user?.avatar} />
+            </div>
             <div className="id">{opDetails.user?.ma_nhanvien}</div>
           </div>
           <div className="right">
@@ -28,7 +30,9 @@ const Op_hiss = ({ opDetails, user, seletedUser, setseletedUser }) => {
               </div>
             </div>
             <div className="address text-[#0027a8] font-[500]">
-              {opDetails.user?.congty_danglam?.fullname ?? "Đang không đi làm"}
+              {opDetails.user?.congty_danglam?.fullname ?? (
+                <div className="text-red-500">Chưa đi làm</div>
+              )}
             </div>
             <div className="address">{opDetails.user?.quequan ?? ""}</div>
           </div>

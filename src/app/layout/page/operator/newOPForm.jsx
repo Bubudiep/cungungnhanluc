@@ -62,34 +62,53 @@ const NewOPForm = ({ form, user }) => {
           "image/jpeg",
           0.9
         );
-        console.log(resizedBase64);
         setPreviewFront(resizedBase64);
+        form.setFieldsValue({
+          cccd_front: resizedBase64,
+        });
       };
     }
   };
 
-  const handleUploadAvatar = (info) => {
+  const handleUploadAvatar = async (info) => {
     if (info.fileList && info.fileList.length > 0) {
       const file = info.fileList[0].originFileObj;
-      setFileListAvatar([info.fileList[0]]);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setPreviewAvatar(e.target.result);
+      setFileListFront([info.fileList[0]]);
+      let base64 = await api.convertToBase64(file);
+      const img = new Image();
+      img.src = base64;
+      img.onload = async () => {
+        const resizedBase64 = await api.resizeImage(
+          img,
+          600,
+          "image/jpeg",
+          0.9
+        );
+        setPreviewAvatar(resizedBase64);
+        form.setFieldsValue({
+          avatar: resizedBase64,
+        });
       };
-      reader.readAsDataURL(file);
     }
   };
   const handleUploadBack = async (info) => {
     if (info.fileList && info.fileList.length > 0) {
       const file = info.fileList[0].originFileObj;
-      setFileListBack([info.fileList[0]]);
+      setFileListFront([info.fileList[0]]);
       let base64 = await api.convertToBase64(file);
       const img = new Image();
       img.src = base64;
       img.onload = async () => {
-        const resizedBase64 = await api.resizeImage(img, 500);
-        console.log(resizedBase64);
+        const resizedBase64 = await api.resizeImage(
+          img,
+          600,
+          "image/jpeg",
+          0.9
+        );
         setPreviewBack(resizedBase64);
+        form.setFieldsValue({
+          cccd_back: resizedBase64,
+        });
       };
     }
   };
@@ -243,6 +262,27 @@ const NewOPForm = ({ form, user }) => {
                 ]}
               >
                 <Input placeholder="Nhập mã nhân viên" />
+              </Form.Item>
+              <Form.Item
+                name="cccd_front"
+                label="Cccd trước (ẩn)"
+                style={{ display: "none" }}
+              >
+                <TextArea />
+              </Form.Item>
+              <Form.Item
+                name="cccd_back"
+                label="Cccd sau (ẩn)"
+                style={{ display: "none" }}
+              >
+                <TextArea />
+              </Form.Item>
+              <Form.Item
+                name="avatar"
+                label="Avatar (ẩn)"
+                style={{ display: "none" }}
+              >
+                <TextArea />
               </Form.Item>
             </Col>
             <Col span={8} className="flex flex-col flex-1">

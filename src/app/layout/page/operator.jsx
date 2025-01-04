@@ -25,7 +25,7 @@ const Operator = () => {
     loadOP();
   }, []);
   return (
-    <div className="employee-page pr-1">
+    <div className="employee-page pb-2">
       <div className="flex flex-col gap-2">
         <OperatorDb />
         <div className="operator-body flex gap-2">

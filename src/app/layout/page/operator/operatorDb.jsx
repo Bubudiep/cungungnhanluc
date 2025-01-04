@@ -38,11 +38,6 @@ const OperatorDb = () => {
         <div className="value">00</div>
         <div className="content">Những người đã nghỉ việc</div>
       </div>
-      <div className="items">
-        <div className="name">Đi làm lại</div>
-        <div className="value">00</div>
-        <div className="content">Những người nghỉ đi làm lại</div>
-      </div>
     </div>
   );
 };

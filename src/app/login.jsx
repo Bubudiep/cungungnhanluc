@@ -75,19 +75,10 @@ const Login = () => {
           navigate("/?fromLogin=true");
         })
         .catch((err) => {
-          if (err.response.data.Error) {
-            notification.error({
-              message: "Lỗi",
-              description: err.response.data.Error,
-            });
-            return;
-          } else {
-            notification.error({
-              message: "Lỗi",
-              description: "Lỗi không xác định!",
-            });
-            return;
-          }
+          notification.error({
+            message: "Lỗi",
+            description: err?.response?.data?.detail ?? "Không xác định!",
+          });
         })
         .finally(() => {
           setLoading(false);

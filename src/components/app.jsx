@@ -10,6 +10,9 @@ import Company from "../app/layout/page/company";
 import User_profile from "../app/layout/page/user";
 import { UserProvider } from "./userContext";
 import Operator from "../app/layout/page/operator";
+import ApprovalList from "../app/layout/page/approval";
+import AttendanceTable from "../app/layout/page/attendance";
+import OP_Salary from "../app/layout/page/salary";
 const App = () => {
   return (
     <UserProvider>
@@ -22,6 +25,9 @@ const App = () => {
             <Route path="/employee" element={<Employee />} />
             <Route path="/profile" element={<User_profile />} />
             <Route path="/operator" element={<Operator />} />
+            <Route path="/approver" element={<ApprovalList />} />
+            <Route path="/attendance" element={<AttendanceTable />} />
+            <Route path="/op_salary" element={<OP_Salary />} />
             <Route path="/*" element={<NotFound />} />
           </Route>
           <Route path="/login" element={<Login />} />
