@@ -13,6 +13,9 @@ const Homepage = () => {
     "/dashboard": "Tổng quan",
     "/employee": "Nhân viên",
     "/company": "Công ty",
+    "/company/setting": "Cài đặt chung",
+    "/company/permission": "Phân quyền",
+    "/company/companis": "Công ty liên kết",
     "/profile": "Cá nhân",
     "/operator": "Nhân lực",
     "/approver": "Phê duyệt",
@@ -24,10 +27,11 @@ const Homepage = () => {
     .filter((item) => item) // Bỏ các phần rỗng
     .map((item, index, arr) => {
       const to = "/" + arr.slice(0, index + 1).join("/"); // Xây dựng đường dẫn cho từng phần
+      console.log(to);
       return { name: routeNames[to] || item, path: to };
     });
 
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => location.pathname.includes(path);
 
   return (
     <div className="home-page">

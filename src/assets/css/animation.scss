@@ -46,6 +46,16 @@
     opacity: 1;
   }
 }
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
 @keyframes slideIn1 {
   from {
     opacity: 0;
