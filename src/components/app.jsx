@@ -13,6 +13,10 @@ import Operator from "../app/layout/page/operator";
 import ApprovalList from "../app/layout/page/approval";
 import AttendanceTable from "../app/layout/page/attendance";
 import OP_Salary from "../app/layout/page/salary";
+import Garenal_setting from "../app/layout/page/company/company_setting";
+import Company_index from "../app/layout/page/company/company_index";
+import Companis from "../app/layout/page/company/company_list";
+import Company_permission from "../app/layout/page/company/company_permission";
 const App = () => {
   return (
     <UserProvider>
@@ -21,7 +25,12 @@ const App = () => {
           <Route path="/" element={<Home />}>
             <Route index element={<Dashboard />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/company" element={<Company />} />
+            <Route path="/company" element={<Company />}>
+              <Route index element={<Company_index />} />
+              <Route path="setting" element={<Garenal_setting />} />
+              <Route path="companis" element={<Companis />} />
+              <Route path="permission" element={<Company_permission />} />
+            </Route>
             <Route path="/employee" element={<Employee />} />
             <Route path="/profile" element={<User_profile />} />
             <Route path="/operator" element={<Operator />} />

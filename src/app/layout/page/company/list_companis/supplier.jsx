@@ -9,7 +9,7 @@ import {
   Spin,
   Pagination,
 } from "antd";
-import api from "../../../../components/api";
+import api from "../../../../../components/api";
 
 const Supplier = ({ user }) => {
   const [companies, setCompanies] = useState([]);

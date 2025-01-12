@@ -9,38 +9,35 @@ import {
   Spin,
   Pagination,
 } from "antd";
-import api from "../../../../components/api";
+import api from "../../../../../components/api";
 
-const Vendor = ({ user }) => {
-  const [companies, setCompanies] = useState([]);
-  const [loading, setLoading] = useState(false);
+const Customer = ({ user, companies, setCompanies }) => {
+  const [loading, setLoading] = useState(true);
   const [firstload, setFirstload] = useState(true);
   const [creating, setCreating] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
   const [pagenow, setPagenow] = useState(1);
   const [total, setTotal] = useState(0);
-  useEffect(() => {
-    fetchCompanies();
-  }, []);
-  const fetchCompanies = (page) => {
-    setLoading(true);
-    if (user) {
-      setTimeout(() => {
-        api
-          .get("/vendors/?page_size=5&page=" + pagenow, user.token)
-          .then((res) => {
-            setCompanies(res.results);
-            setLoading(false);
-            setFirstload(false);
-            setTotal(res.count);
-            setPagenow(pagenow); // Cập nhật trang hiện tại
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      }, 500);
-    }
+  const handlePageChange = (pagenow = 1) => {
+    setLoading(true); // Hiển thị trạng thái loading
+    const url = `/customers/?page=${pagenow}&page_size=5`; // API với số trang
+    const timer = setTimeout(() => {
+      api
+        .get(url, user.token)
+        .then((res) => {
+          setCompanies({ data: res.results });
+          setTotal(res.count); // Cập nhật tổng số nhân viên
+          setPagenow(pagenow); // Cập nhật trang hiện tại
+        })
+        .catch((er) => {
+          console.error("Lỗi khi tải dữ liệu:", er);
+        })
+        .finally(() => {
+          setLoading(false); // Ẩn trạng thái loading
+        });
+    }, 500);
+    return () => clearTimeout(timer);
   };
   const handleAddCompany = () => {
     setIsModalVisible(true);
@@ -49,9 +46,9 @@ const Vendor = ({ user }) => {
     form.validateFields().then(async (values) => {
       setCreating(true);
       api
-        .post("/vendors/", values, user.token)
+        .post("/customers/", values, user.token)
         .then((data) => {
-          fetchCompanies();
+          handlePageChange(pagenow);
           setIsModalVisible(false);
           form.resetFields();
         })
@@ -84,7 +81,7 @@ const Vendor = ({ user }) => {
         </tr>
       );
     }
-    if (!companies || companies.length === 0) {
+    if (!companies.data || companies.data.length === 0) {
       return (
         <tr>
           <td colSpan={999} className="text-center p-8">
@@ -93,9 +90,9 @@ const Vendor = ({ user }) => {
         </tr>
       );
     }
-    return companies.map((company, inx) => (
+    return companies.data.map((company, inx) => (
       <tr key={company.id}>
-        <td className="text-[13px] text-center">
+        <td className="text-[13px] text-center px-3">
           {(pagenow - 1) * 5 + (inx + 1)}
         </td>
         <td>{company.name}</td>
@@ -106,11 +103,17 @@ const Vendor = ({ user }) => {
       </tr>
     ));
   };
+  useEffect(() => {
+    if (companies?.count) {
+      setLoading(false);
+      setTotal(companies.count);
+    }
+  }, [companies]);
   return (
     <>
       <div className="white-table">
         <div className="h3">
-          <div className="text">Danh sách các công ty cung ứng (Vendor)</div>
+          <div className="text">Danh sách các công ty khách hàng</div>
           <div className="tools">
             <Button type="primary" onClick={handleAddCompany}>
               Thêm công ty
@@ -139,7 +142,7 @@ const Vendor = ({ user }) => {
             disabled={loading}
             defaultCurrent={pagenow}
             total={total}
-            onChange={fetchCompanies}
+            onChange={handlePageChange}
             pageSize={5}
           />
         </div>
@@ -189,4 +192,4 @@ const Vendor = ({ user }) => {
   );
 };
 
-export default Vendor;
+export default Customer;
