@@ -189,13 +189,13 @@ const Dashboard = () => {
                   },
                   colors: ["#fa8c16"],
                   xaxis: {
-                    categories: ["C", "VP HCM", "VP CT", "VP DN"],
+                    categories: ["Nguyệt", "Hải", "Cúc", "Hùng"],
                   },
                 }}
                 series={[
                   {
                     name: "Thu nhập",
-                    data: [15000000, 10000000, 12000000, 8000000],
+                    data: [46, 33, 32, 50],
                   },
                 ]}
                 type="bar"
