@@ -271,6 +271,7 @@ const getAddress = async (latitude, longitude) => {
 function resizeImage(img, maxSize, outputFormat = "image/jpeg", quality = 0.8) {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d");
+  console.log(img);
   let width = img.width;
   let height = img.height;
   if (width > height) {

@@ -109,7 +109,8 @@
         @apply flex gap-2 flex-col overflow-auto;
         animation: slideIn 0.6s forwards;
       }
-      .employee-page {
+      .employee-page,
+      .approve-page {
         animation: slideIn 0.6s forwards;
         width: 100%;
         overflow-y: auto;
@@ -259,7 +260,8 @@
           }
         }
       }
-      .employeer-table {
+      .employeer-table,
+      .approval-table {
         background-color: #fff;
         border-radius: 8px;
         width: 100%;
@@ -1168,6 +1170,7 @@ button {
 }
 .company-page {
   display: flex;
+  flex: 1;
   flex-direction: column;
   width: 100%;
   animation: slideIn 0.6s forwards;
@@ -1187,7 +1190,7 @@ button {
   }
   .company-profile {
     background-color: #fff;
-    width: 400px;
+    width: 500px;
     min-width: 400px;
     border-radius: 12px;
     box-shadow: 2px 3px 4px #0001;
@@ -1252,11 +1255,11 @@ button {
     .avatar-container {
       position: relative;
       display: flex;
-      height: 260px;
+      height: 300px;
       .background {
         position: absolute;
         width: 100%;
-        height: 200px;
+        height: 245px;
         background-size: cover; /* Ảnh nền sẽ phủ kín phần tử */
         background-position: center; /* Căn giữa ảnh nền */
         background-repeat: no-repeat; /* Không lặp ảnh nền */
@@ -1604,6 +1607,7 @@ button {
         position: relative;
         color: #323538;
         font-size: 13px;
+        padding-bottom: 4px;
         &.online::before {
           content: " ";
           position: absolute;
@@ -1993,6 +1997,90 @@ button {
           opacity: 1;
         }
       }
+    }
+  }
+}
+.uploadPage {
+  background-color: #0001;
+  padding: 8px;
+  border-radius: 8px;
+  .ant-upload {
+    background-color: #fff;
+    overflow: hidden;
+  }
+  .ant-upload-list-item {
+    background-color: #fff;
+    img {
+      border-radius: 6px;
+    }
+  }
+}
+.opPaycard {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  border-left: 4px solid #1c96c3;
+  background-color: #e6f6fc;
+  margin-bottom: 8px;
+  .info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    align-items: start;
+    color: #000;
+    padding: 8px 8px 8px 0px;
+    line-height: 1.3rem;
+    .stk {
+      font-weight: 500;
+      color: #000;
+    }
+    .logo {
+      img {
+        height: 40px;
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+    }
+    .nganhang {
+      margin-top: 4px;
+      font-size: 13px;
+      color: #034397;
+      background-color: #e0eeff;
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px solid #88b0e4;
+      display: flex;
+      flex: 1;
+      align-items: center;
+    }
+    .note {
+      width: 100%;
+      margin-top: 4px;
+      font-size: 13px;
+      color: #000000;
+      padding: 0px 2px;
+    }
+    .name {
+      font-size: 15px;
+      font-weight: 500;
+    }
+  }
+  .avatar {
+    margin: 8px;
+    width: 100px;
+    height: 120px;
+    background-color: #9dc1e7;
+    border-radius: 10px;
+    border: 1px solid #7fa2d4;
+    overflow: hidden;
+    box-shadow: 2px 2px 4px #0003 inset;
+    img {
+      object-fit: cover;
+      width: 100%;
+      height: 100%;
     }
   }
 }

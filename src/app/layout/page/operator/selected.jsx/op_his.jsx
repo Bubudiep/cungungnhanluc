@@ -2,8 +2,14 @@ import React from "react";
 import OP_DiLam from "./op_tools/op_dilam";
 import OP_NghiViec from "./op_tools/op_nghiviec";
 
-const Op_hiss = ({ opDetails, user, seletedUser, setseletedUser }) => {
-  console.log(opDetails);
+const Op_hiss = ({
+  opList,
+  setOpList,
+  opDetails,
+  user,
+  seletedUser,
+  setseletedUser,
+}) => {
   return (
     <div className="animationbox">
       <div className="op-card">
@@ -75,11 +81,6 @@ const Op_hiss = ({ opDetails, user, seletedUser, setseletedUser }) => {
             <div className="value">0 NGÀY</div>
           </div>
         </div>
-        <OP_DiLam
-          user={user}
-          seletedUser={seletedUser}
-          setseletedUser={setseletedUser}
-        />
         <div className="item">
           <div className="left">
             <div className="icon">
@@ -88,20 +89,29 @@ const Op_hiss = ({ opDetails, user, seletedUser, setseletedUser }) => {
             <div className="name">Báo ứng</div>
           </div>
         </div>
+        <OP_DiLam
+          user={user}
+          seletedUser={seletedUser}
+          setseletedUser={setseletedUser}
+          opList={opList}
+          setOpList={setOpList}
+        />
         <OP_NghiViec
           user={user}
           seletedUser={seletedUser}
           setseletedUser={setseletedUser}
+          opList={opList}
+          setOpList={setOpList}
         />
       </div>
       <div className="h3 p-2 text-[#0041bb] gap-2 flex items-center">
         <i className="fa-solid fa-clock-rotate-left text-[13px] mt-[2px]"></i>
         <div className="text">Quá trình làm việc</div>
       </div>
-      <div className="history ml-5">
-        {opDetails.user &&
-          opDetails.user.work &&
-          opDetails.user.work.map((his, idx) => (
+      <div className="history ml-5 mb-2">
+        {seletedUser.user &&
+          seletedUser.user.work &&
+          seletedUser.user.work.map((his, idx) => (
             <div
               key={idx}
               className={`item ${his.end_date ? "pass" : "online"}`}
@@ -110,17 +120,29 @@ const Op_hiss = ({ opDetails, user, seletedUser, setseletedUser }) => {
                 Từ
                 <div className="time">
                   {his.start_date &&
-                    new Date(his.start_date).toISOString().split("T")[0]}
+                    new Date(his.start_date).toLocaleDateString()}
                 </div>
                 đến
                 <div className="time">
                   {his.end_date
-                    ? new Date(his.end_date).toISOString().split("T")[0]
+                    ? new Date(his.end_date).toLocaleDateString()
                     : "Hiện tại"}
                 </div>
               </div>
               <div className="company">
-                <div className="pos">-</div>
+                <div className="flex justify-between">
+                  <div className="t1">
+                    Số CCCD: {his.so_cccd ?? seletedUser.user.so_cccd}
+                  </div>
+                </div>
+                <div className="flex justify-between">
+                  <div className="t1">Mã nhân viên: {his.ma_nhanvien}</div>
+                </div>
+                {his.reason && (
+                  <div className="flex justify-between">
+                    <div className="t1">Lý do nghỉ: {his.reason}</div>
+                  </div>
+                )}
                 <div className="name">
                   {his.customer.fullname ?? his.customer.name}
                 </div>

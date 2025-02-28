@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ListApproval from "./approval/approvalList";
 
 const ApprovalList = () => {
   const [allrequests, setAllrequests] = useState([]);
@@ -45,6 +46,7 @@ const ApprovalList = () => {
           <div className="content !mt-0">Đơn chi tiêu trong tháng</div>
         </div>
       </div>
+      <ListApproval />
     </div>
   );
 };

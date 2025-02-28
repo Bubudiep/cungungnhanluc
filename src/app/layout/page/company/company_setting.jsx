@@ -20,7 +20,7 @@ const Garenal_setting = () => {
   }, []);
   return (
     <div className="company-page">
-      <div className="flex gap-2 items-start">
+      <div className="flex flex-1 gap-2 items-start">
         <div className="company-profile">
           <Company_profile
             user={user}

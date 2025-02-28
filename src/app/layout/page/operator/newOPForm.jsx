@@ -210,8 +210,8 @@ const NewOPForm = ({ form, user }) => {
     const loadBanks = async () => {
       const banks = await api.banks();
       const options = banks.data.map((bank) => ({
-        label: bank.code + " - " + bank.name,
-        value: bank.bin, // Tùy chọn value là short_name hoặc code
+        label: bank.short_name + " - " + bank.code + " - " + bank.name,
+        value: bank.bin,
       }));
       setNganHangOptions(options);
     };
@@ -377,6 +377,9 @@ const NewOPForm = ({ form, user }) => {
                   options={nganHangOptions}
                   allowClear
                   showSearch={true}
+                  filterOption={(input, option) =>
+                    option?.label?.toLowerCase().includes(input.toLowerCase())
+                  }
                 />
               </Form.Item>
             </Col>

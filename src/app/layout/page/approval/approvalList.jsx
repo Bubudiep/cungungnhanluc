@@ -1,22 +1,43 @@
-import { Button, Empty, Pagination, Spin } from "antd";
 import React, { useEffect, useState } from "react";
-const OperatorList = ({
-  loading,
-  firstload,
-  opList,
-  loadOP,
-  setseletedUser,
-}) => {
+import ApprovalTools from "./approvalTools";
+import { Empty, Pagination, Spin } from "antd";
+import api from "../../../../components/api";
+import { useUser } from "../../../../components/userContext";
+const ListApproval = () => {
+  const { user, setUser } = useUser();
+  const [total, setTotal] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [firstload, setFirstload] = useState(true);
   const [pagenow, setPagenow] = useState(1);
-  const handlePageChange = (e) => {
-    setPagenow(e);
-    loadOP(e);
+  const [apList, setApList] = useState({ count: 0, results: [] });
+  const handlePageChange = (page) => {
+    setPagenow(page);
+    setLoading(true);
+    const url = `/pheduyet/?page=${page}`;
+    api
+      .get(url, user.token)
+      .then((res) => {
+        setTotal(res.count); // Cập nhật tổng số nhân viên
+        setApList(res);
+      })
+      .catch((er) => {
+        console.error("Lỗi khi tải dữ liệu:", er);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setLoading(false);
+          setFirstload(false);
+        }, 500);
+      });
   };
-  useEffect(() => {}, [opList]);
+  useEffect(() => {
+    handlePageChange(1);
+  }, []);
   return (
-    <div className="flex flex-1 flex-col gap-2">
-      <div className="employee-list">
-        <div className="employeer-table">
+    <>
+      <div className="flex flex-col gap-1 w-[800px]">
+        <ApprovalTools />
+        <div className="approval-table">
           <table>
             <thead>
               <tr>
@@ -27,15 +48,15 @@ const OperatorList = ({
                     </>
                   )}
                 </th>
-                <th>Họ và tên</th>
-                <th>Tên gốc</th>
-                <th>SĐT</th>
-                <th>Nhà chính</th>
-                <th>Công ty</th>
-                <th>Ngày vào làm</th>
-                <th>Người tuyển</th>
-                <th>Quản lý</th>
-                <th></th>
+                <th>Trạng thái</th>
+                <th>Phân loại</th>
+                <th>Người tạo</th>
+                <th>Người lao động</th>
+                <th>Hạng mục</th>
+                <th>Lý do</th>
+                <th>Xử lý</th>
+                <th>Cập nhập</th>
+                <th>Ngày tạo</th>
               </tr>
             </thead>
             <tbody>
@@ -55,8 +76,8 @@ const OperatorList = ({
                 </tr>
               ) : (
                 <>
-                  {opList.results.length > 0 ? (
-                    opList.results.map((op, idx) => (
+                  {apList?.results?.length > 0 ? (
+                    apList?.results.map((op, idx) => (
                       <tr
                         key={idx}
                         className={op?.congty_danglam?.name ?? "opacity-50"}
@@ -162,17 +183,17 @@ const OperatorList = ({
             </tbody>
           </table>
         </div>
+        <div className="panel-cl">
+          <Pagination
+            disabled={loading}
+            defaultCurrent={pagenow}
+            total={apList.count}
+            onChange={handlePageChange}
+          />
+        </div>
       </div>
-      <div className="panel-cl">
-        <Pagination
-          disabled={loading}
-          defaultCurrent={pagenow}
-          total={opList.count}
-          onChange={handlePageChange}
-        />
-      </div>
-    </div>
+    </>
   );
 };
 
-export default OperatorList;
+export default ListApproval;

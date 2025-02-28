@@ -24,7 +24,14 @@ const AttendanceTable = () => {
     confirm(); // Áp dụng lại filter
     setFilteredData(data);
   };
-
+  const tableLocale = {
+    triggerDesc: "Giảm dần",
+    triggerAsc: "Tăng dần",
+    cancelSort: "Hủy",
+    filterConfirm: "Xác nhận",
+    filterReset: "Đặt lại",
+    emptyText: "Không có dữ liệu",
+  };
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -254,6 +261,7 @@ const AttendanceTable = () => {
           pagination={{ pageSize: 15 }}
           className="custom-attendance-table"
           rowClassName={rowClassName}
+          locale={tableLocale}
         />
       </div>
     </div>

@@ -1,7 +1,6 @@
 import { Empty, Popconfirm, Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import api from "../../../../components/api";
-import Op_tools from "./selected.jsx/op_tool";
 import Op_hiss from "./selected.jsx/op_his";
 import Op_info from "./selected.jsx/op_info";
 
@@ -25,10 +24,13 @@ const OperatorSelected = ({
             ...old,
             user: res,
           }));
+          setseletedUser((old) => ({
+            ...old,
+            user: res,
+          }));
           const newArray = opList.results.map((item) =>
             item.id === res.id ? { ...item, ...res } : item
           );
-          console.log(newArray);
           setOpList((old) => ({ ...old, results: newArray }));
         })
         .finally(() => {
@@ -37,7 +39,7 @@ const OperatorSelected = ({
           }, 400);
         });
     }
-  }, [seletedUser.user]);
+  }, [seletedUser.user?.id]);
   return (
     <div className="flex flex-col items-start relative">
       {seletedUser ? (
@@ -74,6 +76,8 @@ const OperatorSelected = ({
               <div key={2} className="white-box operator-selected">
                 <Op_hiss
                   user={user}
+                  opList={opList}
+                  setOpList={setOpList}
                   opDetails={opDetails}
                   seletedUser={seletedUser}
                   setseletedUser={setseletedUser}
@@ -81,15 +85,7 @@ const OperatorSelected = ({
               </div>
             </>
           ) : (
-            <>
-              <div key={3} className="white-box operator-selected">
-                <Op_tools
-                  user={user}
-                  seletedUser={seletedUser}
-                  setseletedUser={setseletedUser}
-                />
-              </div>
-            </>
+            <></>
           )}
         </>
       ) : (

@@ -84,10 +84,12 @@ const Op_info = ({ seletedUser }) => {
               <div className="name">Trạng thái</div>
             </div>
             <div className="right">
-              {seletedUser.user?.work?.end_date
-                ? "Đã nghỉ việc"
-                : seletedUser.user?.work?.start_date
-                ? "Đang đi làm"
+              {seletedUser.user?.work.length > 0
+                ? seletedUser.user?.work[0].end_date
+                  ? "Đã nghỉ việc"
+                  : seletedUser.user?.work[0].start_date
+                  ? "Đang đi làm"
+                  : "Chưa đi làm"
                 : "Chưa đi làm"}
             </div>
           </div>

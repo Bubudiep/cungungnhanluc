@@ -17,10 +17,10 @@ const Employee_table = ({ user, setUser }) => {
   const [total, setTotal] = useState(0);
   const [loadingStates, setLoadingStates] = useState({});
   const [loading, setLoading] = useState(false);
-  const [firstload, setFirstload] = useState(false);
-  const [showLoad, setShowload] = useState(true);
   const [pagenow, setPagenow] = useState(1);
   const [listEMP, setListEMP] = useState([]);
+  const [firstload, setFirstload] = useState(false);
+  const [showLoad, setShowload] = useState(true);
   const [selectedEmployee, setSelectedEmployee] = useState(false);
   const [openEmployeeDetail, setOpenEmployeeDetail] = useState(false);
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" }); // Trạng thái sắp xếp

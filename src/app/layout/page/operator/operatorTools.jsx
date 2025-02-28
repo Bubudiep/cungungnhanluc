@@ -26,7 +26,7 @@ const OperatorTools = ({ user, setOpList }) => {
     setVisible(true);
     form.setFieldsValue({
       trang_thai: "di_lam",
-      ngay_vao_lam: dayjs(new Date().toISOString().split("T")[0], "YYYY-MM-DD"),
+      ngay_vao_lam: dayjs(new Date().toLocaleDateString(), "YYYY-MM-DD"),
     });
   };
   const handleCancel = () => {
