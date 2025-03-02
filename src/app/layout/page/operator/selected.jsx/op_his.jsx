@@ -1,6 +1,7 @@
 import React from "react";
 import OP_DiLam from "./op_tools/op_dilam";
 import OP_NghiViec from "./op_tools/op_nghiviec";
+import Op_baoung from "./op_tools/op_baoung";
 
 const Op_hiss = ({
   opList,
@@ -81,14 +82,13 @@ const Op_hiss = ({
             <div className="value">0 NGÀY</div>
           </div>
         </div>
-        <div className="item">
-          <div className="left">
-            <div className="icon">
-              <i className="fa-solid fa-seedling"></i>
-            </div>
-            <div className="name">Báo ứng</div>
-          </div>
-        </div>
+        <Op_baoung
+          user={user}
+          seletedUser={seletedUser}
+          setseletedUser={setseletedUser}
+          opList={opList}
+          setOpList={setOpList}
+        />
         <OP_DiLam
           user={user}
           seletedUser={seletedUser}
