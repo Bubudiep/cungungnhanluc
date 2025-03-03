@@ -29,7 +29,9 @@ const Op_baoung = ({
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState([]);
   const [previewOpen, setPreviewOpen] = useState(false);
+  const [banktype, setBanktype] = useState(false);
   const [QRdata, setQRdata] = useState(200000);
+  const [QRdataUser, setQRdataUser] = useState(200000);
   const [sotienBaoung, setSotienBaoung] = useState(200000);
   const handlePreview = async (file) => {
     file.preview = await getBase64(file.originFileObj);
@@ -84,6 +86,7 @@ const Op_baoung = ({
       });
   };
   useEffect(() => {
+    console.log(user);
     if (seletedUser?.user?.nganhang && seletedUser?.user?.so_taikhoan) {
       const maQR = api.taoMaQR(
         seletedUser?.user?.so_taikhoan,
@@ -94,6 +97,18 @@ const Op_baoung = ({
           .replaceAll(" ", "")}_baoung_${sotienBaoung}`
       );
       setQRdata(maQR);
+    }
+    if (user?.profile?.bank_number && user?.profile?.bank) {
+      const maQRUser = api.taoMaQR(
+        user?.profile?.bank_number,
+        user?.profile?.bank,
+        sotienBaoung,
+        `${api
+          .removeSpecial(seletedUser?.user?.ho_ten)
+          .replaceAll(" ", "")}_baoung_${sotienBaoung}`
+      );
+      console.log(maQRUser);
+      setQRdataUser(maQRUser);
     }
   }, [isModalOpen, sotienBaoung]);
   return (
@@ -182,30 +197,71 @@ const Op_baoung = ({
               name="owner"
               rules={[{ required: true, message: "Vui lòng chọn ngày ứng!" }]}
             >
-              <Select allowClear={false} placeholder="Chọn người thụ hưởng">
+              <Select
+                allowClear={false}
+                placeholder="Chọn người thụ hưởng"
+                onChange={(e) => {
+                  setBanktype(e);
+                }}
+              >
                 <Option value="opertor">Người lao động</Option>
                 <Option value="staff">Người tuyển</Option>
                 <Option value="other">Khác</Option>
               </Select>
             </Form.Item>
-            {/* <OPpayCard
-              data={seletedUser.user}
-              qrCode={
-                <div className="flex ml-auto justify-center items-center mr-2">
-                  <QRCode
-                    value={QRdata} // Chuỗi muốn mã hóa
-                    size={150} // Kích thước mã QR
-                    ecLevel="L"
-                    qrStyle="dots" // Kiểu QR ("squares" hoặc "dots")
-                    fgColor="#517fc4" // Màu QR
-                    eyeColor="#2678f3e0" // Màu của các ô vuông lớn (QR eyes)
-                    bgColor="transparent" // Màu nền QR
-                    eyeRadius={[5, 5, 5, 5]}
-                    quietZone={10} // Vùng trắng xung quanh QR
-                  />
-                </div>
-              }
-            /> */}
+            <div className="ml-12">
+              {banktype === "staff" ? (
+                <OPpayCard
+                  data={{
+                    so_taikhoan: user.profile.bank_number,
+                    avatar: user.profile.avatar,
+                    nganhang: user.profile.bank,
+                    ho_ten: user.profile.full_name,
+                    chu_taikhoan: user.profile.full_name,
+                  }}
+                  qrCode={
+                    user.profile.bank_number && (
+                      <div className="flex ml-auto justify-center items-center mr-2">
+                        <QRCode
+                          value={QRdataUser} // Chuỗi muốn mã hóa
+                          size={150} // Kích thước mã QR
+                          ecLevel="L"
+                          qrStyle="dots" // Kiểu QR ("squares" hoặc "dots")
+                          fgColor="#517fc4" // Màu QR
+                          eyeColor="#2678f3e0" // Màu của các ô vuông lớn (QR eyes)
+                          bgColor="transparent" // Màu nền QR
+                          eyeRadius={[5, 5, 5, 5]}
+                          quietZone={10} // Vùng trắng xung quanh QR
+                        />
+                      </div>
+                    )
+                  }
+                />
+              ) : banktype === "opertor" ? (
+                <OPpayCard
+                  data={seletedUser.user}
+                  qrCode={
+                    seletedUser.user.nganhang && (
+                      <div className="flex ml-auto justify-center items-center mr-2">
+                        <QRCode
+                          value={QRdata} // Chuỗi muốn mã hóa
+                          size={150} // Kích thước mã QR
+                          ecLevel="L"
+                          qrStyle="dots" // Kiểu QR ("squares" hoặc "dots")
+                          fgColor="#517fc4" // Màu QR
+                          eyeColor="#2678f3e0" // Màu của các ô vuông lớn (QR eyes)
+                          bgColor="transparent" // Màu nền QR
+                          eyeRadius={[5, 5, 5, 5]}
+                          quietZone={10} // Vùng trắng xung quanh QR
+                        />
+                      </div>
+                    )
+                  }
+                />
+              ) : (
+                <></>
+              )}
+            </div>
             <Form.Item
               label="Số tiền"
               name="amount"
@@ -235,7 +291,7 @@ const Op_baoung = ({
             >
               <DatePicker allowClear={false} />
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               label="Phân loại"
               name="type"
               rules={[{ required: true, message: "Vui lòng chọn ngày ứng!" }]}
@@ -244,7 +300,7 @@ const Op_baoung = ({
                 <Option value="pending">Kế toán giải ngân</Option>
                 <Option value="completed">Người tuyển ứng trước cho NLĐ</Option>
               </Select>
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item label="Ghi chú" name="reason">
               <Input.TextArea
                 rows={3}
