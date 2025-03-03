@@ -19,7 +19,6 @@ const Op_hiss = ({
             <div className="avatar">
               <img src={opDetails?.user?.avatar} />
             </div>
-            <div className="id">{opDetails.user?.ma_nhanvien}</div>
           </div>
           <div className="right">
             <div className="user-info">
@@ -28,20 +27,24 @@ const Op_hiss = ({
                 <div className="value">{opDetails.user?.ho_ten ?? ""}</div>
               </div>
               <div className="name item">
-                <div className="type">Giới tính</div>
-                <div className="value">{opDetails.user?.gioi_tinh ?? ""}</div>
+                <div className="type">Mã nhân viên</div>
+                <div className="value">{opDetails.user?.ma_nhanvien ?? ""}</div>
               </div>
               <div className="name item">
                 <div className="type">Ngày sinh</div>
                 <div className="value">{opDetails.user?.ngaysinh ?? ""}</div>
               </div>
+              <div className="address text-[#0027a8] font-[500]">
+                {opDetails.user?.congty_danglam?.fullname ?? (
+                  <div className="text-red-500">Chưa đi làm</div>
+                )}
+              </div>
+              <div className="address">
+                {opDetails.user?.quequan ?? (
+                  <div className="text-[#999]">Chưa có quê quán</div>
+                )}
+              </div>
             </div>
-            <div className="address text-[#0027a8] font-[500]">
-              {opDetails.user?.congty_danglam?.fullname ?? (
-                <div className="text-red-500">Chưa đi làm</div>
-              )}
-            </div>
-            <div className="address">{opDetails.user?.quequan ?? ""}</div>
           </div>
         </div>
       </div>
@@ -49,37 +52,9 @@ const Op_hiss = ({
         <div className="item">
           <div className="left">
             <div className="icon">
-              <i className="fa-solid fa-handshake-simple"></i>
-            </div>
-            <div className="name">Lịch sử ứng</div>
-            <div className="value">1.000.000 VNĐ</div>
-          </div>
-        </div>
-        <div className="item">
-          <div className="left">
-            <div className="icon">
               <i className="fa-solid fa-sack-dollar"></i>
             </div>
-            <div className="name">Lịch sử trả lương</div>
-            <div className="value">0 VNĐ</div>
-          </div>
-        </div>
-        <div className="item">
-          <div className="left">
-            <div className="icon">
-              <i className="fa-solid fa-file-export"></i>
-            </div>
-            <div className="name">Bảng công</div>
-            <div className="value">0 NGÀY</div>
-          </div>
-        </div>
-        <div className="item">
-          <div className="left">
-            <div className="icon">
-              <i className="fa-solid fa-link"></i>
-            </div>
-            <div className="name">Nối hợp đồng</div>
-            <div className="value">0 NGÀY</div>
+            <div className="name">Công lương</div>
           </div>
         </div>
         <Op_baoung

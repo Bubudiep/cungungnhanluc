@@ -29,7 +29,7 @@ const Operator = () => {
       <div className="flex flex-col gap-2">
         <OperatorDb />
         <div className="operator-body flex gap-2">
-          <div className="flex flex-col gap-2 right-box">
+          <div className="flex flex-col gap-2 right-box flex-1">
             <OperatorTools setOpList={setOpList} user={user} />
             <OperatorList
               opList={opList}

@@ -1,6 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import api from "../../../../../components/api";
 
 const Op_info = ({ seletedUser }) => {
+  const [userBank, setUserBank] = useState({});
+  const loadBanks = async () => {
+    const banklist = await api.banks();
+    if (banklist.data) {
+      const matchbank = banklist.data.find(
+        (item) => item.bin === seletedUser.user.nganhang
+      );
+      setUserBank(matchbank);
+    }
+  };
+  useEffect(() => {
+    loadBanks();
+  }, []);
   return (
     <div className="animationbox">
       <div className="image">
@@ -29,10 +43,10 @@ const Op_info = ({ seletedUser }) => {
           </div>
           <div className="item">
             <div className="left">
-              <div className="name">Giới tính</div>
+              <div className="name">Số CCCD</div>
             </div>
             <div className="right">
-              <div className="text">{seletedUser.user?.gioi_tinh ?? "-"}</div>
+              <div className="text">{seletedUser.user?.so_cccd ?? "-"}</div>
             </div>
           </div>
           <div className="item">
@@ -49,14 +63,6 @@ const Op_info = ({ seletedUser }) => {
             </div>
             <div className="right">
               <div className="text">{seletedUser.user?.sdt ?? "-"}</div>
-            </div>
-          </div>
-          <div className="item">
-            <div className="left">
-              <div className="name">Số CCCD</div>
-            </div>
-            <div className="right">
-              <div className="text">{seletedUser.user?.so_cccd ?? "-"}</div>
             </div>
           </div>
           <div className="item">
@@ -88,7 +94,7 @@ const Op_info = ({ seletedUser }) => {
                 ? seletedUser.user?.work[0].end_date
                   ? "Đã nghỉ việc"
                   : seletedUser.user?.work[0].start_date
-                  ? "Đang đi làm"
+                  ? `Đang làm tại ${seletedUser.user?.congty_danglam?.fullname}`
                   : "Chưa đi làm"
                 : "Chưa đi làm"}
             </div>
@@ -98,30 +104,6 @@ const Op_info = ({ seletedUser }) => {
               <div className="name">Mã nhân viên</div>
             </div>
             <div className="right">{seletedUser.user?.ma_nhanvien ?? "-"}</div>
-          </div>
-          <div className="item">
-            <div className="left">
-              <div className="name">Công ty</div>
-            </div>
-            <div className="right">
-              <div className="text">
-                {seletedUser.user?.work?.customer?.fullname ?? "-"}
-              </div>
-            </div>
-          </div>
-          <div className="item">
-            <div className="left">
-              <div className="name">Ngày bắt đầu</div>
-            </div>
-            <div className="right">
-              <div className="text">
-                {seletedUser.user?.work?.start_date
-                  ? new Date(seletedUser.user?.work?.start_date)
-                      .toISOString()
-                      .split("T")[0]
-                  : "-"}
-              </div>
-            </div>
           </div>
           <div className="item">
             <div className="left">
@@ -140,6 +122,21 @@ const Op_info = ({ seletedUser }) => {
             <div className="right">
               <div className="text" title={seletedUser.user?.thamnien ?? "-"}>
                 {seletedUser.user?.thamnien ?? "-"}
+              </div>
+            </div>
+          </div>
+          <div className="item">
+            <div className="left">
+              <div className="name">Ngân hàng</div>
+            </div>
+            <div className="right">
+              <div
+                className="text"
+                title={seletedUser.user?.so_taikhoan ?? "-"}
+              >
+                {seletedUser.user?.so_taikhoan
+                  ? `${seletedUser.user?.so_taikhoan} - ${userBank?.short_name}`
+                  : "-"}
               </div>
             </div>
           </div>

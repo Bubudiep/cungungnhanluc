@@ -449,12 +449,22 @@ const zoomAndCrop = (canvas, context) => {
   );
   return tempCanvas;
 };
-// Xuất các phương thức
+function taoMaQR(soTaiKhoan, bin, soTien, noiDung = "") {
+  const vietQR = new VietQR();
+
+  vietQR
+    .setBeneficiaryOrganization(bin, soTaiKhoan)
+    .setTransactionAmount(soTien)
+    .setAdditionalDataFieldTemplate(noiDung);
+
+  return vietQR.build();
+} // Xuất các phương thức
 export default {
   zoomAndCrop,
   convertToBase64,
   parseCCCDString,
   VietQR,
+  taoMaQR,
   send,
   get,
   gets,

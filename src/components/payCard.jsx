@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "./api";
 import { Empty } from "antd";
 
-const OPpayCard = ({ data }) => {
-  console.log(data);
+const OPpayCard = ({ data, qrCode }) => {
   const [bank, setBank] = useState({});
   const nganhang = async () => {
     if (data.nganhang) {
@@ -45,6 +44,7 @@ const OPpayCard = ({ data }) => {
       ) : (
         <Empty description="Chưa có ngân hàng" className="py-3"></Empty>
       )}
+      {qrCode && qrCode}
     </div>
   );
 };

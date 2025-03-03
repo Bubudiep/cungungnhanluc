@@ -1,6 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+::-webkit-scrollbar {
+  padding-left: 5px;
+  margin-left: 5px;
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  border-radius: 5px; /* Bo tròn góc thumb */
+  background: #ffffff; /* Màu nền của track */
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 2px; /* Bo tròn góc thumb */
+  transition: all 0.3s;
+  background: #bcc4df; /* Màu của thumb */
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #737ca0; /* Màu khi hover lên thumb */
+}
 .home-page {
   display: flex;
   flex-direction: column;
@@ -1598,6 +1616,8 @@ button {
       display: flex;
       flex-direction: column;
       padding: 0px 8px;
+      max-height: 400px;
+      overflow-y: auto;
       .item {
         border-left: 4px solid #b8ddff;
         padding-left: 12px;
@@ -1625,7 +1645,7 @@ button {
           color: #197ec2;
         }
         .company {
-          background-color: #e8f4ff;
+          background-color: #c5e1fb;
           border-radius: 6px;
           padding: 8px;
           display: flex;
@@ -1642,7 +1662,7 @@ button {
             color: unset;
           }
           .company {
-            background-color: #ececec;
+            background-color: #e4e4e4;
             .name {
               color: #808080;
             }
@@ -1653,15 +1673,18 @@ button {
     .op-card {
       padding: 8px;
       .box {
-        height: 150px;
-        background: linear-gradient(187deg, #f5f9ff, #e5f0ff, #edf5ff);
+        background-color: #e2edff;
         border-radius: 12px;
         display: flex;
         overflow: hidden;
+        transition: all 0.3s;
+        &:hover {
+          background-color: #c1daff;
+        }
         .left {
           display: flex;
           align-items: center;
-          padding: 8px 20px;
+          padding: 4px 20px;
           flex-direction: column;
           justify-content: center;
           margin-right: 20px;
@@ -1682,6 +1705,7 @@ button {
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             overflow: hidden;
+            background-color: transparent !important;
             img {
               width: 100%;
               object-fit: cover;
@@ -1693,26 +1717,27 @@ button {
           flex-direction: column;
           font-size: 13px;
           gap: 4px;
+          flex: 1;
           .address {
             font-size: 12px;
-            &:last-child {
-              margin-bottom: 14px;
-            }
           }
           .user-info {
             display: flex;
             flex-direction: column;
-            width: 220px;
+            width: 280px;
             font-size: 13px;
-            gap: 2px;
+            flex: 1;
             margin-top: auto;
+            justify-content: center;
           }
           .item {
             display: flex;
             justify-content: space-between;
+            .type {
+              white-space: nowrap;
+            }
             .value {
               font-weight: 500;
-              width: 160px;
               text-align: right;
               white-space: nowrap;
               overflow: hidden;
@@ -1781,6 +1806,15 @@ button {
           }
         }
       }
+    }
+  }
+}
+.ant-modal-wrap {
+  overflow: hidden !important;
+  .ant-modal {
+    top: 20px;
+    .ant-modal-content {
+      max-height: calc(100vh - 40px);
     }
   }
 }
@@ -2017,11 +2051,11 @@ button {
 }
 .opPaycard {
   display: flex;
-  justify-content: center;
   gap: 5px;
   border-left: 4px solid #1c96c3;
   background-color: #e6f6fc;
   margin-bottom: 8px;
+  overflow: hidden;
   .info {
     display: flex;
     flex: 1;
@@ -2032,6 +2066,8 @@ button {
     color: #000;
     padding: 8px 8px 8px 0px;
     line-height: 1.3rem;
+    max-width: 350px;
+    width: 350px;
     .stk {
       font-weight: 500;
       color: #000;
@@ -2070,8 +2106,8 @@ button {
   }
   .avatar {
     margin: 8px;
-    width: 100px;
-    height: 120px;
+    width: 120px;
+    height: 160px;
     background-color: #9dc1e7;
     border-radius: 10px;
     border: 1px solid #7fa2d4;

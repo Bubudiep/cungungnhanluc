@@ -30,6 +30,7 @@ const ApprovalTools = () => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const handlePreview = async (file) => {
     file.preview = await getBase64(file.originFileObj);
+    setPreviewImage(file.preview);
     setPreviewOpen(true);
   };
   const getBase64 = (file) =>
