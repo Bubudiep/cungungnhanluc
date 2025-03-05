@@ -2056,6 +2056,13 @@ button {
   background-color: #e6f6fc;
   margin-bottom: 8px;
   overflow: hidden;
+  button.absolute {
+    font-size: 20px;
+    padding: 4px 8px;
+    background-color: transparent;
+    border-color: transparent;
+    color: #4887cf;
+  }
   .info {
     display: flex;
     flex: 1;
@@ -2066,11 +2073,31 @@ button {
     color: #000;
     padding: 8px 8px 8px 0px;
     line-height: 1.3rem;
-    max-width: 350px;
-    width: 350px;
     .stk {
       font-weight: 500;
       color: #000;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 32px;
+      overflow: hidden;
+      span {
+        white-space: nowrap;
+      }
+      input {
+        padding: 0px;
+        max-width: 180px;
+        margin-left: 5px;
+        background-color: transparent;
+        border: hidden;
+        border-bottom: 1px solid #004eb4;
+        border-radius: 0px;
+        box-shadow: none;
+        outline: none;
+        &:focus {
+          border-bottom: 1px solid #0370ff;
+        }
+      }
     }
     .logo {
       img {
@@ -2085,12 +2112,23 @@ button {
       font-size: 13px;
       color: #034397;
       background-color: #e0eeff;
-      padding: 2px 8px;
+      padding: 0px 8px;
       border-radius: 6px;
       border: 1px solid #88b0e4;
       display: flex;
       flex: 1;
       align-items: center;
+      height: 70px;
+      width: 80%;
+      select {
+        width: 100%;
+        margin: 4px;
+        border: 1px solid transparent;
+        outline: none;
+        background-color: transparent;
+        padding: 0px;
+        border-radius: 6px;
+      }
     }
     .note {
       width: 100%;
@@ -2100,6 +2138,9 @@ button {
       padding: 0px 2px;
     }
     .name {
+      height: 30px;
+      align-items: center;
+      display: flex;
       font-size: 15px;
       font-weight: 500;
     }
@@ -2107,7 +2148,7 @@ button {
   .avatar {
     margin: 8px;
     width: 120px;
-    height: 160px;
+    height: 140px;
     background-color: #9dc1e7;
     border-radius: 10px;
     border: 1px solid #7fa2d4;

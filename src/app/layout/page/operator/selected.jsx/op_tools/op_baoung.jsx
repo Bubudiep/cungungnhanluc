@@ -74,7 +74,7 @@ const Op_baoung = ({
             );
             setOpList((old) => ({ ...old, results: newArray }));
             setIsModalOpen(false);
-            message.success("Đã ghi nhận đi làm thành công!");
+            message.success("Báo ứng thành công!");
           })
           .catch((er) => {
             message.error(er.response?.data?.detail ?? "Lỗi: không xác định!");
@@ -86,7 +86,6 @@ const Op_baoung = ({
       });
   };
   useEffect(() => {
-    console.log(user);
     if (seletedUser?.user?.nganhang && seletedUser?.user?.so_taikhoan) {
       const maQR = api.taoMaQR(
         seletedUser?.user?.so_taikhoan,
@@ -240,6 +239,9 @@ const Op_baoung = ({
               ) : banktype === "opertor" ? (
                 <OPpayCard
                   data={seletedUser.user}
+                  onUpdate={(e) => {
+                    setseletedUser((old) => ({ ...old, user: e }));
+                  }}
                   qrCode={
                     seletedUser.user.nganhang && (
                       <div className="flex ml-auto justify-center items-center mr-2">
