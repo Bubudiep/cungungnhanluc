@@ -72,18 +72,16 @@ const OperatorSelected = ({
               <Op_info seletedUser={seletedUser} />
             </div>
           ) : seletedUser.option == 2 ? (
-            <>
-              <div key={2} className="white-box operator-selected">
-                <Op_hiss
-                  user={user}
-                  opList={opList}
-                  setOpList={setOpList}
-                  opDetails={opDetails}
-                  seletedUser={seletedUser}
-                  setseletedUser={setseletedUser}
-                />
-              </div>
-            </>
+            <div key={2} className="white-box operator-selected">
+              <Op_hiss
+                user={user}
+                opList={opList}
+                setOpList={setOpList}
+                opDetails={opDetails}
+                seletedUser={seletedUser}
+                setseletedUser={setseletedUser}
+              />
+            </div>
           ) : (
             <></>
           )}

@@ -100,6 +100,7 @@ const Op_baoung = ({
       });
   };
   useEffect(() => {
+    console.log(seletedUser);
     if (seletedUser?.user?.nganhang && seletedUser?.user?.so_taikhoan) {
       const maQR = api.taoMaQR(
         seletedUser?.user?.so_taikhoan,

@@ -84,14 +84,10 @@ const ListApproval = () => {
                           {op?.status == "pending" ? "Chờ duyệt" : op?.status}
                         </td>
                         <td>{op?.requesttype?.typecode ?? "Chưa phân loại"}</td>
-                        <td>{op.ten_goc ?? "-"}</td>
-                        <td>{op.sdt ?? "-"}</td>
-                        <td>{op.nhachinh?.name ?? "-"}</td>
-                        <td>
-                          {op?.congty_danglam?.name ?? (
-                            <i className="fa-solid fa-ban"></i>
-                          )}
-                        </td>
+                        <td>{op?.requester?.profile?.full_name ?? "-"}</td>
+                        <td>{op?.operator?.ho_ten ?? "-"}</td>
+                        <td>-</td>
+                        <td>{op?.comment ?? "-"}</td>
                         <td>
                           <div className="flex flex-col">
                             <div className="flex">
