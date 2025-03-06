@@ -24,15 +24,24 @@ const Op_baoung = ({
   setOpList,
 }) => {
   const qrRef = useRef();
-  const [form] = Form.useForm(); // Tạo instance của Form
+  const [banksList, setBanksList] = useState([]);
+  const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState([]);
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [banktype, setBanktype] = useState(false);
+  const [banktype, setBanktype] = useState("opertor");
+  const [paytype, setPaytype] = useState("money");
   const [QRdata, setQRdata] = useState(200000);
   const [QRdataUser, setQRdataUser] = useState(200000);
   const [sotienBaoung, setSotienBaoung] = useState(200000);
+  useEffect(() => {
+    const fetchBanks = async () => {
+      const nht = await api.banks();
+      setBanksList(nht.data);
+    };
+    fetchBanks();
+  }, []);
   const handlePreview = async (file) => {
     file.preview = await getBase64(file.originFileObj);
     setPreviewImage(file.preview);
@@ -58,6 +67,11 @@ const Op_baoung = ({
           .post(
             `/operators/${seletedUser.user.id}/baoung/`,
             {
+              nguoiThuhuong: values.owner,
+              hinhthucThanhtoan: values.payType,
+              khacStk: values.other_stk,
+              khacNganhang: values.other_bank,
+              khacCtk: values.other_ctk,
               soTien: values.amount,
               lyDo: values.reason,
               ngayUng: values.date.format("YYYY-MM-DD"),
@@ -188,6 +202,8 @@ const Op_baoung = ({
               amount: 200000,
               date: dayjs(),
               type: "pending",
+              payType: paytype,
+              owner: "opertor",
             }}
             labelCol={{ span: 5 }}
           >
@@ -199,71 +215,111 @@ const Op_baoung = ({
               <Select
                 allowClear={false}
                 placeholder="Chọn người thụ hưởng"
+                defaultValue={banktype}
                 onChange={(e) => {
                   setBanktype(e);
                 }}
               >
                 <Option value="opertor">Người lao động</Option>
+                <Option value="other">Người khác (nhận hộ)</Option>
                 <Option value="staff">Người tuyển</Option>
-                <Option value="other">Khác</Option>
               </Select>
             </Form.Item>
-            <div className="ml-12">
-              {banktype === "staff" ? (
-                <OPpayCard
-                  data={{
-                    so_taikhoan: user.profile.bank_number,
-                    avatar: user.profile.avatar,
-                    nganhang: user.profile.bank,
-                    ho_ten: user.profile.full_name,
-                    chu_taikhoan: user.profile.full_name,
-                  }}
-                  qrCode={
-                    user.profile.bank_number && (
-                      <div className="flex ml-auto justify-center items-center mr-2">
-                        <QRCode
-                          value={QRdataUser} // Chuỗi muốn mã hóa
-                          size={150} // Kích thước mã QR
-                          ecLevel="L"
-                          qrStyle="dots" // Kiểu QR ("squares" hoặc "dots")
-                          fgColor="#517fc4" // Màu QR
-                          eyeColor="#2678f3e0" // Màu của các ô vuông lớn (QR eyes)
-                          bgColor="transparent" // Màu nền QR
-                          eyeRadius={[5, 5, 5, 5]}
-                          quietZone={10} // Vùng trắng xung quanh QR
-                        />
-                      </div>
-                    )
-                  }
-                />
-              ) : banktype === "opertor" ? (
-                <OPpayCard
-                  data={seletedUser.user}
-                  onUpdate={(e) => {
-                    setseletedUser((old) => ({ ...old, user: e }));
-                  }}
-                  qrCode={
-                    seletedUser.user.nganhang && (
-                      <div className="flex ml-auto justify-center items-center mr-2">
-                        <QRCode
-                          value={QRdata} // Chuỗi muốn mã hóa
-                          size={150} // Kích thước mã QR
-                          ecLevel="L"
-                          qrStyle="dots" // Kiểu QR ("squares" hoặc "dots")
-                          fgColor="#517fc4" // Màu QR
-                          eyeColor="#2678f3e0" // Màu của các ô vuông lớn (QR eyes)
-                          bgColor="transparent" // Màu nền QR
-                          eyeRadius={[5, 5, 5, 5]}
-                          quietZone={10} // Vùng trắng xung quanh QR
-                        />
-                      </div>
-                    )
-                  }
-                />
-              ) : (
-                <></>
-              )}
-            </div>
+            <Form.Item
+              label="Hình thức"
+              name="payType"
+              rules={[{ required: true, message: "Vui lòng chọn hình thức!" }]}
+            >
+              <Select
+                allowClear={false}
+                placeholder="Hình thức nhận báo ứng"
+                onChange={(e) => {
+                  setPaytype(e);
+                }}
+              >
+                <Option value="money">Tiền mặt</Option>
+                <Option value="bank">Chuyển khoản</Option>
+              </Select>
+            </Form.Item>
+            {paytype === "bank" && (
+              <>
+                {banktype === "other" && (
+                  <div className="flex flex-col gap-0 p-1 bg-[#e9f2ff] border-l-[#368dfd] border-l-4 shadow shadow-black/10 mb-2 ml-20 pb-0">
+                    <Form.Item
+                      label="Số tài khoản"
+                      name="other_stk"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Vui lòng nhập số tài khoản!",
+                        },
+                      ]}
+                    >
+                      <Input placeholder="Nhập số tài khoản" />
+                    </Form.Item>
+                    <Form.Item
+                      label="Chủ tài khoản"
+                      name="other_ctk"
+                      rules={[
+                        {
+                          required: true,
+                          message: "Vui lòng nhập chủ tài khoản!",
+                        },
+                      ]}
+                    >
+                      <Input placeholder="Nhập chủ tài khoản" />
+                    </Form.Item>
+                    <Form.Item
+                      label="Ngân hàng"
+                      name="other_bank"
+                      rules={[
+                        { required: true, message: "Vui lòng chọn ngân hàng!" },
+                      ]}
+                    >
+                      <Select style={{ width: "100%" }}>
+                        <Select.Option value="">Chọn ngân hàng</Select.Option>
+                        {banksList.map((bank) => (
+                          <Select.Option key={bank.bin} value={bank.bin}>
+                            {bank.short_name} - {bank.name}
+                          </Select.Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                  </div>
+                )}
+                {banktype === "opertor" && (
+                  <div className="ml-12">
+                    <OPpayCard
+                      data={seletedUser.user}
+                      onUpdate={(res) => {
+                        setseletedUser((old) => ({ ...old, user: res }));
+                        const newArray = opList.results.map((item) =>
+                          item.id === res.id ? { ...item, ...res } : item
+                        );
+                        setOpList((old) => ({ ...old, results: newArray }));
+                      }}
+                      qrCode={
+                        seletedUser.user.nganhang && (
+                          <div className="flex ml-auto justify-center items-center mr-2">
+                            <QRCode
+                              value={QRdata} // Chuỗi muốn mã hóa
+                              size={150} // Kích thước mã QR
+                              ecLevel="L"
+                              qrStyle="dots" // Kiểu QR ("squares" hoặc "dots")
+                              fgColor="#517fc4" // Màu QR
+                              eyeColor="#2678f3e0" // Màu của các ô vuông lớn (QR eyes)
+                              bgColor="transparent" // Màu nền QR
+                              eyeRadius={[5, 5, 5, 5]}
+                              quietZone={10} // Vùng trắng xung quanh QR
+                            />
+                          </div>
+                        )
+                      }
+                    />
+                  </div>
+                )}
+              </>
+            )}
             <Form.Item
               label="Số tiền"
               name="amount"
@@ -293,32 +349,12 @@ const Op_baoung = ({
             >
               <DatePicker allowClear={false} />
             </Form.Item>
-            {/* <Form.Item
-              label="Phân loại"
-              name="type"
-              rules={[{ required: true, message: "Vui lòng chọn ngày ứng!" }]}
-            >
-              <Select allowClear={false}>
-                <Option value="pending">Kế toán giải ngân</Option>
-                <Option value="completed">Người tuyển ứng trước cho NLĐ</Option>
-              </Select>
-            </Form.Item> */}
             <Form.Item label="Ghi chú" name="reason">
               <Input.TextArea
                 rows={3}
                 placeholder="Ứng tiền trọ, tiền ăn...."
               />
             </Form.Item>
-            {/* <Upload
-              className="uploadPage"
-              listType="picture-card"
-              fileList={fileList}
-              onPreview={handlePreview}
-              onChange={handleChange}
-              beforeUpload={() => false} // Không upload lên server ngay
-            >
-              {fileList.length >= 2 ? null : <div>Thêm ảnh</div>}
-            </Upload> */}
           </Form>
         </div>
       </Modal>

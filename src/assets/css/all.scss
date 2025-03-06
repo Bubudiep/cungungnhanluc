@@ -354,6 +354,10 @@
                   color: #31b401;
                   font-weight: 550;
                 }
+                &.pending {
+                  color: #ec967c;
+                  font-weight: 550;
+                }
                 .offline {
                   color: #acacac;
                   font-weight: 550;
@@ -2052,16 +2056,22 @@ button {
 .opPaycard {
   display: flex;
   gap: 5px;
-  border-left: 4px solid #1c96c3;
-  background-color: #e6f6fc;
+  background-color: #fff;
+  box-shadow: 0px 0px 4px #0005;
   margin-bottom: 8px;
+  border-radius: 8px;
   overflow: hidden;
   button.absolute {
-    font-size: 20px;
-    padding: 4px 8px;
+    font-size: 15px;
+    padding: 0px 8px;
     background-color: transparent;
-    border-color: transparent;
-    color: #4887cf;
+    border: hidden;
+    transition: all 0.3s;
+    color: #98afc9;
+    &:hover {
+      background-color: #98a5b6 !important;
+      color: #fff !important;
+    }
   }
   .info {
     display: flex;
@@ -2070,24 +2080,25 @@ button {
     justify-content: center;
     position: relative;
     align-items: start;
-    color: #000;
+    color: #696969;
     padding: 8px 8px 8px 0px;
-    line-height: 1.3rem;
+    font-size: 13px;
     .stk {
-      font-weight: 500;
-      color: #000;
       display: flex;
       align-items: center;
       gap: 4px;
-      height: 32px;
       overflow: hidden;
+      &:first-child {
+        color: #235380;
+        font-size: 20px;
+        font-weight: 700;
+      }
       span {
         white-space: nowrap;
       }
       input {
         padding: 0px;
         max-width: 180px;
-        margin-left: 5px;
         background-color: transparent;
         border: hidden;
         border-bottom: 1px solid #004eb4;
@@ -2112,23 +2123,20 @@ button {
       font-size: 13px;
       color: #034397;
       background-color: #e0eeff;
-      padding: 0px 8px;
+      padding: 4px 8px;
       border-radius: 6px;
       border: 1px solid #88b0e4;
       display: flex;
-      flex: 1;
       align-items: center;
-      height: 70px;
       width: 80%;
-      select {
-        width: 100%;
-        margin: 4px;
-        border: 1px solid transparent;
-        outline: none;
-        background-color: transparent;
-        padding: 0px;
-        border-radius: 6px;
-      }
+    }
+    select {
+      margin-top: 4px;
+      width: 100%;
+      outline: none;
+      padding: 4px;
+      border-radius: 6px;
+      border: 1px solid #0003;
     }
     .note {
       width: 100%;
@@ -2147,11 +2155,10 @@ button {
   }
   .avatar {
     margin: 8px;
-    width: 120px;
-    height: 140px;
+    width: 100px;
+    height: 100px;
     background-color: #9dc1e7;
     border-radius: 10px;
-    border: 1px solid #7fa2d4;
     overflow: hidden;
     box-shadow: 2px 2px 4px #0003 inset;
     img {

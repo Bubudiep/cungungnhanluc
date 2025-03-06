@@ -78,35 +78,12 @@ const ListApproval = () => {
                 <>
                   {apList?.results?.length > 0 ? (
                     apList?.results.map((op, idx) => (
-                      <tr
-                        key={idx}
-                        className={op?.congty_danglam?.name ?? "opacity-50"}
-                      >
-                        <td className="!text-[11px]">
-                          {op?.congty_danglam?.name ? (
-                            <div className="online">Online</div>
-                          ) : (
-                            <div className="offline">Offline</div>
-                          )}
+                      <tr key={idx} className={`${op?.status?.toUpperCase()}`}>
+                        <td></td>
+                        <td className={`!text-[11px] ${op?.status} online`}>
+                          {op?.status == "pending" ? "Chờ duyệt" : op?.status}
                         </td>
-                        <td>
-                          <div className="flex flex-col">
-                            <a
-                              onClick={(e) =>
-                                setseletedUser({ user: op, option: 2 })
-                              }
-                            >
-                              {op.ho_ten}
-                            </a>
-                            <a
-                              onClick={(e) =>
-                                setseletedUser({ user: op, option: 2 })
-                              }
-                            >
-                              {op.ma_nhanvien}
-                            </a>
-                          </div>
-                        </td>
+                        <td>{op?.requesttype?.typecode ?? "Chưa phân loại"}</td>
                         <td>{op.ten_goc ?? "-"}</td>
                         <td>{op.sdt ?? "-"}</td>
                         <td>{op.nhachinh?.name ?? "-"}</td>
