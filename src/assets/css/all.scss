@@ -60,7 +60,7 @@
           flex: 1;
           max-width: 280px;
           min-width: 200px;
-          border-radius: 16px;
+          border-radius: 8px;
           box-shadow: 2px 2px 4px #00000010;
           padding: 10px;
           .inout {
@@ -94,8 +94,9 @@
             font-size: 16px;
           }
           .value {
-            font-size: 32px;
+            font-size: 28px;
             text-align: center;
+            font-weight: 500;
           }
           .content {
             margin-top: 10px;
@@ -278,11 +279,56 @@
           }
         }
       }
+      .approval-table {
+        table {
+          tr {
+            td {
+              height: 42px;
+              div {
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+              &.ant-table-cell-row-hover {
+                background-color: unset;
+              }
+              .request_code {
+                color: #1171c0;
+                user-select: none;
+                transition: all 0.3s;
+                cursor: pointer;
+                &:hover {
+                  text-decoration: underline;
+                  color: #0096fa;
+                }
+              }
+              .pending,
+              .not {
+                font-size: 12px;
+                color: #db8145;
+              }
+              .approved,
+              .done {
+                font-size: 12px;
+                color: #19cc79;
+              }
+            }
+            &:hover {
+              td {
+                background-color: #f2f8ff;
+              }
+            }
+          }
+        }
+      }
       .employeer-table,
       .approval-table {
         background-color: #fff;
         border-radius: 8px;
         width: 100%;
+        .ant-pagination {
+          justify-content: center;
+          margin: 16px 0px 14px 0px;
+        }
         table {
           width: 100%;
           border-spacing: 0px;

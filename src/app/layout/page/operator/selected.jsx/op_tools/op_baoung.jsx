@@ -134,10 +134,11 @@ const Op_baoung = ({
           </div>
           <div className="name">Báo ứng</div>
           <div className="value">
-            {seletedUser?.user?.baoung
-              .filter((item) => item.status === "pending")
-              .reduce((sum, item) => sum + parseFloat(item.amount), 0)
-              .toLocaleString()}{" "}
+            {seletedUser?.user?.baoung &&
+              seletedUser?.user?.baoung
+                .filter((item) => item.status === "pending")
+                .reduce((sum, item) => sum + parseFloat(item.amount), 0)
+                .toLocaleString()}{" "}
             VNĐ
           </div>
         </div>
@@ -162,40 +163,46 @@ const Op_baoung = ({
             </div>
           </div>
           <div className="flex gap-2">
-            {seletedUser?.user?.baoung
-              .filter((item) => item.status === "pending")
-              .reduce((sum, item) => sum + parseFloat(item.amount), 0) > 0 && (
-              <div className="bg-red-100 flex-1 border border-[#d18125] rounded-md overflow-hidden">
-                <div className="flex gap-2 items-center text bg-[#d18125] text-[#fff] font-[500] p-2 py-1">
-                  <GoAlertFill />
-                  Số tiền chưa giải ngân
+            {seletedUser?.user?.baoung &&
+              seletedUser?.user?.baoung
+                .filter((item) => item.status === "pending")
+                .reduce((sum, item) => sum + parseFloat(item.amount), 0) >
+                0 && (
+                <div className="bg-red-100 flex-1 border border-[#d18125] rounded-md overflow-hidden">
+                  <div className="flex gap-2 items-center text bg-[#d18125] text-[#fff] font-[500] p-2 py-1">
+                    <GoAlertFill />
+                    Số tiền chưa giải ngân
+                  </div>
+                  <div className="p-1 text-[20px] font-[500] text-center text-[#ac4922]">
+                    {seletedUser?.user?.baoung
+                      .filter((item) => item.status === "pending")
+                      .reduce((sum, item) => sum + parseFloat(item.amount), 0)
+                      .toLocaleString()}{" "}
+                    VNĐ
+                  </div>
                 </div>
-                <div className="p-1 text-[20px] font-[500] text-center text-[#ac4922]">
-                  {seletedUser?.user?.baoung
-                    .filter((item) => item.status === "pending")
-                    .reduce((sum, item) => sum + parseFloat(item.amount), 0)
-                    .toLocaleString()}{" "}
-                  VNĐ
+              )}
+            {seletedUser?.user?.baoung &&
+              seletedUser?.user?.baoung
+                .filter((item) => item.retrieve_status === "not_retrieved")
+                .reduce((sum, item) => sum + parseFloat(item.amount), 0) >
+                0 && (
+                <div className="bg-red-100 flex-1 border border-red-700 rounded-md overflow-hidden">
+                  <div className="flex gap-2 items-center text bg-red-700 text-[#fff] font-[500] p-2 py-1">
+                    <GoAlertFill />
+                    Số tiền đang ứng chưa thu hồi
+                  </div>
+                  <div className="p-1 text-[20px] font-[500] text-center">
+                    {seletedUser?.user?.baoung
+                      .filter(
+                        (item) => item.retrieve_status === "not_retrieved"
+                      )
+                      .reduce((sum, item) => sum + parseFloat(item.amount), 0)
+                      .toLocaleString()}{" "}
+                    VNĐ
+                  </div>
                 </div>
-              </div>
-            )}
-            {seletedUser?.user?.baoung
-              .filter((item) => item.retrieve_status === "not_retrieved")
-              .reduce((sum, item) => sum + parseFloat(item.amount), 0) > 0 && (
-              <div className="bg-red-100 flex-1 border border-red-700 rounded-md overflow-hidden">
-                <div className="flex gap-2 items-center text bg-red-700 text-[#fff] font-[500] p-2 py-1">
-                  <GoAlertFill />
-                  Số tiền đang ứng chưa thu hồi
-                </div>
-                <div className="p-1 text-[20px] font-[500] text-center">
-                  {seletedUser?.user?.baoung
-                    .filter((item) => item.retrieve_status === "not_retrieved")
-                    .reduce((sum, item) => sum + parseFloat(item.amount), 0)
-                    .toLocaleString()}{" "}
-                  VNĐ
-                </div>
-              </div>
-            )}
+              )}
           </div>
           <Form
             form={form}

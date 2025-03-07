@@ -1,5 +1,6 @@
 import {
   Button,
+  DatePicker,
   Form,
   Input,
   InputNumber,
@@ -13,12 +14,15 @@ import api from "../../../../components/api";
 import dayjs from "dayjs";
 import { useUser } from "../../../../components/userContext";
 import OPpayCard from "../../../../components/payCard";
+import { GoAlertFill } from "react-icons/go";
+import moment from "moment";
 
-const ApprovalTools = () => {
+const ApprovalTools = ({ selectedRowKeys, updateList }) => {
   const { user, setUser } = useUser();
   const [form] = Form.useForm(); // Tạo instance của Form
   const [visible, setVisible] = useState(false);
   const [isAdd, setIsAdd] = useState(false);
+  const [isCreate, setIsCreate] = useState(false);
   const [key, setKey] = useState(0);
   const [loaiYC, setLoaiYC] = useState([]);
   const [ycSelected, setYcSelected] = useState({ need_operator: false });
@@ -58,32 +62,66 @@ const ApprovalTools = () => {
       .validateFields()
       .then((values) => {
         console.log("Form values:", values);
+        setIsCreate(true);
+        api
+          .post(
+            "/pheduyet/",
+            { ...values, date: values.date.format("YYYY-MM-DD") },
+            user.token
+          )
+          .then((res) => {
+            message.success("Thêm yêu cầu thành công!");
+            updateList();
+            setVisible(false);
+          })
+          .catch((e) => {
+            console.log(e);
+            message.error(e?.response?.detail ?? "Lỗi khi tạo!");
+            setIsCreate(false);
+          })
+          .finally(() => {
+            setIsCreate(false);
+          });
       })
       .catch((e) => {
         console.log(e);
         message.error("Thiếu các trường yêu cầu!");
       });
   };
+  const handleAction = () => {
+    console.log("Xử lý các ID:", selectedRowKeys);
+  };
   useEffect(() => {
+    setIsAdd(true);
+    setIsCreate(false);
     setFileList([]);
     setnguoilaodongP({});
     setYcSelected({ need_operator: false });
     api
       .get("/pheduyet/config/", user.token)
       .then((res) => {
-        if (res.phanloai) setLoaiYC(res.phanloai);
+        if (res.phanloai)
+          setLoaiYC(res.phanloai.filter((item) => item.typecode !== "Báo ứng"));
         if (res.lydo) setReasonType(res.lydo);
         if (res.nguoilaodong) setnguoilaodong(res.nguoilaodong);
       })
       .catch((er) => {
         console.log(er);
+        message.error(e?.response?.detail ?? "Lỗi khi lấy dữ liệu cài đặt!");
       })
-      .finally(() => {});
+      .finally(() => {
+        setIsAdd(false);
+      });
   }, [visible]);
   return (
     <div className="tools flex">
       <div className="left"></div>
-      <div className="right ml-auto">
+      <div className="flex right ml-auto gap-1">
+        {selectedRowKeys.length > 0 && (
+          <Button type="primary" onClick={handleAction}>
+            Xử lý ({selectedRowKeys.length})
+          </Button>
+        )}
         <Button
           type="primary"
           onClick={handleOpen}
@@ -97,16 +135,29 @@ const ApprovalTools = () => {
         open={visible}
         onCancel={handleCancel}
         onOk={handleOk}
+        confirmLoading={isCreate}
         loading={isAdd}
         okText="Gửi yêu cầu"
         cancelText="Hủy"
         width={600}
       >
         <div className="flex flex-col gap-1">
+          <div className="hint leading-[1.2] bg-[#eef6ff] mb-1 border border-[#7a9abb] rounded-md text-[#274c74] select-none">
+            <div className="font-[500] flex items-center gap-1.5 p-1 px-2 pb-1">
+              <GoAlertFill className="inline" /> Thêm phê duyệt
+            </div>
+            <div className="p-1.5 pt-0">
+              Tạo yêu cầu thanh toán cho mục đích chung của công ty. Tiền sẽ
+              được thanh toán cho người yêu cầu khi mà yêu cầu được phê duyệt.
+              <br />
+              Báo ứng không nằm trong mục này
+            </div>
+          </div>
           <Form
             form={form}
             initialValues={{
               trangthai: "di_lam",
+              date: moment(),
             }}
             labelCol={{ span: 6 }}
             wrapperCol={{ span: 30 }}
@@ -125,9 +176,9 @@ const ApprovalTools = () => {
                 }}
               >
                 {loaiYC.map((type) => (
-                  <Option key={type.id} value={type.id}>
+                  <Select.Option key={type.id} value={type.id}>
                     {type.typecode}
-                  </Option>
+                  </Select.Option>
                 ))}
               </Select>
             </Form.Item>
@@ -151,9 +202,9 @@ const ApprovalTools = () => {
                   }}
                 >
                   {nguoilaodong.map((op) => (
-                    <Option key={op.id} value={op.id}>
+                    <Select.Option key={op.id} value={op.id}>
                       {op.ho_ten} ({op.ma_nhanvien})
-                    </Option>
+                    </Select.Option>
                   ))}
                 </Select>
               </Form.Item>
@@ -162,12 +213,29 @@ const ApprovalTools = () => {
               <OPpayCard data={nguoilaodongP} />
             )}
             <Form.Item
+              label="Hình thức"
+              name="payType"
+              rules={[{ required: true, message: "Vui lòng chọn hình thức!" }]}
+            >
+              <Select allowClear={false} placeholder="Hình thức nhận tiền">
+                <Option value="money">Tiền mặt</Option>
+                <Option value="bank">Chuyển khoản</Option>
+              </Select>
+            </Form.Item>
+            <Form.Item
+              label="Ngày yêu cầu"
+              name="date"
+              rules={[{ required: true, message: "Vui lòng chọn ngày ứng!" }]}
+            >
+              <DatePicker allowClear={false} />
+            </Form.Item>
+            <Form.Item
               label="Số tiền"
               name="amount"
               rules={[{ required: true, message: "Vui lòng nhập số tiền!" }]}
             >
               <InputNumber
-                min={200000}
+                min={20000}
                 max={2000000}
                 style={{ width: "100%" }}
                 placeholder="Từ 200.000 đến 2.000.000"
@@ -186,9 +254,9 @@ const ApprovalTools = () => {
             >
               <Select placeholder="Phân loại lý do">
                 {reasonType.map((type) => (
-                  <Option key={type.id} value={type.id}>
+                  <Select.Option key={type.id} value={type.id}>
                     {type.typename}
-                  </Option>
+                  </Select.Option>
                 ))}
               </Select>
             </Form.Item>

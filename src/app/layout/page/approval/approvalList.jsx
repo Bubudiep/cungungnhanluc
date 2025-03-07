@@ -1,171 +1,190 @@
 import React, { useEffect, useState } from "react";
 import ApprovalTools from "./approvalTools";
-import { Empty, Pagination, Spin } from "antd";
+import { Table, Checkbox, Spin, Empty, Button, Modal, Tooltip } from "antd";
 import api from "../../../../components/api";
 import { useUser } from "../../../../components/userContext";
+import { FaCircleInfo } from "react-icons/fa6";
+import ApprovalHis from "./approvalHis";
+import ApprovalDetails from "./approvalDetails";
+
 const ListApproval = () => {
-  const { user, setUser } = useUser();
-  const [total, setTotal] = useState(0);
+  const { user } = useUser();
   const [loading, setLoading] = useState(false);
-  const [firstload, setFirstload] = useState(true);
+  const [firstLoad, setFirstLoad] = useState(true);
   const [pagenow, setPagenow] = useState(1);
   const [apList, setApList] = useState({ count: 0, results: [] });
-  const handlePageChange = (page) => {
-    setPagenow(page);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [pageSize, setPageSize] = useState(10);
+  const [selectedRecord, setSelectedRecord] = useState(false);
+  const fetchData = (page, pagesize = pageSize) => {
     setLoading(true);
-    const url = `/pheduyet/?page=${page}`;
     api
-      .get(url, user.token)
+      .get(`/pheduyet/?page=${page}&page_size=${pagesize}`, user.token)
       .then((res) => {
-        setTotal(res.count); // Cập nhật tổng số nhân viên
         setApList(res);
       })
-      .catch((er) => {
-        console.error("Lỗi khi tải dữ liệu:", er);
-      })
+      .catch((error) => console.error("Lỗi khi tải dữ liệu:", error))
       .finally(() => {
         setTimeout(() => {
           setLoading(false);
-          setFirstload(false);
+          setFirstLoad(false);
         }, 500);
       });
   };
+  const handlePageChange = (page, size) => {
+    setPagenow(page);
+    setPageSize(size);
+    setLoading(true);
+    fetchData(page, size);
+  };
+  const handleAction = (record) => {
+    setSelectedRecord(record);
+  };
   useEffect(() => {
-    handlePageChange(1);
+    fetchData(1, 10);
   }, []);
+  const columns = [
+    {
+      title: "",
+      dataIndex: "status",
+      render: (status) => (
+        <div className={status}>
+          {status === "pending" ? "Chờ duyệt" : status}
+        </div>
+      ),
+    },
+    {
+      title: "",
+      dataIndex: "requesttype",
+      render: (requesttype) => (
+        <div
+          className={`flex p-2 py-1 rounded text-[#fff] text-[11px] font-[500]`}
+          style={{
+            backgroundColor: requesttype?.color ?? "#999",
+          }}
+        >
+          {requesttype?.typecode ?? "Chưa phân loại"}
+        </div>
+      ),
+    },
+    {
+      title: "#ID",
+      dataIndex: "request_code",
+      render: (request_code, record) => (
+        <div
+          className="request_code"
+          onClick={() => {
+            handleAction(record);
+          }}
+        >
+          #{request_code}
+        </div>
+      ),
+    },
+    {
+      title: "Số tiền",
+      className: "text-[#1677ff]",
+      dataIndex: "amount",
+      render: (amount) => parseInt(amount).toLocaleString(),
+    },
+    {
+      title: "Người tạo",
+      dataIndex: "requester",
+      render: (requester) => requester?.profile?.full_name ?? "-",
+    },
+    {
+      title: "Hạng mục",
+      dataIndex: "reason",
+      render: (reason) => reason?.typename ?? "-", // Placeholder
+    },
+    {
+      title: "Lý do",
+      dataIndex: "comment",
+      render: (comment) => (
+        <div className="max-w-[100px]">
+          <Tooltip title={comment}>{comment ?? "-"}</Tooltip>
+        </div>
+      ),
+    },
+    {
+      title: "Giải ngân",
+      dataIndex: "payment_status_display",
+      render: (payment_status_display) => (
+        <div
+          className={`${payment_status_display === "Chưa" ? "not" : "done"}`}
+        >
+          {payment_status_display}
+        </div>
+      ),
+    },
+    {
+      title: "Thu hồi",
+      dataIndex: "retrieve_status_display",
+      render: (retrieve_status_display) => (
+        <div
+          className={`${retrieve_status_display === "Chưa" ? "not" : "done"}`}
+        >
+          {retrieve_status_display}
+        </div>
+      ),
+    },
+    {
+      title: "Ngày tạo",
+      dataIndex: "created_at",
+      render: (created_at) => new Date(created_at).toLocaleString() ?? "-",
+    },
+  ];
+
   return (
-    <>
-      <div className="flex flex-col gap-1 w-[800px]">
-        <ApprovalTools />
-        <div className="approval-table">
-          <table>
-            <thead>
-              <tr>
-                <th>
-                  {loading && (
-                    <>
-                      <Spin size="small" />
-                    </>
-                  )}
-                </th>
-                <th>Trạng thái</th>
-                <th>Phân loại</th>
-                <th>Người tạo</th>
-                <th>Người lao động</th>
-                <th>Hạng mục</th>
-                <th>Lý do</th>
-                <th>Xử lý</th>
-                <th>Cập nhập</th>
-                <th>Ngày tạo</th>
-              </tr>
-            </thead>
-            <tbody>
-              {firstload ? (
-                <tr>
-                  <td colSpan={9999} className="none">
-                    <Spin
-                      size="large"
-                      style={{
-                        height: 350,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    />
-                  </td>
-                </tr>
-              ) : (
-                <>
-                  {apList?.results?.length > 0 ? (
-                    apList?.results.map((op, idx) => (
-                      <tr key={idx} className={`${op?.status?.toUpperCase()}`}>
-                        <td></td>
-                        <td className={`!text-[11px] ${op?.status} online`}>
-                          {op?.status == "pending" ? "Chờ duyệt" : op?.status}
-                        </td>
-                        <td>{op?.requesttype?.typecode ?? "Chưa phân loại"}</td>
-                        <td>{op?.requester?.profile?.full_name ?? "-"}</td>
-                        <td>{op?.operator?.ho_ten ?? "-"}</td>
-                        <td>-</td>
-                        <td>{op?.comment ?? "-"}</td>
-                        <td>
-                          <div className="flex flex-col">
-                            <div className="flex">
-                              {op?.work?.length > 0 &&
-                                op?.work[0].start_date &&
-                                new Date(op?.work[0].start_date)
-                                  ?.toISOString()
-                                  ?.split("T")[0]}
-                            </div>
-                            <div className="flex">
-                              {op?.work?.length > 0 && op?.work[0].end_date
-                                ? new Date(op?.work[0].end_date)
-                                    ?.toISOString()
-                                    ?.split("T")[0]
-                                : "-"}
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          {op?.nguoituyen && (
-                            <>
-                              <a className="flex">
-                                {op?.nguoituyen?.name ?? "-"}
-                              </a>
-                              <div className="flex">
-                                {op?.nguoituyen?.full_name ?? "-"}
-                              </div>
-                            </>
-                          )}
-                        </td>
-                        <td>
-                          {op?.nguoibaocao && (
-                            <>
-                              <a className="flex">
-                                {op?.nguoibaocao?.name ?? "-"}
-                              </a>
-                              <div className="flex">
-                                {op?.nguoibaocao?.full_name ?? "-"}
-                              </div>
-                            </>
-                          )}
-                        </td>
-                        <td>
-                          <div className="flex gap-1 ml-2">
-                            <button
-                              className="edit"
-                              onClick={(e) =>
-                                setseletedUser({ user: op, option: 1 })
-                              }
-                            >
-                              <i className="fa-solid fa-circle-info"></i>
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={9999}>
-                        <Empty className="my-40" />
-                      </td>
-                    </tr>
-                  )}
-                </>
-              )}
-            </tbody>
-          </table>
-        </div>
-        <div className="panel-cl">
-          <Pagination
-            disabled={loading}
-            defaultCurrent={pagenow}
-            total={apList.count}
-            onChange={handlePageChange}
+    <div className="flex gap-2 flex-1 overflow-hidden">
+      <div className="flex flex-col gap-1 !w-[1000px] !max-w-[1000px] approve-page">
+        <ApprovalTools
+          selectedRowKeys={selectedRowKeys}
+          updateList={() => {
+            fetchData(pagenow, pageSize);
+          }}
+        />
+        {firstLoad ? (
+          <Spin
+            size="large"
+            className="h-40 flex items-center justify-center"
           />
-        </div>
+        ) : (
+          <Table
+            columns={columns}
+            dataSource={apList.results}
+            rowKey={(record) => record.id}
+            pagination={{
+              pageSize: pageSize,
+              showSizeChanger: true,
+              current: pagenow,
+              total: apList.count,
+              pageSizeOptions: ["5", "10", "15", "20", "30"],
+              onShowSizeChange: handlePageChange,
+              locale: { items_per_page: "/ trang" },
+              onChange: (page) => {
+                setPagenow(page);
+                fetchData(page, pageSize);
+              },
+            }}
+            className="approval-table"
+            rowSelection={{
+              selectedRowKeys,
+              onChange: setSelectedRowKeys,
+            }}
+            loading={loading}
+            locale={{ emptyText: <Empty /> }}
+          />
+        )}
       </div>
-    </>
+      <ApprovalHis />
+      <ApprovalDetails
+        item={selectedRecord}
+        setItem={setSelectedRecord}
+        list={apList}
+        update={setApList}
+      />
+    </div>
   );
 };
 

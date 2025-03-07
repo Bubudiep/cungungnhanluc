@@ -51,20 +51,20 @@ const OperatorSelected = ({
           )}
           <div className="tabs">
             <div
-              className={`item ${seletedUser.option == 1 ? "active" : ""}`}
-              onClick={() => {
-                setseletedUser({ ...seletedUser, option: 1 });
-              }}
-            >
-              Thông tin
-            </div>
-            <div
               className={`item ${seletedUser.option == 2 ? "active" : ""}`}
               onClick={() => {
                 setseletedUser({ ...seletedUser, option: 2 });
               }}
             >
               Quá trình làm việc
+            </div>
+            <div
+              className={`item ${seletedUser.option == 1 ? "active" : ""}`}
+              onClick={() => {
+                setseletedUser({ ...seletedUser, option: 1 });
+              }}
+            >
+              Thông tin cá nhân
             </div>
           </div>
           {seletedUser.option == 1 ? (
