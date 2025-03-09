@@ -451,12 +451,11 @@ const zoomAndCrop = (canvas, context) => {
 };
 function taoMaQR(soTaiKhoan, bin, soTien, noiDung = "") {
   const vietQR = new VietQR();
-
   vietQR
     .setBeneficiaryOrganization(bin, soTaiKhoan)
     .setTransactionAmount(soTien)
     .setAdditionalDataFieldTemplate(noiDung);
-
+  console.log(vietQR.build());
   return vietQR.build();
 } // Xuất các phương thức
 export default {

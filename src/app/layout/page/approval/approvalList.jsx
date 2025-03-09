@@ -47,10 +47,8 @@ const ListApproval = () => {
     {
       title: "",
       dataIndex: "status",
-      render: (status) => (
-        <div className={status}>
-          {status === "pending" ? "Chờ duyệt" : status}
-        </div>
+      render: (status, record) => (
+        <div className={status}>{record.status_display}</div>
       ),
     },
     {

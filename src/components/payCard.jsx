@@ -17,16 +17,17 @@ const OPpayCard = ({ data, qrCode, onUpdate }) => {
     const fetchBanks = async () => {
       const nht = await api.banks();
       setBanksList(nht.data);
-    };
-    fetchBanks();
-  }, []);
-
-  useEffect(() => {
-    if (selectedBank) {
       const bankInfo = banksList.find((item) => item.bin === selectedBank);
       setBank(bankInfo || {});
-    }
-  }, [selectedBank, banksList]);
+    };
+    fetchBanks();
+  }, [selectedBank]);
+
+  useEffect(() => {
+    setStk(data.so_taikhoan);
+    setChuTaiKhoan(data.chu_taikhoan);
+    setSelectedBank(data.nganhang);
+  }, [data]);
 
   const handleUpdate = () => {
     api
@@ -44,6 +45,7 @@ const OPpayCard = ({ data, qrCode, onUpdate }) => {
         setIsModalVisible(false); // Đóng modal sau khi cập nhật thành công
       })
       .catch((er) => {
+        console.log(er);
         message.error(er?.response?.detail ?? "Lỗi khi cập nhật!");
       });
   };

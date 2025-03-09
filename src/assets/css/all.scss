@@ -772,6 +772,9 @@ body,
     }
   }
   .ant-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     padding: 0px 24px 20px 24px;
   }
 }
@@ -1100,6 +1103,43 @@ button {
     &:hover {
       color: #008cff;
       border: 1px solid #008cff;
+    }
+  }
+  &.ant-btn-reject,
+  &.ant-btn-coppy_text {
+    outline: none;
+    position: relative;
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    font-weight: 400;
+    white-space: nowrap;
+    text-align: center;
+    background-image: none;
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+    user-select: none;
+    touch-action: manipulation;
+    &.ant-btn-coppy_text {
+      color: #cad8e5;
+      border-color: transparent;
+      background: #fff;
+      &:hover {
+        color: #8db7df;
+      }
+    }
+    &.ant-btn-reject {
+      color: rgba(255, 255, 255, 0.88);
+      border-color: #e75318;
+      background: #e75318;
+      &:hover {
+        color: #fff;
+        border-color: #ff1e00;
+        background: #ff1e00;
+      }
     }
   }
   &.delete {
@@ -2211,6 +2251,74 @@ button {
       object-fit: cover;
       width: 100%;
       height: 100%;
+    }
+  }
+}
+.ant-descriptions-view {
+  table {
+    tr {
+      th {
+        padding: 8px !important;
+      }
+      td {
+        padding: 8px !important;
+      }
+    }
+  }
+}
+.approver-details {
+  .approved {
+    color: #009945;
+    background-color: #dcfae9;
+  }
+  .details-info {
+    .h1 {
+      font-weight: 500;
+      &::before {
+        content: "#";
+        margin-right: 5px;
+      }
+    }
+    .card {
+      border: 1px solid #0505050f;
+      border-radius: 8px;
+      overflow: hidden;
+      .item {
+        padding: 8px;
+        .name {
+          color: #757575;
+          padding: 0px 4px;
+        }
+        .value {
+          text-align: center;
+          font-size: 26px;
+          padding-bottom: 8px;
+          color: #f16f2f;
+        }
+        &:not(:last-child) {
+          border-bottom: 1px solid #0505050f;
+        }
+      }
+      .items {
+        display: flex;
+        padding: 0px;
+        background-color: #fafafa;
+        .name {
+          width: 40%;
+          color: #757575;
+          padding: 8px;
+          height: -webkit-fill-available;
+        }
+        .value {
+          padding: 8px 10px;
+          width: 60%;
+          background-color: #fff;
+          border-left: 1px solid #0505050f;
+        }
+        &:not(:last-child) {
+          border-bottom: 1px solid #0505050f;
+        }
+      }
     }
   }
 }
