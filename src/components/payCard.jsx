@@ -7,23 +7,29 @@ import { useUser } from "./userContext";
 const OPpayCard = ({ data, qrCode, onUpdate }) => {
   const { user } = useUser();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedBank, setSelectedBank] = useState(data?.nganhang || "");
   const [bank, setBank] = useState({});
   const [stk, setStk] = useState(data?.so_taikhoan || "");
   const [chuTaiKhoan, setChuTaiKhoan] = useState(data?.chu_taikhoan || "");
-  const [selectedBank, setSelectedBank] = useState(data?.nganhang || "");
   const [banksList, setBanksList] = useState([]);
 
   useEffect(() => {
     setStk(data.so_taikhoan);
     setChuTaiKhoan(data.chu_taikhoan);
     setSelectedBank(data.nganhang);
-    const fetchBanks = async (banks) => {
-      const nht = await api.banks();
-      setBanksList(nht.data);
-      const bankInfo = banksList.find((item) => item.bin === banks);
-      setBank(bankInfo || {});
-    };
-    fetchBanks(data.nganhang);
+
+    api
+      .get("https://api.vietqr.io/v2/banks")
+      .then((res) => {
+        setBanksList(res.data); // Đúng cấu trúc của API
+        const foundBank = res.data.find(
+          (bank) => String(bank.bin) === String(data.nganhang)
+        );
+        setBank(foundBank || {}); // Nếu không tìm thấy, tránh bị lỗi undefined
+      })
+      .catch((error) => {
+        setBanksList([]);
+      });
   }, [data]);
 
   const handleUpdate = () => {
@@ -65,9 +71,7 @@ const OPpayCard = ({ data, qrCode, onUpdate }) => {
           </span>
         </div>
         <div className="logo">
-          {selectedBank && bank?.logo && (
-            <img src={bank.logo} alt="Logo ngân hàng" />
-          )}
+          {bank?.logo && <img src={bank.logo} alt="Logo ngân hàng" />}
         </div>
         <div className="stk">{data?.ghichu_taikhoan ?? "-"}</div>
       </div>
