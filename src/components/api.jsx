@@ -5,7 +5,7 @@ const author = import.meta.env.VITE_AUTHOR;
 const version = import.meta.env.VITE_VERSION;
 const api = axios.create({
   // baseURL: "http://" + location.hostname + ":5005/nl-api", // URL cơ sở cho các yêu cầu
-  baseURL: "http://ipays.vn:5005/nl-api", // URL cơ sở cho các yêu cầu
+  baseURL: "https://ipays.vn/nl-api", // URL cơ sở cho các yêu cầu
 });
 class VietQR {
   constructor() {
