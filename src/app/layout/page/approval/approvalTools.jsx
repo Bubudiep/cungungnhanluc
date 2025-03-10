@@ -210,7 +210,12 @@ const ApprovalTools = ({ selectedRowKeys, updateList }) => {
               </Form.Item>
             )}
             {ycSelected?.need_operator && nguoilaodongP?.id && (
-              <OPpayCard data={nguoilaodongP} />
+              <OPpayCard
+                data={nguoilaodongP}
+                onUpdate={(res) => {
+                  setnguoilaodongP(res);
+                }}
+              />
             )}
             <Form.Item
               label="Hình thức"

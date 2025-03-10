@@ -14,19 +14,16 @@ const OPpayCard = ({ data, qrCode, onUpdate }) => {
   const [banksList, setBanksList] = useState([]);
 
   useEffect(() => {
-    const fetchBanks = async () => {
-      const nht = await api.banks();
-      setBanksList(nht.data);
-      const bankInfo = banksList.find((item) => item.bin === selectedBank);
-      setBank(bankInfo || {});
-    };
-    fetchBanks();
-  }, [selectedBank]);
-
-  useEffect(() => {
     setStk(data.so_taikhoan);
     setChuTaiKhoan(data.chu_taikhoan);
     setSelectedBank(data.nganhang);
+    const fetchBanks = async (banks) => {
+      const nht = await api.banks();
+      setBanksList(nht.data);
+      const bankInfo = banksList.find((item) => item.bin === banks);
+      setBank(bankInfo || {});
+    };
+    fetchBanks(data.nganhang);
   }, [data]);
 
   const handleUpdate = () => {
