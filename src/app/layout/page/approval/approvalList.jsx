@@ -11,9 +11,9 @@ const ListApproval = () => {
   const { user } = useUser();
   const [loading, setLoading] = useState(false);
   const [firstLoad, setFirstLoad] = useState(true);
-  const [pagenow, setPagenow] = useState(1);
   const [apList, setApList] = useState({ count: 0, results: [] });
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [pagenow, setPagenow] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [selectedRecord, setSelectedRecord] = useState(false);
   const fetchData = (page, pagesize = pageSize) => {
