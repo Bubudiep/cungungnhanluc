@@ -71,6 +71,7 @@ const ListApproval = () => {
       render: (request_code, record) => (
         <div
           className="request_code"
+          key={record.id}
           onClick={() => {
             handleAction(record);
           }}
@@ -180,7 +181,9 @@ const ListApproval = () => {
         item={selectedRecord}
         setItem={setSelectedRecord}
         list={apList}
-        update={setApList}
+        update={(res) => {
+          fetchData(pagenow, pageSize);
+        }}
       />
     </div>
   );

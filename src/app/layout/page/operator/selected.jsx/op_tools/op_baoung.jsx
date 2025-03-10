@@ -101,30 +101,7 @@ const Op_baoung = ({
   };
   useEffect(() => {
     console.log(seletedUser);
-    if (seletedUser?.user?.nganhang && seletedUser?.user?.so_taikhoan) {
-      const maQR = api.taoMaQR(
-        seletedUser?.user?.so_taikhoan,
-        seletedUser?.user?.nganhang,
-        sotienBaoung,
-        `${api
-          .removeSpecial(seletedUser?.user?.ho_ten)
-          .replaceAll(" ", "")}_baoung_${sotienBaoung}`
-      );
-      setQRdata(maQR);
-    }
-    if (user?.profile?.bank_number && user?.profile?.bank) {
-      const maQRUser = api.taoMaQR(
-        user?.profile?.bank_number,
-        user?.profile?.bank,
-        sotienBaoung,
-        `${api
-          .removeSpecial(seletedUser?.user?.ho_ten)
-          .replaceAll(" ", "")}_baoung_${sotienBaoung}`
-      );
-      console.log(maQRUser);
-      setQRdataUser(maQRUser);
-    }
-  }, [isModalOpen, sotienBaoung]);
+  }, [isModalOpen]);
   return (
     <>
       <div className="item" onClick={() => setIsModalOpen(true)}>
@@ -184,19 +161,17 @@ const Op_baoung = ({
               )}
             {seletedUser?.user?.baoung &&
               seletedUser?.user?.baoung
-                .filter((item) => item.retrieve_status === "not_retrieved")
+                .filter((item) => item.retrieve_status === "not")
                 .reduce((sum, item) => sum + parseFloat(item.amount), 0) >
                 0 && (
                 <div className="bg-red-100 flex-1 border border-red-700 rounded-md overflow-hidden">
                   <div className="flex gap-2 items-center text bg-red-700 text-[#fff] font-[500] p-2 py-1">
                     <GoAlertFill />
-                    Số tiền đang ứng chưa thu hồi
+                    Số tiền đã ứng chưa thu hồi
                   </div>
                   <div className="p-1 text-[20px] font-[500] text-center">
                     {seletedUser?.user?.baoung
-                      .filter(
-                        (item) => item.retrieve_status === "not_retrieved"
-                      )
+                      .filter((item) => item.retrieve_status === "not")
                       .reduce((sum, item) => sum + parseFloat(item.amount), 0)
                       .toLocaleString()}{" "}
                     VNĐ
@@ -223,7 +198,6 @@ const Op_baoung = ({
               <Select
                 allowClear={false}
                 placeholder="Chọn người thụ hưởng"
-                defaultValue={banktype}
                 onChange={(e) => {
                   setBanktype(e);
                 }}
@@ -306,23 +280,6 @@ const Op_baoung = ({
                         );
                         setOpList((old) => ({ ...old, results: newArray }));
                       }}
-                      qrCode={
-                        seletedUser.user.nganhang && (
-                          <div className="flex ml-auto justify-center items-center mr-2">
-                            <QRCode
-                              value={QRdata} // Chuỗi muốn mã hóa
-                              size={150} // Kích thước mã QR
-                              ecLevel="L"
-                              qrStyle="dots" // Kiểu QR ("squares" hoặc "dots")
-                              fgColor="#517fc4" // Màu QR
-                              eyeColor="#2678f3e0" // Màu của các ô vuông lớn (QR eyes)
-                              bgColor="transparent" // Màu nền QR
-                              eyeRadius={[5, 5, 5, 5]}
-                              quietZone={10} // Vùng trắng xung quanh QR
-                            />
-                          </div>
-                        )
-                      }
                     />
                   </div>
                 )}

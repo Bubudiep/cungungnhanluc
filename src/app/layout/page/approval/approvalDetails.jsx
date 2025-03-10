@@ -11,25 +11,9 @@ const ApprovalDetails = ({ item, setItem, update }) => {
   const { user } = useUser();
   const [itemDetails, setItemDetails] = useState({});
   const [bankInfo, setBankInfo] = useState({});
+  const [isApply, setIsapply] = useState(false);
   const handleCancel = () => {
     setItem(false);
-  };
-  const handleApproval = (status) => {
-    message.success(
-      `Đã ${status === "approved" ? "phê duyệt" : "không duyệt"} đơn này.`
-    );
-    api
-      .post(
-        `/pheduyet/${item.id}/${status}/`,
-        {
-          comment: "",
-        },
-        user.token
-      )
-      .then((res) => {
-        setItemDetails(res);
-        setItem(res);
-      });
   };
   const handleCopy = () => {
     navigator.clipboard.writeText(item.request_code);
@@ -42,6 +26,13 @@ const ApprovalDetails = ({ item, setItem, update }) => {
     };
     fetchBanks();
   }, []);
+  const handleKeyDown = (event) => {
+    if (event.key === " ") {
+      event.preventDefault();
+      console.log("space");
+      handleApproval("approved");
+    }
+  };
   useEffect(() => {
     if (item.id) {
       api
@@ -50,11 +41,39 @@ const ApprovalDetails = ({ item, setItem, update }) => {
           setItemDetails(res);
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err?.response?.data?.detail);
         })
         .finally(() => {});
     }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [item]);
+  const handleApproval = (status) => {
+    setIsapply(true);
+    if (event) event.preventDefault(); // Chặn sự kiện ngoài ý muốn
+    api
+      .post(
+        `/pheduyet/${item.id}/${status}/`,
+        {
+          comment: "",
+        },
+        user.token
+      )
+      .then((res) => {
+        setItemDetails(res);
+        setItem(res);
+        update(res);
+        message.success(
+          `Đã ${status === "approved" ? "phê duyệt" : "không duyệt"} đơn này.`
+        );
+      })
+      .catch((err) => {
+        message.error(err?.response?.data?.detail);
+      })
+      .finally(() => {
+        setIsapply(false);
+      });
+  };
   return (
     <Modal
       title="Thông tin chi tiết"
@@ -70,6 +89,7 @@ const ApprovalDetails = ({ item, setItem, update }) => {
             key="approve"
             type="primary"
             icon={<FaCheck />}
+            loading={isApply}
             onClick={() => handleApproval("approved")}
           >
             Duyệt
@@ -108,10 +128,10 @@ const ApprovalDetails = ({ item, setItem, update }) => {
               {item.status_display}
             </Descriptions.Item>
             <Descriptions.Item label="Người yêu cầu">
-              {item.requester.profile.full_name}
+              {item?.requester?.profile?.full_name}
             </Descriptions.Item>
             <Descriptions.Item label="Lý do">
-              {item.reason || "-"}
+              {item?.reason?.typename || "-"}
             </Descriptions.Item>
             <Descriptions.Item label="Ngày yêu cầu">
               {item.request_date}
@@ -120,7 +140,7 @@ const ApprovalDetails = ({ item, setItem, update }) => {
               {item.comment || "Không có ghi chú"}
             </Descriptions.Item>
             <Descriptions.Item label="Trạng thái thanh toán">
-              {item.payment_status_display && "Đã thanh toán"}
+              {item.payment_status_display}
             </Descriptions.Item>
             <Descriptions.Item label="Trạng thái hoàn trả">
               {item.retrieve_status_display}
