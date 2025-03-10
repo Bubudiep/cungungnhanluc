@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal, DatePicker, Input, message } from "antd";
 import moment from "moment";
 import api from "../../../../../../components/api";
+import dayjs from "dayjs";
 
 const OP_NghiViec = ({
   user,
@@ -11,7 +12,9 @@ const OP_NghiViec = ({
   setseletedUser,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(moment());
+  const [selectedDate, setSelectedDate] = useState(
+    moment().format("YYYY-MM-DD")
+  );
   const [reason, setReason] = useState(""); // State lưu lý do nghỉ việc
   const handleNghiviec = () => {
     if (!selectedDate) {
@@ -82,7 +85,7 @@ const OP_NghiViec = ({
             <DatePicker
               onChange={(date) => setSelectedDate(date)}
               style={{ width: "100%" }}
-              defaultValue={selectedDate}
+              defaultValue={dayjs(selectedDate, "YYYY-MM-DD")}
             />
             <p>Nhập lý do nghỉ việc:</p>
             <Input.TextArea

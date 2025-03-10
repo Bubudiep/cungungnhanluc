@@ -311,6 +311,10 @@
                 font-size: 12px;
                 color: #19cc79;
               }
+              .rejected {
+                font-size: 12px;
+                color: #cc1f19;
+              }
             }
             &:hover {
               td {
@@ -2267,18 +2271,68 @@ button {
   }
 }
 .approver-details {
+  .h1 {
+    font-weight: 500;
+    &::before {
+      content: "#";
+      margin-right: 5px;
+    }
+  }
   .approved {
     color: #009945;
     background-color: #dcfae9;
   }
-  .details-info {
-    .h1 {
-      font-weight: 500;
-      &::before {
-        content: "#";
-        margin-right: 5px;
+  .historys {
+    .item {
+      display: flex;
+      flex-direction: column;
+      background-color: #f0f0f0;
+      padding: 2px;
+      border-radius: 5px;
+      &:not(:first-child) {
+        margin-top: 5px;
+      }
+      .title {
+        font-size: 13px;
+        display: flex;
+        padding: 2px 4px;
+        font-size: 12px;
+        gap: 6px;
+        .name {
+          font-weight: 500;
+          color: #006dff;
+        }
+        .action {
+          background-color: #505d83;
+          color: #fff;
+          border-radius: 6px;
+          font-size: 11px;
+          padding: 0px 6px 1px 6px;
+          &.create {
+            background-color: #1b8bb8;
+          }
+          &.rejected {
+            background-color: #b83a1b;
+          }
+          &.approved {
+            background-color: #18a70b;
+          }
+        }
+      }
+      .content {
+        color: #51565f;
+        padding: 2px 4px;
+        font-size: 13px;
+        border-radius: 4px;
+      }
+      .time {
+        margin-left: auto;
+        font-size: 11px;
+        color: #999;
       }
     }
+  }
+  .details-info {
     .card {
       border: 1px solid #0505050f;
       border-radius: 8px;

@@ -1,4 +1,11 @@
-import { Modal, Button, Descriptions, message, Tooltip } from "antd";
+import {
+  Modal,
+  Button,
+  Descriptions,
+  message,
+  Tooltip,
+  InputNumber,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { FaCheck, FaCopy, FaXmark } from "react-icons/fa6";
 import OPpayCard from "../../../../components/payCard";
@@ -6,12 +13,14 @@ import api from "../../../../components/api";
 import { useUser } from "../../../../components/userContext";
 import { QRCode } from "react-qrcode-logo";
 import { TbSpace } from "react-icons/tb";
+import { FaEdit, FaHistory, FaSave } from "react-icons/fa";
 
 const ApprovalDetails = ({ item, setItem, update }) => {
   const { user } = useUser();
   const [itemDetails, setItemDetails] = useState({});
   const [bankInfo, setBankInfo] = useState({});
   const [isApply, setIsapply] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const handleCancel = () => {
     setItem(false);
   };
@@ -48,6 +57,12 @@ const ApprovalDetails = ({ item, setItem, update }) => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [item]);
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+  const handleSave = () => {
+    setIsEditing(false);
+  };
   const handleApproval = (status) => {
     setIsapply(true);
     if (event) event.preventDefault(); // Chặn sự kiện ngoài ý muốn
@@ -81,7 +96,7 @@ const ApprovalDetails = ({ item, setItem, update }) => {
       onCancel={handleCancel}
       className="!w-[900px]"
       footer={[
-        <div className="items-center mr-auto text-[#999]">
+        <div className="items-center mr-auto text-[#999]" key="hint">
           Bấm "phím cách" để duyệt và sang phê duyệt tiếp theo
         </div>,
         item.status == "pending" && (
@@ -106,6 +121,21 @@ const ApprovalDetails = ({ item, setItem, update }) => {
             Hủy
           </Button>
         ),
+        item.status == "pending" &&
+          (!isEditing ? (
+            <Button key="edit" icon={<FaEdit />} onClick={() => handleEdit()}>
+              Sửa
+            </Button>
+          ) : (
+            <Button
+              type="primary"
+              key="save"
+              icon={<FaSave />}
+              onClick={() => handleSave()}
+            >
+              Lưu
+            </Button>
+          )),
         <Button key="close" onClick={handleCancel}>
           Đóng
         </Button>,
@@ -113,48 +143,91 @@ const ApprovalDetails = ({ item, setItem, update }) => {
     >
       {item && itemDetails ? (
         <div className="flex approver-details gap-4">
-          <Descriptions bordered column={1} className="w-[450px]">
-            <Descriptions.Item label="Mã yêu cầu">
-              <span style={{ marginRight: 8 }}>{item.request_code}</span>
-              <Tooltip title="Sao chép mã">
-                <Button
-                  type="coppy_text"
-                  icon={<FaCopy />}
-                  onClick={handleCopy}
-                />
-              </Tooltip>
-            </Descriptions.Item>
-            <Descriptions.Item label="Trạng thái" className={`${item.status}`}>
-              {item.status_display}
-            </Descriptions.Item>
-            <Descriptions.Item label="Người yêu cầu">
-              {item?.requester?.profile?.full_name}
-            </Descriptions.Item>
-            <Descriptions.Item label="Lý do">
-              {item?.reason?.typename || "-"}
-            </Descriptions.Item>
-            <Descriptions.Item label="Ngày yêu cầu">
-              {item.request_date}
-            </Descriptions.Item>
-            <Descriptions.Item label="Ghi chú">
-              {item.comment || "Không có ghi chú"}
-            </Descriptions.Item>
-            <Descriptions.Item label="Trạng thái thanh toán">
-              {item.payment_status_display}
-            </Descriptions.Item>
-            <Descriptions.Item label="Trạng thái hoàn trả">
-              {item.retrieve_status_display}
-            </Descriptions.Item>
-            <Descriptions.Item label="Người duyệt">
-              {item.approver ? item.approver.full_name : "Chưa có"}
-            </Descriptions.Item>
-          </Descriptions>
+          <div className="flex flex-col gap-1">
+            <Descriptions bordered column={1} className="w-[450px]">
+              <Descriptions.Item label="Mã yêu cầu">
+                <span style={{ marginRight: 8 }}>{item.request_code}</span>
+                <Tooltip title="Sao chép mã">
+                  <Button
+                    type="coppy_text"
+                    icon={<FaCopy />}
+                    onClick={handleCopy}
+                  />
+                </Tooltip>
+              </Descriptions.Item>
+              <Descriptions.Item label="Người yêu cầu">
+                {item?.requester?.profile?.full_name}
+              </Descriptions.Item>
+              <Descriptions.Item label="Người duyệt">
+                {itemDetails.approver
+                  ? itemDetails?.approver?.profile?.full_name
+                  : "Chưa có"}
+              </Descriptions.Item>
+              <Descriptions.Item label="Ngày yêu cầu">
+                {item.request_date}
+              </Descriptions.Item>
+              <Descriptions.Item label="Lý do">
+                {item?.reason?.typename || "-"}
+              </Descriptions.Item>
+              <Descriptions.Item label="Ghi chú">
+                {item.comment || "-"}
+              </Descriptions.Item>
+            </Descriptions>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1.5 font-[500] p-0.5">
+                <FaHistory />
+                Lịch sử
+              </div>
+              <div className="historys max-h-[200px] overflow-auto pr-0.5">
+                {itemDetails?.history &&
+                  itemDetails?.history?.map((his) => (
+                    <div className="item" key={his.id}>
+                      <div className="title">
+                        <div className="name">
+                          {his.user?.profile?.full_name}
+                        </div>
+                        <div className={`action ${his.action}`}>
+                          {his.action}
+                        </div>
+                        <div className="time">
+                          {api.timeSinceOrder(his.created_at)}
+                        </div>
+                      </div>
+                      <div className="content">
+                        {his.comment != "" ? his.comment : "-"}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
           <div className="flex flex-col details-info flex-1">
             <div className="card">
               <div className="item">
                 <div className="name">Số tiền</div>
                 <div className="value flex flex-col">
-                  <div>{parseInt(item.amount).toLocaleString()} VND</div>
+                  <div>
+                    {isEditing ? (
+                      <>
+                        <InputNumber
+                          min={20000}
+                          max={2000000}
+                          style={{ width: "100%" }}
+                          placeholder="Từ 200.000 đến 2.000.000"
+                          formatter={(value) =>
+                            value
+                              ? value
+                                  .toString()
+                                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+                              : ""
+                          }
+                          parser={(value) => value.replace(/\./g, "")} // Xóa dấu chấm khi nhập lại số
+                        />
+                      </>
+                    ) : (
+                      parseInt(item.amount).toLocaleString() + " VND"
+                    )}
+                  </div>
                   <div className="flex flex-1 justify-center">
                     {item.status == "pending" &&
                       itemDetails?.operator?.so_taikhoan &&
