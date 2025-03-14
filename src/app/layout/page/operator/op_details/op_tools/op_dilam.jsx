@@ -3,7 +3,7 @@ import { Modal, Input, Select, DatePicker, message } from "antd";
 import moment from "moment";
 import api from "../../../../../../components/api";
 
-const OP_DiLam = ({ user, seletedUser, setseletedUser, opList, setOpList }) => {
+const OP_DiLam = ({ opDetails, setOpDetails, user, setOpList }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [workDetails, setWorkDetails] = useState({
     company: null,
@@ -24,19 +24,16 @@ const OP_DiLam = ({ user, seletedUser, setseletedUser, opList, setOpList }) => {
     }
     api
       .post(
-        `/operators/${seletedUser.user.id}/dilam/`,
+        `/operators/${opDetails.id}/dilam/`,
         { employeeCode, company, startDate: startDate.format("YYYY-MM-DD") },
         user.token
       )
       .then((res) => {
-        setseletedUser((old) => ({
+        setOpList((old) => ({
           ...old,
-          user: res,
+          results: old.results.map((item) => (item.id === res.id ? res : item)),
         }));
-        const newArray = opList.results.map((item) =>
-          item.id === res.id ? { ...item, ...res } : item
-        );
-        setOpList((old) => ({ ...old, results: newArray }));
+        setOpDetails(res);
         setIsModalOpen(false);
         message.success("Đã ghi nhận đi làm thành công!");
       })
@@ -66,15 +63,13 @@ const OP_DiLam = ({ user, seletedUser, setseletedUser, opList, setOpList }) => {
       <Modal
         title="Thông tin đi làm"
         open={isModalOpen}
-        onOk={seletedUser?.user?.congty_danglam ? handleCancel : handleDiLam}
+        onOk={opDetails?.congty_danglam ? handleCancel : handleDiLam}
         onCancel={handleCancel}
         okText="Xác nhận"
         cancelText="Hủy"
       >
-        {seletedUser?.user?.congty_danglam ? (
-          <p>
-            {seletedUser?.user?.ho_ten} đang làm việc, vui lòng nghỉ làm trước!
-          </p>
+        {opDetails?.congty_danglam ? (
+          <p>{opDetails?.ho_ten} đang làm việc, vui lòng nghỉ làm trước!</p>
         ) : (
           <div className="flex flex-col gap-2">
             <div className="flex items-center">

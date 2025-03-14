@@ -16,14 +16,7 @@ import moment from "moment";
 import dayjs from "dayjs";
 import { GoAlertFill } from "react-icons/go";
 const { Option } = Select;
-const Op_baoung = ({
-  user,
-  seletedUser,
-  setseletedUser,
-  opList,
-  setOpList,
-}) => {
-  const qrRef = useRef();
+const Op_baoung = ({ opDetails, setOpDetails, user }) => {
   const [banksList, setBanksList] = useState([]);
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,8 +25,6 @@ const Op_baoung = ({
   const [previewOpen, setPreviewOpen] = useState(false);
   const [banktype, setBanktype] = useState("opertor");
   const [paytype, setPaytype] = useState("money");
-  const [QRdata, setQRdata] = useState(200000);
-  const [QRdataUser, setQRdataUser] = useState(200000);
   const [sotienBaoung, setSotienBaoung] = useState(200000);
   useEffect(() => {
     const fetchBanks = async () => {
@@ -65,7 +56,7 @@ const Op_baoung = ({
         console.log("Form values:", values);
         api
           .post(
-            `/operators/${seletedUser.user.id}/baoung/`,
+            `/operators/${opDetails.id}/baoung/`,
             {
               nguoiThuhuong: values.owner,
               hinhthucThanhtoan: values.payType,
@@ -79,14 +70,7 @@ const Op_baoung = ({
             user.token
           )
           .then((res) => {
-            setseletedUser((old) => ({
-              ...old,
-              user: res,
-            }));
-            const newArray = opList.results.map((item) =>
-              item.id === res.id ? { ...item, ...res } : item
-            );
-            setOpList((old) => ({ ...old, results: newArray }));
+            setOpDetails(res);
             setIsModalOpen(false);
             message.success("Báo ứng thành công!");
           })
@@ -100,7 +84,7 @@ const Op_baoung = ({
       });
   };
   useEffect(() => {
-    console.log(seletedUser);
+    console.log(opDetails);
   }, [isModalOpen]);
   return (
     <>
@@ -111,8 +95,8 @@ const Op_baoung = ({
           </div>
           <div className="name">Báo ứng</div>
           <div className="value">
-            {seletedUser?.user?.baoung &&
-              seletedUser?.user?.baoung
+            {opDetails?.baoung &&
+              opDetails?.baoung
                 .filter((item) => item.status === "pending")
                 .reduce((sum, item) => sum + parseFloat(item.amount), 0)
                 .toLocaleString()}{" "}
@@ -122,7 +106,7 @@ const Op_baoung = ({
       </div>
       <Modal
         className="!w-auto max-w-[700px]"
-        title={`Báo ứng cho ${seletedUser?.user?.ho_ten}`}
+        title={`Báo ứng cho ${opDetails?.ho_ten}`}
         open={isModalOpen}
         onOk={handleBaoung}
         onCancel={handleCancel}
@@ -140,8 +124,8 @@ const Op_baoung = ({
             </div>
           </div>
           <div className="flex gap-2">
-            {seletedUser?.user?.baoung &&
-              seletedUser?.user?.baoung
+            {opDetails?.baoung &&
+              opDetails?.baoung
                 .filter((item) => item.status === "pending")
                 .reduce((sum, item) => sum + parseFloat(item.amount), 0) >
                 0 && (
@@ -151,7 +135,7 @@ const Op_baoung = ({
                     Số tiền chưa giải ngân
                   </div>
                   <div className="p-1 text-[20px] font-[500] text-center text-[#ac4922]">
-                    {seletedUser?.user?.baoung
+                    {opDetails?.baoung
                       .filter((item) => item.status === "pending")
                       .reduce((sum, item) => sum + parseFloat(item.amount), 0)
                       .toLocaleString()}{" "}
@@ -159,8 +143,8 @@ const Op_baoung = ({
                   </div>
                 </div>
               )}
-            {seletedUser?.user?.baoung &&
-              seletedUser?.user?.baoung
+            {opDetails?.baoung &&
+              opDetails?.baoung
                 .filter((item) => item.retrieve_status === "not")
                 .reduce((sum, item) => sum + parseFloat(item.amount), 0) >
                 0 && (
@@ -170,7 +154,7 @@ const Op_baoung = ({
                     Số tiền đã ứng chưa thu hồi
                   </div>
                   <div className="p-1 text-[20px] font-[500] text-center">
-                    {seletedUser?.user?.baoung
+                    {opDetails?.baoung
                       .filter((item) => item.retrieve_status === "not")
                       .reduce((sum, item) => sum + parseFloat(item.amount), 0)
                       .toLocaleString()}{" "}
@@ -258,8 +242,10 @@ const Op_baoung = ({
                         { required: true, message: "Vui lòng chọn ngân hàng!" },
                       ]}
                     >
-                      <Select style={{ width: "100%" }}>
-                        <Select.Option value="">Chọn ngân hàng</Select.Option>
+                      <Select
+                        style={{ width: "100%" }}
+                        placeholder="Chọn ngân hàng"
+                      >
                         {banksList.map((bank) => (
                           <Select.Option key={bank.bin} value={bank.bin}>
                             {bank.short_name} - {bank.name}
@@ -272,13 +258,9 @@ const Op_baoung = ({
                 {banktype === "opertor" && (
                   <div className="ml-12">
                     <OPpayCard
-                      data={seletedUser.user}
+                      data={opDetails}
                       onUpdate={(res) => {
-                        setseletedUser((old) => ({ ...old, user: res }));
-                        const newArray = opList.results.map((item) =>
-                          item.id === res.id ? { ...item, ...res } : item
-                        );
-                        setOpList((old) => ({ ...old, results: newArray }));
+                        setOpDetails(res);
                       }}
                     />
                   </div>

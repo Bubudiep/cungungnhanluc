@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../../../components/api";
 
-const Op_info = ({ seletedUser }) => {
+const Op_info = ({ opDetails, user, setOpDetails }) => {
   const [userBank, setUserBank] = useState({});
   const loadBanks = async () => {
     const banklist = await api.banks();
     if (banklist.data) {
       const matchbank = banklist.data.find(
-        (item) => item.bin === seletedUser.user.nganhang
+        (item) => item.bin === opDetails.nganhang
       );
       setUserBank(matchbank);
     }
@@ -19,10 +19,10 @@ const Op_info = ({ seletedUser }) => {
     <div className="animationbox">
       <div className="image">
         <div className="item">
-          <img src={seletedUser?.user?.cccd_front} alt="Ảnh CCCD mặt trước" />
+          <img src={opDetails?.cccd_front} alt="Ảnh CCCD mặt trước" />
         </div>
         <div className="item">
-          <img src={seletedUser?.user?.cccd_back} alt="Ảnh CCCD mặt sau" />
+          <img src={opDetails?.cccd_back} alt="Ảnh CCCD mặt sau" />
         </div>
       </div>
       <div className="flex flex-col g-1">
@@ -39,14 +39,14 @@ const Op_info = ({ seletedUser }) => {
             <div className="left">
               <div className="name">Họ và tên</div>
             </div>
-            <div className="right">{seletedUser.user?.ho_ten ?? "-"}</div>
+            <div className="right">{opDetails?.ho_ten ?? "-"}</div>
           </div>
           <div className="item">
             <div className="left">
               <div className="name">Số CCCD</div>
             </div>
             <div className="right">
-              <div className="text">{seletedUser.user?.so_cccd ?? "-"}</div>
+              <div className="text">{opDetails?.so_cccd ?? "-"}</div>
             </div>
           </div>
           <div className="item">
@@ -54,7 +54,7 @@ const Op_info = ({ seletedUser }) => {
               <div className="name">Ngày sinh</div>
             </div>
             <div className="right">
-              <div className="text">{seletedUser.user?.ngaysinh ?? "-"}</div>
+              <div className="text">{opDetails?.ngaysinh ?? "-"}</div>
             </div>
           </div>
           <div className="item">
@@ -62,7 +62,7 @@ const Op_info = ({ seletedUser }) => {
               <div className="name">Điện thoại</div>
             </div>
             <div className="right">
-              <div className="text">{seletedUser.user?.sdt ?? "-"}</div>
+              <div className="text">{opDetails?.sdt ?? "-"}</div>
             </div>
           </div>
           <div className="item">
@@ -70,8 +70,8 @@ const Op_info = ({ seletedUser }) => {
               <div className="name">Quê quán</div>
             </div>
             <div className="right">
-              <div className="text" title={seletedUser.user?.quequan ?? "-"}>
-                {seletedUser.user?.quequan ?? "-"}
+              <div className="text" title={opDetails?.quequan ?? "-"}>
+                {opDetails?.quequan ?? "-"}
               </div>
             </div>
           </div>
@@ -90,11 +90,11 @@ const Op_info = ({ seletedUser }) => {
               <div className="name">Trạng thái</div>
             </div>
             <div className="right">
-              {seletedUser.user?.work.length > 0
-                ? seletedUser.user?.work[0].end_date
+              {opDetails?.work.length > 0
+                ? opDetails?.work[0].end_date
                   ? "Đã nghỉ việc"
-                  : seletedUser.user?.work[0].start_date
-                  ? `Đang làm tại ${seletedUser.user?.congty_danglam?.fullname}`
+                  : opDetails?.work[0].start_date
+                  ? `Đang làm tại ${opDetails?.congty_danglam?.fullname}`
                   : "Chưa đi làm"
                 : "Chưa đi làm"}
             </div>
@@ -103,16 +103,14 @@ const Op_info = ({ seletedUser }) => {
             <div className="left">
               <div className="name">Mã nhân viên</div>
             </div>
-            <div className="right">{seletedUser.user?.ma_nhanvien ?? "-"}</div>
+            <div className="right">{opDetails?.ma_nhanvien ?? "-"}</div>
           </div>
           <div className="item">
             <div className="left">
               <div className="name">Nhà chính</div>
             </div>
             <div className="right">
-              <div className="text">
-                {seletedUser.user?.nhachinh?.fullname ?? "-"}
-              </div>
+              <div className="text">{opDetails?.nhachinh?.fullname ?? "-"}</div>
             </div>
           </div>
           <div className="item">
@@ -120,8 +118,8 @@ const Op_info = ({ seletedUser }) => {
               <div className="name">Thâm niên</div>
             </div>
             <div className="right">
-              <div className="text" title={seletedUser.user?.thamnien ?? "-"}>
-                {seletedUser.user?.thamnien ?? "-"}
+              <div className="text" title={opDetails?.thamnien ?? "-"}>
+                {opDetails?.thamnien ?? "-"}
               </div>
             </div>
           </div>
@@ -130,12 +128,9 @@ const Op_info = ({ seletedUser }) => {
               <div className="name">Ngân hàng</div>
             </div>
             <div className="right">
-              <div
-                className="text"
-                title={seletedUser.user?.so_taikhoan ?? "-"}
-              >
-                {seletedUser.user?.so_taikhoan
-                  ? `${seletedUser.user?.so_taikhoan} - ${userBank?.short_name}`
+              <div className="text" title={opDetails?.so_taikhoan ?? "-"}>
+                {opDetails?.so_taikhoan
+                  ? `${opDetails?.so_taikhoan} - ${userBank?.short_name}`
                   : "-"}
               </div>
             </div>
@@ -155,7 +150,7 @@ const Op_info = ({ seletedUser }) => {
               <div className="name">Quản lý</div>
             </div>
             <div className="right">
-              {seletedUser.user?.nguoibaocao?.full_name ?? "-"}
+              {opDetails?.nguoibaocao?.full_name ?? "-"}
             </div>
           </div>
           <div className="item">
@@ -163,7 +158,7 @@ const Op_info = ({ seletedUser }) => {
               <div className="name">Người tuyển</div>
             </div>
             <div className="right">
-              {seletedUser.user?.nguoituyen?.full_name ?? "-"}
+              {opDetails?.nguoituyen?.full_name ?? "-"}
             </div>
           </div>
           <div className="item"></div>

@@ -111,8 +111,8 @@ const OPpayCard = ({ data, qrCode, onUpdate }) => {
           onChange={setSelectedBank}
           style={{ width: "100%" }}
           className="mb-2"
+          placeholder="Chọn ngân hàng"
         >
-          <Select.Option value="">Chọn ngân hàng</Select.Option>
           {banksList.map((bank) => (
             <Select.Option key={bank.bin} value={bank.bin}>
               {bank.short_name} - {bank.name}

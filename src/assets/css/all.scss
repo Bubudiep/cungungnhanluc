@@ -157,9 +157,11 @@
         }
         .right-box {
           display: flex;
+          width: 100%;
           gap: 8px;
           flex-direction: column;
-          min-width: 900px;
+          min-width: 880px;
+          max-width: 1000px;
           .tools {
             display: flex;
             justify-content: space-between;
@@ -390,6 +392,10 @@
                 font-size: 0.8rem;
                 &:first-child {
                   text-align: center;
+                  font-size: 12px;
+                }
+                &:last-child {
+                  padding-right: 8px;
                 }
                 a {
                   color: #003f97;

@@ -9,7 +9,7 @@ import Employee from "../app/layout/page/employee";
 import Company from "../app/layout/page/company";
 import User_profile from "../app/layout/page/user";
 import { UserProvider } from "./userContext";
-import Operator from "../app/layout/page/operator";
+import Operator from "../app/layout/page/operator/index";
 import ApprovalList from "../app/layout/page/approval";
 import AttendanceTable from "../app/layout/page/attendance";
 import OP_Salary from "../app/layout/page/salary";
@@ -17,6 +17,7 @@ import Garenal_setting from "../app/layout/page/company/company_setting";
 import Company_index from "../app/layout/page/company/company_index";
 import Companis from "../app/layout/page/company/company_list";
 import Company_permission from "../app/layout/page/company/company_permission";
+import OP_details from "../app/layout/page/operator/op_details";
 const App = () => {
   return (
     <UserProvider>
@@ -33,7 +34,9 @@ const App = () => {
             </Route>
             <Route path="employee" element={<Employee />} />
             <Route path="profile" element={<User_profile />} />
-            <Route path="operator" element={<Operator />} />
+            <Route path="operator" element={<Operator />}>
+              <Route path=":id" element={<OP_details />} />
+            </Route>
             <Route path="approver" element={<ApprovalList />} />
             <Route path="attendance" element={<AttendanceTable />} />
             <Route path="op_salary" element={<OP_Salary />} />

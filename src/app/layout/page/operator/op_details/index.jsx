@@ -1,37 +1,26 @@
-import { Empty, Popconfirm, Spin } from "antd";
-import React, { useEffect, useState } from "react";
-import api from "../../../../components/api";
-import Op_hiss from "./selected.jsx/op_his";
-import Op_info from "./selected.jsx/op_info";
+import React, { useContext, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import api from "../../../../../components/api";
+import { useUser } from "../../../../../components/userContext";
+import { Empty, Spin } from "antd";
+import Op_hiss from "./op_his";
+import Op_info from "./op_info";
+import { OperatorContext } from "../index";
 
-const OperatorSelected = ({
-  user,
-  seletedUser,
-  setseletedUser,
-  setOpList,
-  opList,
-}) => {
+const OP_details = () => {
+  const { user, setUser } = useUser();
+  const { id } = useParams();
   const [loading, setloading] = useState(false);
-  const [isEdit_info, setIsEdit_info] = useState(false);
   const [opDetails, setOpDetails] = useState({});
+  const [optionView, setOptionView] = useState(1);
+  const { setOpList, loadOP } = useContext(OperatorContext);
   useEffect(() => {
-    if (seletedUser) {
+    if (id) {
       setloading(true);
       api
-        .get(`/operators_details/${seletedUser.user.id}/`, user?.token)
+        .get(`/operators_details/${id}/`, user?.token)
         .then((res) => {
-          setOpDetails((old) => ({
-            ...old,
-            user: res,
-          }));
-          setseletedUser((old) => ({
-            ...old,
-            user: res,
-          }));
-          const newArray = opList.results.map((item) =>
-            item.id === res.id ? { ...item, ...res } : item
-          );
-          setOpList((old) => ({ ...old, results: newArray }));
+          setOpDetails(res);
         })
         .finally(() => {
           setTimeout(() => {
@@ -39,10 +28,10 @@ const OperatorSelected = ({
           }, 400);
         });
     }
-  }, [seletedUser.user?.id]);
+  }, [id]);
   return (
     <div className="flex flex-col items-start relative">
-      {seletedUser ? (
+      {opDetails ? (
         <>
           {loading && (
             <div className="h-full w-full z-10 bg-[#0001] rounded-xl flex items-center justify-center absolute">
@@ -51,35 +40,38 @@ const OperatorSelected = ({
           )}
           <div className="tabs">
             <div
-              className={`item ${seletedUser.option == 2 ? "active" : ""}`}
+              className={`item ${optionView == 1 ? "active" : ""}`}
               onClick={() => {
-                setseletedUser({ ...seletedUser, option: 2 });
+                setOptionView(1);
               }}
             >
-              Quá trình làm việc
+              Quản lý thông tin
             </div>
             <div
-              className={`item ${seletedUser.option == 1 ? "active" : ""}`}
+              className={`item ${optionView == 2 ? "active" : ""}`}
               onClick={() => {
-                setseletedUser({ ...seletedUser, option: 1 });
+                setOptionView(2);
               }}
             >
               Thông tin cá nhân
             </div>
           </div>
-          {seletedUser.option == 1 ? (
+          {optionView == 2 ? (
             <div key={1} className="white-box operator-selected">
-              <Op_info seletedUser={seletedUser} />
+              <Op_info
+                opDetails={opDetails}
+                user={user}
+                setOpList={setOpList}
+                setOpDetails={setOpDetails}
+              />
             </div>
-          ) : seletedUser.option == 2 ? (
+          ) : optionView == 1 ? (
             <div key={2} className="white-box operator-selected">
               <Op_hiss
-                user={user}
-                opList={opList}
-                setOpList={setOpList}
                 opDetails={opDetails}
-                seletedUser={seletedUser}
-                setseletedUser={setseletedUser}
+                setOpDetails={setOpDetails}
+                setOpList={setOpList}
+                user={user}
               />
             </div>
           ) : (
@@ -102,4 +94,4 @@ const OperatorSelected = ({
   );
 };
 
-export default OperatorSelected;
+export default OP_details;
