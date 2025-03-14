@@ -22,24 +22,24 @@ const App = () => {
     <UserProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Home />}>
+          <Route path="/electron/" element={<Home />}>
             <Route index element={<Dashboard />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/company" element={<Company />}>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="company" element={<Company />}>
               <Route index element={<Company_index />} />
               <Route path="setting" element={<Garenal_setting />} />
               <Route path="companis" element={<Companis />} />
               <Route path="permission" element={<Company_permission />} />
             </Route>
-            <Route path="/employee" element={<Employee />} />
-            <Route path="/profile" element={<User_profile />} />
-            <Route path="/operator" element={<Operator />} />
-            <Route path="/approver" element={<ApprovalList />} />
-            <Route path="/attendance" element={<AttendanceTable />} />
-            <Route path="/op_salary" element={<OP_Salary />} />
-            <Route path="/*" element={<NotFound />} />
+            <Route path="employee" element={<Employee />} />
+            <Route path="profile" element={<User_profile />} />
+            <Route path="operator" element={<Operator />} />
+            <Route path="approver" element={<ApprovalList />} />
+            <Route path="attendance" element={<AttendanceTable />} />
+            <Route path="op_salary" element={<OP_Salary />} />
+            <Route path="*" element={<NotFound />} />
           </Route>
-          <Route path="/login" element={<Login />} />
+          <Route path="/electron/login/" element={<Login />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

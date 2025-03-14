@@ -1,33 +1,56 @@
 import React from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
-import api from "../../components/api";
-import Top_container from "./top-container";
 import avatar from "../../assets/image/avatar.png";
 import { useUser } from "../../components/userContext";
+import Top_container from "./top-container";
+
+const routes = [
+  { path: "/electron/dashboard", name: "Tổng quan", icon: "fa-chart-simple" },
+  { path: "/electron/operator", name: "Nhân lực", icon: "fa-users-viewfinder" },
+  { path: "/electron/attendance", name: "Bảng công", icon: "fa-calendar-days" },
+  {
+    path: "/electron/op_salary",
+    name: "Lương NLĐ",
+    icon: "fa-money-bill-transfer",
+  },
+  {
+    path: "/electron/approver",
+    name: "Phê duyệt",
+    icon: "fa-file-invoice-dollar",
+  },
+  { path: "/electron/employee", name: "Nhân viên", icon: "fa-users-gear" },
+  { path: "/electron/company", name: "Công ty", icon: "fa-building" },
+];
+
+const routeNames = {
+  "/electron": (
+    <div className="icon">
+      <i className="fa-solid fa-house"></i>
+    </div>
+  ),
+  "/electron/dashboard": "Tổng quan",
+  "/electron/employee": "Nhân viên",
+  "/electron/company": "Công ty",
+  "/electron/company/setting": "Cài đặt chung",
+  "/electron/company/permission": "Phân quyền",
+  "/electron/company/companis": "Công ty liên kết",
+  "/electron/profile": "Cá nhân",
+  "/electron/operator": "Nhân lực",
+  "/electron/approver": "Phê duyệt",
+  "/electron/attendance": "Bảng công",
+  "/electron/op_salary": "Bảng lương",
+};
 
 const Homepage = () => {
-  const { user, setUser } = useUser();
+  const { user } = useUser();
   const location = useLocation();
-  const routeNames = {
-    "/": "Home",
-    "/dashboard": "Tổng quan",
-    "/employee": "Nhân viên",
-    "/company": "Công ty",
-    "/company/setting": "Cài đặt chung",
-    "/company/permission": "Phân quyền",
-    "/company/companis": "Công ty liên kết",
-    "/profile": "Cá nhân",
-    "/operator": "Nhân lực",
-    "/approver": "Phê duyệt",
-    "/attendance": "Bảng công",
-    "/op_salary": "Bảng lương",
-  };
+
+  // Tạo danh sách breadcrumb tự động từ URL
   const breadcrumbItems = location.pathname
     .split("/")
     .filter((item) => item) // Bỏ các phần rỗng
     .map((item, index, arr) => {
-      const to = "/" + arr.slice(0, index + 1).join("/"); // Xây dựng đường dẫn cho từng phần
-      console.log(to);
+      const to = "/" + arr.slice(0, index + 1).join("/");
       return { name: routeNames[to] || item, path: to };
     });
 
@@ -39,107 +62,47 @@ const Homepage = () => {
       <div className="body-container">
         <div className="app-container">
           <div className="list-app">
-            <Link
-              className={`item ${isActive("/dashboard") ? "active" : ""}`}
-              to="/dashboard"
-            >
-              <div className="icon">
-                <i className="fa-solid fa-chart-simple"></i>
-              </div>
-              <div className="name">Tổng quan</div>
-            </Link>
-            <Link
-              className={`item ${isActive("/operator") ? "active" : ""}`}
-              to="/operator"
-            >
-              <div className="icon">
-                <i className="fa-solid fa-users-viewfinder"></i>
-              </div>
-              <div className="name">Nhân lực</div>
-            </Link>
-            <Link
-              className={`item ${isActive("/attendance") ? "active" : ""}`}
-              to="/attendance"
-            >
-              <div className="icon">
-                <i className="fa-solid fa-calendar-days"></i>
-              </div>
-              <div className="name">Bảng công</div>
-            </Link>
-            <Link
-              className={`item ${isActive("/op_salary") ? "active" : ""}`}
-              to="/op_salary"
-            >
-              <div className="icon">
-                <i className="fa-solid fa-money-bill-transfer"></i>
-              </div>
-              <div className="name">Lương NLĐ</div>
-            </Link>
-            <Link
-              className={`item ${isActive("/approver") ? "active" : ""}`}
-              to="/approver"
-            >
-              <div className="icon">
-                <i className="fa-solid fa-file-invoice-dollar"></i>
-              </div>
-              <div className="name">Phê duyệt</div>
-            </Link>
-            <Link
-              className={`item ${isActive("/employee") ? "active" : ""}`}
-              to="/employee"
-            >
-              <div className="icon">
-                <i className="fa-solid fa-users-gear"></i>
-              </div>
-              <div className="name">Nhân viên</div>
-            </Link>
-            <Link
-              className={`item ${isActive("/company") ? "active" : ""}`}
-              to="/company"
-            >
-              <div className="icon">
-                <i className="fa-regular fa-building"></i>
-              </div>
-              <div className="name">Công ty</div>
-            </Link>
+            {routes.map((route, index) => (
+              <Link
+                key={index}
+                className={`item ${isActive(route.path) ? "active" : ""}`}
+                to={route.path}
+              >
+                <div className="icon">
+                  <i className={`fa-solid ${route.icon}`}></i>
+                </div>
+                <div className="name">{route.name}</div>
+              </Link>
+            ))}
           </div>
+
+          {/* Avatar */}
           <div className="list-app">
             <Link
-              className={`item ${isActive("/profile") ? "active" : ""}`}
-              to="/profile"
+              className={`item ${
+                isActive("/electron/profile") ? "active" : ""
+              }`}
+              to="/electron/profile"
             >
               <div className="avatar">
-                {user.profile?.avatar ? (
-                  <img src={user.profile?.avatar} alt="Avatar" />
-                ) : (
-                  <img src={avatar} alt="Default Avatar" />
-                )}
+                <img src={user.profile?.avatar || avatar} alt="Avatar" />
               </div>
             </Link>
           </div>
         </div>
+
         <div className="main-container">
           <div className="route-container">
-            <div className="route-container">
-              <Link to="/" className="items">
-                <div className="icon">
-                  <i className="fa-solid fa-house"></i>
-                </div>
-              </Link>
-              {breadcrumbItems.map((item, index) => (
-                <React.Fragment key={index}>
-                  <i className="fa-solid fa-angle-right"></i>
-                  {index === breadcrumbItems.length - 1 ? (
-                    <span className="breadcrumb-item active">{item.name}</span>
-                  ) : (
-                    <Link to={item.path} className="breadcrumb-item">
-                      {item.name}
-                    </Link>
-                  )}
-                </React.Fragment>
-              ))}
-            </div>
+            {breadcrumbItems.map((item, index) => (
+              <React.Fragment key={index}>
+                {index !== 0 && <i className="fa-solid fa-angle-right"></i>}
+                <Link to={item.path} className="breadcrumb-item">
+                  {item.name}
+                </Link>
+              </React.Fragment>
+            ))}
           </div>
+
           <div className="outlet-box">
             <Outlet />
           </div>

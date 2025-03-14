@@ -25,7 +25,7 @@ const Login = () => {
       if (token) {
         // Kiểm tra API để xác thực token
         api.get("/user/", token).then((res) => {
-          navigate("/?fromLogin=true");
+          navigate("/electron/?fromLogin=true");
         });
       } else {
         // Kiểm tra localStorage
@@ -72,7 +72,7 @@ const Login = () => {
             expirationTime.getTime() + 7 * 24 * 60 * 60 * 1000
           );
           document.cookie = `token=${token}; expires=${expirationTime.toUTCString()}; path=/`;
-          navigate("/?fromLogin=true");
+          navigate("/electron/?fromLogin=true");
         })
         .catch((err) => {
           notification.error({

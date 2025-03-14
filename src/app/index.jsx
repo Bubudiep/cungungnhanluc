@@ -42,7 +42,7 @@ const Home = () => {
       })
       .catch((err) => {
         console.log(err);
-        navigate("/login");
+        navigate("/electron/login");
       })
       .finally(() => {
         setTimeout(() => {
@@ -62,7 +62,7 @@ const Home = () => {
       checkUser(token);
     } else {
       console.log("Không tìm thấy token!");
-      navigate("/login");
+      navigate("/electron/login");
     }
   }, []);
   return (
