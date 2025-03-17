@@ -178,7 +178,7 @@ const ApprovalDetails = ({ item, setItem, update }) => {
                 <FaHistory />
                 Lịch sử
               </div>
-              <div className="historys max-h-[200px] overflow-auto pr-0.5">
+              <div className="historys max-h-[300px] overflow-auto pr-0.5">
                 {itemDetails?.history &&
                   itemDetails?.history?.map((his) => (
                     <div className="item" key={his.id}>

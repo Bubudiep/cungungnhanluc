@@ -8,11 +8,11 @@ const routes = [
   { path: "/electron/dashboard", name: "Tổng quan", icon: "fa-chart-simple" },
   { path: "/electron/operator", name: "Nhân lực", icon: "fa-users-viewfinder" },
   { path: "/electron/attendance", name: "Bảng công", icon: "fa-calendar-days" },
-  {
-    path: "/electron/op_salary",
-    name: "Lương NLĐ",
-    icon: "fa-money-bill-transfer",
-  },
+  // {
+  //   path: "/electron/op_salary",
+  //   name: "Lương NLĐ",
+  //   icon: "fa-money-bill-transfer",
+  // },
   {
     path: "/electron/approver",
     name: "Phê duyệt",

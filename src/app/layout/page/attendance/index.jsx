@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Table, DatePicker, Button, Input } from "antd";
 import dayjs from "dayjs";
+import DashboardCard from "../../../../components/dbCard";
 
 const AttendanceTable = () => {
   const [data, setData] = useState([]);
@@ -181,45 +182,24 @@ const AttendanceTable = () => {
       isSunday ? `sunday-column-${colIndex + 1}` : ""
     );
   };
+  const dashboardData = [
+    { name: "Người đi làm", value: 10, description: "Tổng người đi làm" },
+    { name: "Giờ làm", value: 160, description: "Tổng giờ làm trong tháng" },
+    {
+      name: "Ngày nghỉ",
+      value: 5,
+      description: "Những ngày mà công nhân nghỉ",
+    },
+    {
+      name: "Đi làm dưới 7 ngày",
+      value: 2,
+      description: "Tổng số người đi làm dưới 7 ngày",
+    },
+    { name: "Đi làm đầy đủ", value: 8, description: "Không nghỉ ngày nào" },
+  ];
   return (
     <div className="attendance-page mt-1">
-      <div className="db-card">
-        <div className="items">
-          <div className="name">Người đi làm</div>
-          <div className="value flex flex-1 items-center justify-center">
-            00
-          </div>
-          <div className="content !mt-0">Tổng người đi làm</div>
-        </div>
-        <div className="items">
-          <div className="name">Giờ làm</div>
-          <div className="value flex flex-1 items-center justify-center">
-            00
-          </div>
-          <div className="content !mt-0">Tổng giờ làm trong tháng</div>
-        </div>
-        <div className="items">
-          <div className="name">Ngày nghỉ</div>
-          <div className="value flex flex-1 items-center justify-center">
-            00
-          </div>
-          <div className="content !mt-0">Những ngày mà công nhân nghỉ</div>
-        </div>
-        <div className="items">
-          <div className="name">Đi làm dưới 7 ngày</div>
-          <div className="value flex flex-1 items-center justify-center">
-            00
-          </div>
-          <div className="content !mt-0">Tổng số người đi làm dưới 7 ngày</div>
-        </div>
-        <div className="items">
-          <div className="name">Đi làm đầy đủ</div>
-          <div className="value flex flex-1 items-center justify-center">
-            00
-          </div>
-          <div className="content !mt-0">Không nghỉ ngày nào</div>
-        </div>
-      </div>
+      <DashboardCard data={dashboardData} />
       <div className="flex">
         <div className="left flex gap-1 items-center">
           <DatePicker

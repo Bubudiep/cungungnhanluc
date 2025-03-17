@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ListApproval from "./approval/approvalList";
+import ListApproval from "./approvalList";
 
 const ApprovalList = () => {
   const [allrequests, setAllrequests] = useState([]);
