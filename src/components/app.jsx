@@ -18,11 +18,13 @@ import Company_index from "../app/layout/page/company/company_index";
 import Companis from "../app/layout/page/company/company_list";
 import Company_permission from "../app/layout/page/company/company_permission";
 import OP_details from "../app/layout/page/operator/op_details";
+import LandingPage from "../app/landingPage";
 const App = () => {
   return (
     <UserProvider>
       <Router>
         <Routes>
+          <Route path="/" element={<LandingPage />} />
           <Route path="/electron/" element={<Home />}>
             <Route index element={<Dashboard />} />
             <Route path="dashboard" element={<Dashboard />} />

@@ -1,6 +1,21 @@
 .fadeOut {
   animation: fadeOut 0.3s forwards;
 }
+.fadeIn {
+  animation: fadeIn 0.3s forwards;
+}
+.fadeIn-6 {
+  animation: fadeIn 0.6s forwards;
+}
+.fadeIn-10 {
+  animation: fadeIn 1.5s forwards;
+}
+.fadeIn-up {
+  animation: slideIn 0.6s forwards;
+}
+.fadeIn-down {
+  animation: slideIntop 0.6s forwards;
+}
 @keyframes spin {
   0% {
     transform: rotate(0deg);
