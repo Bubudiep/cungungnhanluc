@@ -41,7 +41,6 @@ const Login = () => {
       console.error(err);
     }
   };
-
   useEffect(() => {
     checkAuth();
     try {
