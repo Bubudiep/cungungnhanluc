@@ -25,7 +25,7 @@ const LandingPage = () => {
     }
   }, []);
   return (
-    loading ?? (
+    !loading && (
       <div className="w-full overflow-auto scroll-smooth">
         <Helmet>
           <title>HiTech | Giải pháp ứng dụng quản lý doanh nghiệp</title>
