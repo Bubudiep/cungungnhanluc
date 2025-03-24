@@ -15,6 +15,7 @@ import NewOPForm from "./newOPForm";
 import api from "../../../../components/api";
 import dayjs from "dayjs";
 import OPsearch_box from "./search_box";
+import { FaFileExcel } from "react-icons/fa6";
 const { TextArea } = Input;
 const OperatorTools = ({ user, setOpList }) => {
   const [form] = Form.useForm();
@@ -77,13 +78,19 @@ const OperatorTools = ({ user, setOpList }) => {
         <div className="left">
           <OPsearch_box user={user} />
         </div>
-        <div className="right">
+        <div className="right flex gap-1">
           <Button
             type="primary"
             onClick={handleOpen}
             icon={<i className="fa-solid fa-plus"></i>}
           >
-            Thêm NLĐ
+            Thêm mới
+          </Button>
+          <Button type="primary" icon={<FaFileExcel />}>
+            Import excel
+          </Button>
+          <Button type="primary" icon={<FaFileExcel />}>
+            Export excel
           </Button>
         </div>
         <Modal

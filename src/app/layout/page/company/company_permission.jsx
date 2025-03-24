@@ -1,7 +1,11 @@
 import React from "react";
 
 const Company_permission = () => {
-  return <div>Company_permission</div>;
+  return (
+    <div className="flex flex-col">
+      <div className="h2">Phân quyền theo bộ phận</div>
+    </div>
+  );
 };
 
 export default Company_permission;

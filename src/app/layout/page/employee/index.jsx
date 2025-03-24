@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import api from "../../../components/api";
-import Employee_table from "./employee/employee_table";
-import { useUser } from "../../../components/userContext";
+import api from "../../../../components/api";
+import Employee_table from "./employee_table";
+import { useUser } from "../../../../components/userContext";
 import { message } from "antd";
 
 const Employee = () => {
@@ -27,7 +27,7 @@ const Employee = () => {
   return (
     <div className="employee-page">
       <div className="flex flex-col gap-2">
-        <div className="db-card">
+        {/* <div className="db-card">
           <div className="items">
             <div className="name">Tổng số</div>
             <div className="value">{empData?.totalEmp ?? 0}</div>
@@ -63,7 +63,7 @@ const Employee = () => {
             <div className="value">{empData?.totalResign ?? 0}</div>
             <div className="content">Những người đã nghỉ việc</div>
           </div>
-        </div>
+        </div> */}
         <div className="employee-list">
           <Employee_table empData={empData} user={user} setUser={setUser} />
         </div>

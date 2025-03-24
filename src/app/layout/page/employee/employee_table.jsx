@@ -6,6 +6,7 @@ import {
   Popconfirm,
   Skeleton,
   Spin,
+  Table,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import Tools_list from "./tools_list";
@@ -18,12 +19,15 @@ const Employee_table = ({ user, setUser }) => {
   const [loadingStates, setLoadingStates] = useState({});
   const [loading, setLoading] = useState(false);
   const [pagenow, setPagenow] = useState(1);
+  const [pageSize, setPageSize] = useState(15); // Thêm pageSize vào state
   const [listEMP, setListEMP] = useState([]);
   const [firstload, setFirstload] = useState(false);
   const [showLoad, setShowload] = useState(true);
   const [selectedEmployee, setSelectedEmployee] = useState(false);
   const [openEmployeeDetail, setOpenEmployeeDetail] = useState(false);
-  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" }); // Trạng thái sắp xếp
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]); // Thêm state để lưu các key của hàng đã chọn
+
   const handleSort = (key) => {
     if (!loading) {
       let direction = "asc";
@@ -32,7 +36,7 @@ const Employee_table = ({ user, setUser }) => {
       }
       setSortConfig({ key, direction });
       const ordering = direction === "asc" ? key : `-${key}`;
-      const url = `/employee/?page_size=10&ordering=${ordering}`;
+      const url = `/employee/?page_size=${pageSize}&ordering=${ordering}`; // Sử dụng pageSize trong URL
       setLoading(true);
       const timer = setTimeout(() => {
         api
@@ -53,10 +57,12 @@ const Employee_table = ({ user, setUser }) => {
       return () => clearTimeout(timer);
     }
   };
-  const handlePageChange = (page) => {
+
+  const handlePageChange = (page, size) => {
     setPagenow(page); // Cập nhật trang hiện tại
+    setPageSize(size); // Cập nhật pageSize khi thay đổi
     setLoading(true); // Hiển thị trạng thái loading
-    const url = `/employee/?page=${page}&page_size=10`; // API với số trang
+    const url = `/employee/?page=${page}&page_size=${size}`; // API với số trang và pageSize
     const timer = setTimeout(() => {
       api
         .get(url, user.token)
@@ -76,6 +82,7 @@ const Employee_table = ({ user, setUser }) => {
     }, 500);
     return () => clearTimeout(timer);
   };
+
   const handleDeactive = (employee, active) => {
     setLoadingStates((prev) => ({ ...prev, [employee.id]: true }));
     setTimeout(() => {
@@ -88,14 +95,11 @@ const Employee_table = ({ user, setUser }) => {
         .then((res) => {
           setUser((old) => ({
             ...old,
-            employee: old.employee.map(
-              (oldJ) =>
-                oldJ.id === res.id
-                  ? { ...oldJ, ...res } // Cập nhật thông tin
-                  : oldJ // Giữ nguyên phần tử không cần cập nhật
+            employee: old.employee.map((oldJ) =>
+              oldJ.id === res.id ? { ...oldJ, ...res } : oldJ
             ),
           }));
-          message.success("Trạng thái mới đã cập nhập!");
+          message.success("Trạng thái mới đã cập nhật!");
         })
         .catch((er) => {
           message.error(er?.response?.detail ?? "Phát sinh lỗi!");
@@ -105,11 +109,15 @@ const Employee_table = ({ user, setUser }) => {
         });
     }, 500);
   };
+
+  const handleSelectChange = (selectedRowKeys) => {
+    setSelectedRowKeys(selectedRowKeys); // Cập nhật các hàng đã chọn
+  };
   useEffect(() => {
     setFirstload(true);
     const timer = setTimeout(() => {
       api
-        .get(`/employee/?page_size=10`, user.token)
+        .get(`/employee/?page_size=${pageSize}`, user.token) // Sử dụng pageSize trong API call
         .then((res) => {
           setUser((old) => ({
             ...old,
@@ -127,7 +135,96 @@ const Employee_table = ({ user, setUser }) => {
         });
     }, 500);
     return () => clearTimeout(timer);
-  }, []);
+  }, [pageSize]); // Thêm pageSize vào dependency để load lại khi pageSize thay đổi
+
+  const columns = [
+    {
+      title: "Thông tin nhân viên",
+      dataIndex: "name",
+      key: "name",
+      sorter: true,
+      render: (text, record) => (
+        <div className="flex flex-col">
+          <div className="flex text-[#2b67e9]">
+            <a href="#" onClick={() => setSelectedEmployee(record)}>
+              {record.name ?? "-"}
+            </a>
+          </div>
+          <div className="flex text-[#2b67e9] font-semibold">
+            {record.username ?? "-"}
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Bộ phận",
+      dataIndex: "department_name",
+      key: "department_name",
+    },
+    {
+      title: "Chức vụ",
+      dataIndex: "possition_name",
+      key: "possition_name",
+    },
+    {
+      title: "Thời gian tạo",
+      dataIndex: "created_at",
+      key: "created_at",
+      render: (text) => (text ? api.timeSinceOrder(text) : "-"),
+    },
+    {
+      title: "Hành động",
+      key: "action",
+      render: (text, record) => (
+        <div className="flex gap-1">
+          {user.user.isAdmin &&
+            (record.isActive ? (
+              <>
+                <Button
+                  type="link"
+                  className="edit"
+                  onClick={() => {
+                    setOpenEmployeeDetail(record);
+                  }}
+                >
+                  <i className="fa-regular fa-pen-to-square"></i>
+                </Button>
+                <Popconfirm
+                  title="Xác nhận khóa tài khoản?"
+                  okText="Khóa"
+                  cancelText="Hủy"
+                  onConfirm={() => handleDeactive(record, false)}
+                >
+                  <Button
+                    type="link"
+                    className="remove"
+                    icon={<i className="fa-solid fa-lock"></i>}
+                    loading={loadingStates[record.id] || false}
+                  ></Button>
+                </Popconfirm>
+              </>
+            ) : (
+              <>
+                <Popconfirm
+                  title="Mở khóa tài khoản?"
+                  okText="Mở"
+                  cancelText="Hủy"
+                  onConfirm={() => handleDeactive(record, true)}
+                >
+                  <Button
+                    type="link"
+                    className="edit"
+                    icon={<i className="fa-solid fa-unlock"></i>}
+                    loading={loadingStates[record.id] || false}
+                  ></Button>
+                </Popconfirm>
+              </>
+            ))}
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="flex flex-1 items-start gap-2">
       <EditEmployee
@@ -138,7 +235,7 @@ const Employee_table = ({ user, setUser }) => {
           setOpenEmployeeDetail(false);
         }}
       />
-      <div className="right-box">
+      <div className="right-box !max-w-[100%]">
         <div className="tools">
           <div className="left">
             <Searchbox user={user} />
@@ -148,231 +245,26 @@ const Employee_table = ({ user, setUser }) => {
           </div>
         </div>
         <div className="employeer-table">
-          <table>
-            <thead>
-              <tr>
-                <th>
-                  {loading && (
-                    <>
-                      <Spin size="small" />
-                    </>
-                  )}
-                </th>
-                <th onClick={() => handleSort("name")} style={{ width: 300 }}>
-                  Thông tin nhân viên
-                  {sortConfig.key === "name" && (
-                    <div className="flex flex-col filter">
-                      <i
-                        className={`fa-solid fa-caret-up ${
-                          sortConfig.direction === "asc" && "active"
-                        }`}
-                      ></i>
-                      <i
-                        className={`fa-solid fa-caret-down ${
-                          sortConfig.direction !== "asc" && "active"
-                        }`}
-                      ></i>
-                    </div>
-                  )}
-                </th>
-                <th
-                  onClick={() => handleSort("department")}
-                  style={{ width: 200 }}
-                >
-                  Bộ phận
-                  {sortConfig.key === "department" && (
-                    <div className="flex flex-col filter">
-                      <i
-                        className={`fa-solid fa-caret-up ${
-                          sortConfig.direction === "asc" && "active"
-                        }`}
-                      ></i>
-                      <i
-                        className={`fa-solid fa-caret-down ${
-                          sortConfig.direction !== "asc" && "active"
-                        }`}
-                      ></i>
-                    </div>
-                  )}
-                </th>
-                <th
-                  onClick={() => handleSort("possition")}
-                  style={{ width: 200 }}
-                >
-                  Chức vụ
-                  {sortConfig.key === "possition" && (
-                    <div className="flex flex-col filter">
-                      <i
-                        className={`fa-solid fa-caret-up ${
-                          sortConfig.direction === "asc" && "active"
-                        }`}
-                      ></i>
-                      <i
-                        className={`fa-solid fa-caret-down ${
-                          sortConfig.direction !== "asc" && "active"
-                        }`}
-                      ></i>
-                    </div>
-                  )}
-                </th>
-                <th style={{ width: 100 }}>Thời gian tạo</th>
-                <th className="w-20"></th>
-              </tr>
-            </thead>
-            <tbody className="fadeIn">
-              {firstload ? (
-                <tr>
-                  <td colSpan={9999} className="none">
-                    <Spin
-                      size="large"
-                      style={{
-                        height: 350,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    />
-                  </td>
-                </tr>
-              ) : user.employee?.length > 0 ? (
-                user.employee?.map((employee) => (
-                  <tr key={employee.id}>
-                    <td className="isOut">
-                      <div className="flex flex-col items-start">
-                        {employee.isActive ? (
-                          employee.isOnline ? (
-                            <div className="online">online</div>
-                          ) : (
-                            <div className="offline">offline</div>
-                          )
-                        ) : (
-                          <div className="notwork">
-                            <i className="fa-solid fa-xmark"></i>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td>
-                      <div className="flex flex-col">
-                        <div className="flex text-[#2b67e9]">
-                          <a
-                            href="#"
-                            onClick={() => setSelectedEmployee(employee)}
-                          >
-                            {employee.name ?? "-"}
-                          </a>
-                        </div>
-                        <div className="flex text-[#2b67e9] font-semibold">
-                          {employee.username ?? "-"}
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      {employee.department_name ? (
-                        <a
-                          href="#"
-                          onClick={() => setSelectedEmployee(employee)}
-                        >
-                          {employee.department_name}
-                        </a>
-                      ) : (
-                        "-"
-                      )}
-                    </td>
-                    <td>
-                      {employee.possition_name ? (
-                        <a
-                          href="#"
-                          onClick={() => setSelectedEmployee(employee)}
-                        >
-                          {employee.possition_name}
-                        </a>
-                      ) : (
-                        "-"
-                      )}
-                    </td>
-                    <td className="text-[#999]">
-                      {employee.created_at
-                        ? api.timeSinceOrder(employee.created_at)
-                        : "-"}
-                    </td>
-                    <td>
-                      <div className="flex gap-1">
-                        {user.user.isAdmin &&
-                          (employee.isActive ? (
-                            <>
-                              <Button
-                                type="link"
-                                className="edit"
-                                onClick={() => {
-                                  setOpenEmployeeDetail(employee);
-                                }}
-                              >
-                                <i className="fa-regular fa-pen-to-square"></i>
-                              </Button>
-                              <Popconfirm
-                                title="Xác nhận khóa tài khoản?"
-                                okText="Khóa"
-                                cancelText="Hủy"
-                                onConfirm={() =>
-                                  handleDeactive(employee, false)
-                                }
-                              >
-                                <Button
-                                  type="link"
-                                  className="remove"
-                                  icon={<i className="fa-solid fa-lock"></i>}
-                                  loading={loadingStates[employee.id] || false} // Trạng thái loading chỉ áp dụng cho nhân viên hiện tại
-                                ></Button>
-                              </Popconfirm>
-                            </>
-                          ) : (
-                            <>
-                              <Popconfirm
-                                title="Mở khóa tài khoản?"
-                                okText="Mở"
-                                cancelText="Hủy"
-                                onConfirm={() => handleDeactive(employee, true)}
-                              >
-                                <Button
-                                  type="link"
-                                  className="edit"
-                                  icon={<i className="fa-solid fa-unlock"></i>}
-                                  loading={loadingStates[employee.id] || false} // Trạng thái loading chỉ áp dụng cho nhân viên hiện tại
-                                ></Button>
-                              </Popconfirm>
-                            </>
-                          ))}
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td className="null" colSpan={999}>
-                    <Empty description="Chưa có nhân viên nào..." />
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+          <Table
+            columns={columns}
+            dataSource={user.employee}
+            loading={loading}
+            pagination={false} // Tắt pagination tự động của table
+            rowKey="id"
+            rowSelection={{
+              selectedRowKeys,
+              onChange: handleSelectChange,
+            }}
+          />
         </div>
         <div className="panel-cl">
           <Pagination
             disabled={loading}
-            defaultCurrent={pagenow}
+            current={pagenow}
+            pageSize={pageSize} // Sử dụng pageSize ở đây
             total={total}
             onChange={handlePageChange}
           />
-        </div>
-      </div>
-      <div className="employee-details">
-        <div className="full">
-          {selectedEmployee ? (
-            <></>
-          ) : (
-            <Empty description="Chọn một nhân viên hoặc bộ phận, chức vụ để phân quyền..." />
-          )}
         </div>
       </div>
     </div>

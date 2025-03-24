@@ -28,7 +28,7 @@ const Operator = () => {
     <OperatorContext.Provider value={{ opList, setOpList, loadOP }}>
       <div className="employee-page pb-2">
         <div className="flex flex-col gap-2">
-          <OperatorDb />
+          {/* <OperatorDb /> */}
           <div className="operator-body flex gap-2">
             <div className="flex flex-col gap-2 right-box">
               <OperatorTools setOpList={setOpList} user={user} />

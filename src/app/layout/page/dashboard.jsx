@@ -48,10 +48,7 @@ const Dashboard = () => {
     labels: ["Lương NLĐ", "Thưởng DS", "Thưởng khác", "Quà cáp", "Chi tiêu"],
     colors: ["#008FFB", "#00E396", "#FEB019", "#FF4560", "#775DD0"],
   };
-
   const pieChartData = [54.6, 28.6, 14.3, 0.7, 1.8];
-
-  // Dữ liệu biểu đồ đường
   const lineChartOptions = {
     chart: {
       type: "line",

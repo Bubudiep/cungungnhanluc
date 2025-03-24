@@ -16,8 +16,6 @@ const OperatorList = ({
     setPagenow(page);
     loadOP(page);
   };
-
-  // Cấu hình các cột cho Table của antd
   const columns = [
     {
       title: "",
@@ -33,12 +31,13 @@ const OperatorList = ({
       title: "Họ và tên",
       dataIndex: "ho_ten",
       render: (text, record) => (
-        <div className="flex flex-col">
-          <Link to={`/electron/operator/${record.id}`}>{text}</Link>
-          <Link to={`/electron/operator/${record.id}`}>
-            {record.ma_nhanvien}
-          </Link>
-        </div>
+        <Link
+          className="flex flex-col hover:shadow hover:bg-white rounded-md items-center py-1"
+          to={`/electron/operator/${record.id}`}
+        >
+          <div>{text}</div>
+          <div>{record.ma_nhanvien}</div>
+        </Link>
       ),
     },
     {

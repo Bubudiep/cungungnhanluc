@@ -7,7 +7,7 @@ import Top_container from "./top-container";
 const routes = [
   { path: "/electron/dashboard", name: "Tổng quan", icon: "fa-chart-simple" },
   { path: "/electron/operator", name: "Nhân lực", icon: "fa-users-viewfinder" },
-  { path: "/electron/attendance", name: "Bảng công", icon: "fa-calendar-days" },
+  // { path: "/electron/attendance", name: "Bảng công", icon: "fa-calendar-days" },
   // {
   //   path: "/electron/op_salary",
   //   name: "Lương NLĐ",
@@ -18,7 +18,7 @@ const routes = [
     name: "Phê duyệt",
     icon: "fa-file-invoice-dollar",
   },
-  { path: "/electron/employee", name: "Nhân viên", icon: "fa-users-gear" },
+  // { path: "/electron/employee", name: "Nhân viên", icon: "fa-users-gear" },
   { path: "/electron/company", name: "Công ty", icon: "fa-building" },
 ];
 
