@@ -3,8 +3,9 @@ import dayjs from "dayjs";
 const key = import.meta.env.VITE_KEY;
 const author = import.meta.env.VITE_AUTHOR;
 const version = import.meta.env.VITE_VERSION;
+const host = import.meta.env.VITE_HOST;
 const api = axios.create({
-  baseURL: "http://" + location.hostname + ":5005/nl-api", // URL cơ sở cho các yêu cầu
+  baseURL: "http://" + host + "/nl-api", // URL cơ sở cho các yêu cầu
   // baseURL: "https://ipays.vn/nl-api", // URL cơ sở cho các yêu cầu
   // baseURL: "http://ipays.vn:5005/nl-api", // URL cơ sở cho các yêu cầu
 });
